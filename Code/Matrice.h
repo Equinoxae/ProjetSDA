@@ -1,11 +1,13 @@
 
 struct matrice{
 
+  unsigned int h;
+  unsigned int l;
+  Point* points;
 
+};
 
-}*matrice;
-
-matrice MatAlloc(h*l) : création d’une nouvelle matrice h * l initialisée à 0
+matrice MatAlloc(int h,intl); // création d’une nouvelle matrice h * l initialisée à 0
 
 MatFree : libération éventuelle de la mémoire utilisée
 
