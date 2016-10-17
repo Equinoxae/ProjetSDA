@@ -1,22 +1,22 @@
-
 #include <stdlib.h>
 #include <stdio.h>
+#include "Matrice.h"
 
-matrice MatAlloc(int h1,int l1){
+Matrice MatAlloc(int h1,int l1){
 
-  matrice m;
+  Matrice m;
 
-  m->h = h1;
-  m->l = l1;
-  m->points = malloc(h * l * sizeof(int));
+  m.h = h1;
+  m.l = l1;
+  m.points = malloc(h1 * l1 * sizeof(int));
 
   int i;
   int j;
 
-  for(i = 0; i < l; i++ ){
-    for(j = 0; j < h; j++){
+  for(i = 0; i < l1; i++ ){
+    for(j = 0; j < h1; j++){
 
-      m->points[i * l + j] =  ;
+      m.points[i * l1 + j] = 0;
 
     }// end j
   } // end i
@@ -25,58 +25,59 @@ matrice MatAlloc(int h1,int l1){
 
 }
 
-void MatFree(matrice m){
-  free(m);
+void MatFree(Matrice m){
+  free(m.points);
 }
 
-int MatVal(matrice m, int p){
+int MatVal(Matrice m, int p){
   return m.points[p];
 }
 
-int MatVal2(matrice m, int x, int y){
+int MatVal2(Matrice m, int x, int y){
   return m.points[x*m.l + y];
 }
 
-void MatSet(matrice m, int p, int v){
-  m[p]->v;
+void MatSet(Matrice m, int p, int v){
+  m.points[p] = v;
 }
 
-void MatSet2(matrice m, int x,int y, int v){
-  m[x*m.l+y]->v;
+void MatSet2(Matrice m, int x,int y, int v){
+  m.points[x*m.l+y] = v;
 }
 
-void MatSauve(matrice m,char* file){
-  File* f = NULL;
+void MatSauve(Matrice m,char* file){
+  FILE * f ;
 
-  f = fopen("./"+file,"w");
+  f = fopen(file,"w");
   fprintf(f, "%i %i \n",m.h,m.l);
   int i;
   for(i = 0 ; i < m.h * m.l ; i++ ){
-    putc(m.points[i]);
-    putc(' ');
+    putc(m.points[i],f);
+    putc(' ',f);
   }
   fclose(f);
 }
 
-matrice MatLit(char* file){
-  File* f = NULL;
+Matrice MatLit(char* file){
+  FILE * f ;
 
   f = fopen(file,"r");
 
   int h;
   int l;
 
-  fscanf(f,"%i %i\n",h,l)
+  fscanf(f,"%i %i\n",&h,&l);
 
-  matrice m = NULL;
+  Matrice m ;
   m = MatAlloc(h,l);
 
   int i;
 
-  char in[2];
+  char in;
   for(i = 0; i < h*l;i++){
-    fgetc(in,2,f);
-    MatSet(m,i,in[0]);
+    in = (char)fgetc(f);
+    fgetc(f);
+    MatSet(m,i,in);
     }
 
     close(f);
