@@ -1,16 +1,40 @@
 
-EnsAlloc : création d’un nouvel ensemble
- 
-EnsFree : libération éventuelle de la mémoire utilisée
+/* Noeud de l'ensemble */
+struct noeud{
+    /* data*/
+    int * data; // [x,y]
 
-EnsEstVide : teste si un ensemble est vide
+    /* list suite */
+    struct noeud * next ;
+};
 
-EnsAjoute : ajoute un couple à un ensemble
+typedef struct noeud Noeud;
 
-EnsSuppr : retire un couple à un ensemble
+Noeud *NoeudAlloc();
+void NoeudSuppr(Noeud *node);
 
-EnsEstDans : teste si un couple appartient à un ensemble
+/* Ensemble */
 
-EnsTaille : nombre d’éléments dans l’ensemble
+struct ensemble{
+    struct Noeud * premier;
+};
 
-EnsTirage : tire un couple aléatoirement dans un ensemble, et le retire de l’ensemble
+typedef struct ensemble Ens;
+
+Ens EnsAlloc(); // création d’un nouvel ensemble
+
+void EnsFree(Ens e); // libération éventuelle de la mémoire utilisée
+
+int EnsEstVide(Ens e); // teste si un ensemble est vide
+
+void EnsAjoute(Ens e, int x, int y); // ajoute un couple à un ensemble
+
+int EnsFind(Ens e, int x, int y);
+
+void EnsSuppr(Ens e, int x, int y); // retire un couple à un ensemble
+
+int EnsEstDans(Ens e, int x,int y); // teste si un couple appartient à un ensemble
+
+int EnsTaille(Ens e); // nombre d’éléments dans l’ensemble
+
+int * EnsTirage(Ens e); // tire un couple aléatoirement dans un ensemble, et le retire de l’ensemble
