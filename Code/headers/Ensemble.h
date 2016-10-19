@@ -1,17 +1,14 @@
 
 /* Noeud de l'ensemble */
-struct noeud{
+struct Noeud{
     /* data*/
     int * data; // [x,y]
 
     /* list suite */
-    struct noeud * next ;
+    struct Noeud * next ;
 };
 
-typedef struct noeud Noeud;
-
-Noeud *NoeudAlloc();
-void NoeudSuppr(Noeud *node);
+typedef struct Noeud Noeud;
 
 /* Ensemble */
 
@@ -21,20 +18,27 @@ struct ensemble{
 
 typedef struct ensemble Ens;
 
-Ens EnsAlloc(); // création d’un nouvel ensemble
+// Noeud fonction //
 
-void EnsFree(Ens e); // libération éventuelle de la mémoire utilisée
+Noeud *NoeudAlloc();
+void NoeudSuppr(Noeud *n);
 
-int EnsEstVide(Ens e); // teste si un ensemble est vide
+// Ensemble fonction //
 
-void EnsAjoute(Ens e, int x, int y); // ajoute un couple à un ensemble
+Ens * EnsAlloc(); // création d’un nouvel ensemble
 
-int EnsFind(Ens e, int x, int y);
+void EnsFree(Ens *e); // libération éventuelle de la mémoire utilisée
 
-void EnsSuppr(Ens e, int x, int y); // retire un couple à un ensemble
+int EnsEstVide(Ens *e); // teste si un ensemble est vide
 
-int EnsEstDans(Ens e, int x,int y); // teste si un couple appartient à un ensemble
+void EnsAjoute(Ens *e, int x, int y); // ajoute un couple à un ensemble
 
-int EnsTaille(Ens e); // nombre d’éléments dans l’ensemble
+int EnsFind(Ens *e, int x, int y);
 
-int * EnsTirage(Ens e); // tire un couple aléatoirement dans un ensemble, et le retire de l’ensemble
+void EnsSuppr(Ens *e, int x, int y); // retire un couple à un ensemble
+
+int EnsEstDans(Ens *e, int x,int y); // teste si un couple appartient à un ensemble
+
+int EnsTaille(Ens *e); // nombre d’éléments dans l’ensemble
+
+int * EnsTirage(Ens *e); // tire un couple aléatoirement dans un ensemble, et le retire de l’ensemble
