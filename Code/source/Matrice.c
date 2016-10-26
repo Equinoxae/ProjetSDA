@@ -2,13 +2,13 @@
 #include <stdio.h>
 #include "Matrice.h"
 
-Matrice MatAlloc(int h1,int l1){
+Matrice * MatAlloc(int l1,int h1){
 
-  Matrice m;
+  Matrice * m;
 
-  m.h = h1;
-  m.l = l1;
-  m.points = malloc(h1 * l1 * sizeof(int));
+  m->h = h1;
+  m->l = l1;
+  m->points = malloc(h1 * l1 * sizeof(int));
 
   int i;
   int j;
@@ -16,7 +16,7 @@ Matrice MatAlloc(int h1,int l1){
   for(i = 0; i < l1; i++ ){
     for(j = 0; j < h1; j++){
 
-      m.points[i * l1 + j] = 0;
+      m->points[i * l1 + j] = 0;
 
     }// end j
   } // end i
@@ -25,40 +25,42 @@ Matrice MatAlloc(int h1,int l1){
 
 }
 
-void MatFree(Matrice m){
-  free(m.points);
+void MatFree(Matrice * m){
+  free(m->points);
 }
 
-int MatVal(Matrice m, int p){
-  return m.points[p];
+int MatVal(Matrice * m, int p){
+  return m->points[p];
 }
 
-int MatVal2(Matrice m, int x, int y){
-  return m.points[x*m.l + y];
+int MatVal2(Matrice * m, int x, int y){
+  return m->points[x*m->l + y];
 }
 
-void MatSet(Matrice m, int p, int v){
-  m.points[p] = v;
+void MatSet(Matrice * m, int p, int v){
+  m->points[p] = v;
 }
 
-void MatSet2(Matrice m, int x,int y, int v){
-  m.points[x*m.l+y] = v;
+void MatSet2(Matrice * m, int x,int y, int v){
+  m->points[x*m->l+y] = v;
 }
 
-void MatSauve(Matrice m,char* file){
-  FILE * f ;
+void MatSauve(Matrice * m,char* file){
+    FILE * f ;
 
-  f = fopen(file,"w");
-  fprintf(f, "%i %i \n",m.h,m.l);
-  int i;
-  for(i = 0 ; i < m.h * m.l ; i++ ){
-    putc(m.points[i],f);
-    putc(' ',f);
-  }
-  fclose(f);
+    f = fopen(file,"w");
+    fprintf(f, "%i %i \n",m->h,m->l);
+
+    int i;
+    for(i = 0 ; i < m->h * m->l ; i++ ){
+        putc(m->points[i],f);
+        putc(' ',f);
+    }
+
+    fclose(f);
 }
 
-Matrice MatLit(char* file){
+Matrice * MatLit(char* file){
   FILE * f ;
 
   f = fopen(file,"r");
@@ -68,7 +70,7 @@ Matrice MatLit(char* file){
 
   fscanf(f,"%i %i\n",&h,&l);
 
-  Matrice m ;
+  Matrice * m ;
   m = MatAlloc(h,l);
 
   int i;
@@ -84,4 +86,12 @@ Matrice MatLit(char* file){
 
     return m;
 
+}
+
+int MatGetL(Matrice * m){
+    return m->l;
+}
+
+int MatGetH(Matrice * m){
+    return m->h;
 }
