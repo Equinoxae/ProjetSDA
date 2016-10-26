@@ -1,11 +1,9 @@
 #include "Ensemble.h"
 #include "Matrice.h"
 
-struct Lab{
-    struct Matrice * map;
-};
-
-typedef struct Lab Labyrinthe;
+typedef struct Lab{
+    Matrice * map;
+}Labyrinthe;
 
 
 Labyrinthe *LabCreate(int w,int h,double r);
@@ -18,7 +16,7 @@ void LabSupprBordInter(Labyrinthe *lab, Ens *v); // Supprime les bord interireur
 
 int EstConstructible(Labyrinthe *lab , Ens *c, int * point, int init);
 
-void Granularise(Labyrinthe *lab ,Ens *c ,Ens *v , double r);
+void Granularise(Labyrinthe *lab ,Ens *c ,Ens *v , int nb);
 
 void LabConstruit(Labyrinthe *lab ,Ens *c ,Ens *v);
 

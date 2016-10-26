@@ -4,7 +4,7 @@
 
 Labyrinthe *LabCreate(int w,int h,double r)
 {
-    if(r >= 1/3){
+    if(r >= 0.3){
         exit(1);
     }
 
@@ -16,16 +16,18 @@ Labyrinthe *LabCreate(int w,int h,double r)
     // taille bordure
     int W = w + 1;
     int H = h + 1;
-
+    printf("fuck it\n" );
     // init
-    l = malloc(sizeof(Matrice *));
-    l = MatAlloc(W,H);
+    l->map = MatAlloc(W,H);
     c = EnsAlloc();
     v = EnsAlloc();
 
+    printf("hello1\n");
     LabInit( l, c, v, W, H);
 
-    Granularise(l ,c ,v , (int)( W * H * r ) );
+    printf("hello2\n");
+
+    Granularise(l ,c ,v , (int)( w * h * r ) );
 
     LabSupprBordInter(l , v);
 
@@ -40,21 +42,29 @@ void LabFree(Labyrinthe *lab){
 
 void LabInit(Labyrinthe *lab, Ens *c,  Ens *v, int w ,int h)
 {
+    printf("haha\n" );
     int i,j;
     for(i = 0; i < w ; i++){
         for(j = 0 ; j < h ; j++){
             if( i == 0 || i == w || j == 0 || j == h ){
                 MatSet2(lab->map, i, j, 1);
                 EnsAjoute(c, i, j);
+                printf("hihi\n" );
             }
             else{
+                printf("hoho\n" );
                 EnsAjoute(v , i ,j);
             }
         }
     }
 
+        printf("hi\n");
+        printf("%i\n",EnsTaille(v) );
+        printf("Fuuuuck\n" );
     EnsSuppr(v,1,1); // départ
     EnsSuppr(v, w-1 , h-1 ); // Arrivée
+
+        printf("hi\n");
 }
 
 void LabSupprBordInter(Labyrinthe *lab,  Ens *v)

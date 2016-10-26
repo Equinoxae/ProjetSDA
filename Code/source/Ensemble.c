@@ -3,7 +3,6 @@
 #include <time.h>
 #include <unistd.h>
 #include <string.h>
-#include <assert.h> // a voir
 #include "Ensemble.h"
 
     /* Noued */
@@ -11,7 +10,8 @@
     Noeud *NoeudAlloc(){
         Noeud *n = malloc(sizeof(Noeud));
 
-        n->data =  malloc(sizeof(int)*2);
+        n->x = -1;
+        n->y = -1;
         n->next = NULL;
 
         return n;
@@ -52,22 +52,26 @@
 
     void EnsAjoute(Ens *e, int x, int y){
 
+        printf("%i,%i\n", x,y);
+
         Noeud * n = e->premier;
         while (n->next != NULL) {
             n = n->next;
         }
 
-        n->data[0] = x;
-        n->data[1] = y;
+        n->x = x;
+        n->y = y;
         n->next = NoeudAlloc();
     }
 
     int EnsFind(Ens *e, int x, int y){
 
         int index = 0;
+
         Noeud * n = e->premier;
         while (n->next != NULL) {
-            if (n->data[0] == x && n->data[1] == y) {
+            printf("%i\n",index );
+            if (n->x == x && n->y == y) {
                 return index;
             }
             n = n->next;
@@ -80,6 +84,7 @@
 
         int index = EnsFind(e, x, y);
 
+        printf("%i\n",index);
         if(index == -1){
             return;
         }
@@ -133,8 +138,8 @@
             index--;
         }
 
-        res[0] = n->data[0];
-        res[1] = n->data[1];
+        res[0] = n->x;
+        res[1] = n->y;
 
         return res;
     }

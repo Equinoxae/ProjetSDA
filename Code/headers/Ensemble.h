@@ -1,22 +1,19 @@
 
 /* Noeud de l'ensemble */
-struct Noeud{
+typedef struct Noeud{
     /* data*/
-    int * data; // [x,y]
-
+    int x; // [x,y]
+    int y;
     /* list suite */
     struct Noeud * next ;
-};
+}Noeud;
 
-typedef struct Noeud Noeud;
 
 /* Ensemble */
 
-struct ensemble{
+typedef struct ensemble{
     struct Noeud * premier;
-};
-
-typedef struct ensemble Ens;
+}Ens;
 
 // Noeud fonction //
 
