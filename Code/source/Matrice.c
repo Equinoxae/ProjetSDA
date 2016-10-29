@@ -4,23 +4,11 @@
 
 Matrice * MatAlloc(int l1,int h1){
 
-  Matrice * m;
+  Matrice * m = malloc(sizeof(Matrice));
 
   m->h = h1;
   m->l = l1;
-  m->points = malloc(h1 * l1 * sizeof(int));
-
-  int i;
-  int j;
-
-  for(i = 0; i < l1; i++ ){
-    for(j = 0; j < h1; j++){
-
-      m->points[i * l1 + j] = 0;
-
-    }// end j
-  } // end i
-
+  m->points = calloc(l1*h1,sizeof(int));
   return m;
 
 }

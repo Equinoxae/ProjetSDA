@@ -11,7 +11,7 @@ typedef struct Noeud{
 
 /* Ensemble */
 
-typedef struct ensemble{
+typedef struct Ens{
     struct Noeud * premier;
 }Ens;
 

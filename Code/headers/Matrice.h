@@ -1,11 +1,11 @@
 
-typedef struct matrice{
+typedef struct Matrice{
 
-  unsigned int h;
-  unsigned int l;
+  int h;
+  int l;
   int * points;
 
-}Matrice;
+} Matrice;
 
 Matrice *MatAlloc(int l1,int h1); // création d’une nouvelle Matrice h * l initialisée à 0
 

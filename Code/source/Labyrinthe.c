@@ -9,23 +9,21 @@ Labyrinthe *LabCreate(int w,int h,double r)
     }
 
     //var
-    Labyrinthe * l;
+    Labyrinthe * l = malloc(sizeof(Labyrinthe));
     Ens * c; // case construite
     Ens * v; // case vide (constructible)
 
     // taille bordure
     int W = w + 1;
     int H = h + 1;
-    printf("fuck it\n" );
+
     // init
     l->map = MatAlloc(W,H);
+
     c = EnsAlloc();
     v = EnsAlloc();
 
-    printf("hello1\n");
     LabInit( l, c, v, W, H);
-
-    printf("hello2\n");
 
     Granularise(l ,c ,v , (int)( w * h * r ) );
 
@@ -42,29 +40,24 @@ void LabFree(Labyrinthe *lab){
 
 void LabInit(Labyrinthe *lab, Ens *c,  Ens *v, int w ,int h)
 {
-    printf("haha\n" );
     int i,j;
     for(i = 0; i < w ; i++){
         for(j = 0 ; j < h ; j++){
             if( i == 0 || i == w || j == 0 || j == h ){
                 MatSet2(lab->map, i, j, 1);
                 EnsAjoute(c, i, j);
-                printf("hihi\n" );
             }
             else{
-                printf("hoho\n" );
                 EnsAjoute(v , i ,j);
             }
         }
     }
 
-        printf("hi\n");
-        printf("%i\n",EnsTaille(v) );
-        printf("Fuuuuck\n" );
+    printf("v : %i\n",EnsTaille(v) );
+
     EnsSuppr(v,1,1); // départ
     EnsSuppr(v, w-1 , h-1 ); // Arrivée
 
-        printf("hi\n");
 }
 
 void LabSupprBordInter(Labyrinthe *lab,  Ens *v)
