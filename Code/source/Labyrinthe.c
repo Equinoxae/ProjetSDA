@@ -83,12 +83,12 @@ void LabSupprBordInter(Labyrinthe *lab,  Ens *v)
 
 }
 
-int EstConstructible(Labyrinthe *lab ,  Ens *c, int * point, int init)
+int EstConstructible(Labyrinthe *lab ,  Ens *c, Noeud * point, int init)
 {
-    int x = point[0];
-    int y = point[1];
+    int x = point->x;
+    int y = point->y;
 
-    if( EnsEstDans(c,point[0],point[1]) ){
+    if( !EnsEstDans(c,point->x,point->y) ){
 
         int adjcent[4] = {0,0,0,0}; // W , N , E , S
         int adj_count = 0;
@@ -151,20 +151,20 @@ void Granularise(Labyrinthe *lab , Ens *c , Ens *v , int nb){
 
     while( count < nb && !EnsEstVide(v)){
 
-        int * tirage = EnsTirage(v);
+        Noeud * tirage = EnsTirage(v);
         res = EstConstructible(lab, c , tirage  , 1);
 
         if(res == 1){
 
-            MatSet2(lab->map, tirage[0] ,tirage[1] , 1);
-            EnsAjoute(c, tirage[0] ,tirage[1]);
-            EnsSuppr(v, tirage[0] ,tirage[1]);
+            MatSet2(lab->map, tirage->x ,tirage->y , 1);
+            EnsAjoute(c, tirage->x ,tirage->y);
+            EnsSuppr(v, tirage->x ,tirage->y);
 
             count++;
         }
         else if(res == -1)
         {
-            EnsSuppr(v, tirage[0] ,tirage[1]);
+            EnsSuppr(v, tirage->x ,tirage->y);
         }
 
     }
@@ -176,19 +176,19 @@ void LabConstruit(Labyrinthe *lab , Ens *c , Ens *v){
 
     while(!EnsEstVide(v)){
 
-        int * tirage = EnsTirage(v);
+        Noeud * tirage = EnsTirage(v);
         res = EstConstructible(lab, c , tirage  , 0);
 
         if(res == 1){
 
-            MatSet2(lab->map, tirage[0] ,tirage[1] , 1);
-            EnsAjoute(c, tirage[0] ,tirage[1]);
-            EnsSuppr(v, tirage[0] ,tirage[1]);
+            MatSet2(lab->map, tirage->x ,tirage->y , 1);
+            EnsAjoute(c, tirage->x ,tirage->y);
+            EnsSuppr(v, tirage->x ,tirage->y);
 
         }
         else if(res == -1)
         {
-            EnsSuppr(v, tirage[0] ,tirage[1]);
+            EnsSuppr(v, tirage->x ,tirage->y);
         }
 
     }

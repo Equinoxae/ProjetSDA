@@ -38,4 +38,4 @@ int EnsEstDans(Ens *e, int x,int y); // teste si un couple appartient à un ense
 
 int EnsTaille(Ens *e); // nombre d’éléments dans l’ensemble
 
-int * EnsTirage(Ens *e); // tire un couple aléatoirement dans un ensemble, et le retire de l’ensemble
+Noeud * EnsTirage(Ens *e); // tire un couple aléatoirement dans un ensemble, et le retire de l’ensemble

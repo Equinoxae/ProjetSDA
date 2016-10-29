@@ -14,7 +14,7 @@ void LabInit(Labyrinthe *lab,Ens *c, Ens *v, int w ,int h); // construit les bor
 
 void LabSupprBordInter(Labyrinthe *lab, Ens *v); // Supprime les bord interireur du Labyrinthe *des case disponnible a la construction
 
-int EstConstructible(Labyrinthe *lab , Ens *c, int * point, int init);
+int EstConstructible(Labyrinthe *lab , Ens *c, Noeud * point, int init);
 
 void Granularise(Labyrinthe *lab ,Ens *c ,Ens *v , int nb);
 
