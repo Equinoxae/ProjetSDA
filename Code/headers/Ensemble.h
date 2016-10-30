@@ -18,6 +18,7 @@ typedef struct Ens{
 // Noeud fonction //
 
 Noeud *NoeudAlloc();
+Noeud *NoeudInit(int x,int y);
 void NoeudSuppr(Noeud *n);
 
 // Ensemble fonction //
@@ -37,5 +38,7 @@ void EnsSuppr(Ens *e, int x, int y); // retire un couple à un ensemble
 int EnsEstDans(Ens *e, int x,int y); // teste si un couple appartient à un ensemble
 
 int EnsTaille(Ens *e); // nombre d’éléments dans l’ensemble
+
+void EnsPrint(Ens *e);
 
 Noeud * EnsTirage(Ens *e); // tire un couple aléatoirement dans un ensemble, et le retire de l’ensemble

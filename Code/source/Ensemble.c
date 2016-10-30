@@ -17,6 +17,17 @@ Noeud *NoeudAlloc(){
     return n;
 }
 
+Noeud *NoeudInit(int x,int y){
+    Noeud *n = malloc(sizeof(Noeud));
+
+    n->x = x;
+    n->y = y;
+    n->next = NULL;
+
+    return n;
+}
+
+
 void NoeudSuppr(Noeud *n){
     free(n);
 }
@@ -52,8 +63,6 @@ int EnsEstVide(Ens *e){
 
 void EnsAjoute(Ens *e, int x, int y){
 
-    printf("%i,%i\n", x,y);
-
     Noeud * n = e->premier;
     while (n->next != NULL) {
         n = n->next;
@@ -70,7 +79,6 @@ int EnsFind(Ens *e, int x, int y){
 
     Noeud * n = e->premier;
     while (n->next != NULL) {
-        printf("%i\n",index );
         if (n->x == x && n->y == y) {
             return index;
         }
@@ -84,7 +92,6 @@ void EnsSuppr(Ens *e, int x, int y){
 
     int index = EnsFind(e, x, y);
 
-    printf("%i\n",index);
     if(index == -1){
         return;
     }
@@ -99,6 +106,7 @@ void EnsSuppr(Ens *e, int x, int y){
             before = before->next;
             index--;
         }
+
         Noeud * n = before->next;
         before->next = before->next->next;
         NoeudSuppr(n);
@@ -121,13 +129,23 @@ int EnsTaille(Ens *e){
     return length;
 }
 
+void EnsPrint(Ens *e){
+
+    Noeud * n = e->premier;
+    while (n->next != NULL) {
+        printf("x : %i , y : %i\n",n->x,n->y);
+        n = n->next;
+    }
+}
+
+
 Noeud * EnsTirage(Ens *e){
     int * res = malloc(sizeof(int)*2);
     int index;
 
     /* tirage */
 
-    srand(time(NULL));
+    //srand(time(NULL));
     index = rand() % EnsTaille(e);
 
     /* recherche */

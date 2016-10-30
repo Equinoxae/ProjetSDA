@@ -1,12 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 #include "Labyrinthe.h"
 
-Labyrinthe *LabCreate(int w,int h,double r)
+Labyrinthe *LabCreate(int w,int h,float r)
 {
-    if(r >= 0.3){
-        exit(1);
-    }
+    // init random
+    srand(time(NULL));
 
     //var
     Labyrinthe * l = malloc(sizeof(Labyrinthe));
@@ -14,8 +14,8 @@ Labyrinthe *LabCreate(int w,int h,double r)
     Ens * v; // case vide (constructible)
 
     // taille bordure
-    int W = w + 1;
-    int H = h + 1;
+    int W = w + 2;
+    int H = h + 2;
 
     // init
     l->map = MatAlloc(W,H);
@@ -43,7 +43,7 @@ void LabInit(Labyrinthe *lab, Ens *c,  Ens *v, int w ,int h)
     int i,j;
     for(i = 0; i < w ; i++){
         for(j = 0 ; j < h ; j++){
-            if( i == 0 || i == w || j == 0 || j == h ){
+            if( i == 0 || i == w-1 || j == 0 || j == h-1 ){
                 MatSet2(lab->map, i, j, 1);
                 EnsAjoute(c, i, j);
             }
@@ -53,10 +53,11 @@ void LabInit(Labyrinthe *lab, Ens *c,  Ens *v, int w ,int h)
         }
     }
 
-    printf("v : %i\n",EnsTaille(v) );
-
     EnsSuppr(v,1,1); // départ
-    EnsSuppr(v, w-1 , h-1 ); // Arrivée
+    EnsSuppr(v, w-2 , h-2 ); // Arrivée
+
+    //EnsPrint(v);
+    //scanf("\n");
 
 }
 
@@ -67,75 +68,311 @@ void LabSupprBordInter(Labyrinthe *lab,  Ens *v)
     int i,j;
     for(i = 0; i < w ; i++){
         for(j = 0 ; j < h ; j++){
-            if( i == 1 || i == w-1 || j == 1 || j == h-1 ){
+            if( i == 1 || i == w-2 || j == 1 || j == h-2 ){
                 EnsSuppr(v, i, j);
             }
         }
     }
 
-
 }
 
-int EstConstructible(Labyrinthe *lab ,  Ens *c, Noeud * point, int init)
+int EstConstructible(Labyrinthe *lab ,  Ens *c , Ens *v, Noeud * point, int init)
 {
     int x = point->x;
     int y = point->y;
 
+    int res;
+
+    // si le point n'est pas construit sinon supprime supprime
     if( !EnsEstDans(c,point->x,point->y) ){
 
-        int adjcent[4] = {0,0,0,0}; // W , N , E , S
+        int adjcent[4] = {0,0,0,0}; // W , N , E , S <OK>
         int adj_count = 0;
 
         // Case Gauche
-        if( EnsEstDans(c , x-1 , y ) ){
+        if( EnsEstDans(c , x , y-1 ) ){
             adjcent[0] = 1;
             adj_count++;
         }
-
         // Case En-Haut
-        if( EnsEstDans(c , x , y-1 ) ){
+        if( EnsEstDans(c , x-1 , y ) ){
             adjcent[1] = 1;
             adj_count++;
         }
-
         // Case Droite
-        if( EnsEstDans(c , x+1 , y ) ){
+        if( EnsEstDans(c , x , y+1 ) ){
             adjcent[2] = 1;
             adj_count++;
         }
-
         // Case En-Bas
-        if( EnsEstDans(c , x , y+1 ) ){
+        if( EnsEstDans(c , x+1 , y ) ){
             adjcent[3] = 1;
             adj_count++;
         }
 
+        // si il n'y a rien a coté
         if( adj_count == 0){
-            return (init)? 1 : 0;
-        }
-        else if(adj_count == 1){
 
-            if(adjcent[0] == 1){
-                return (!EnsEstDans(c,x+1,y-1) && !EnsEstDans(c,x+1,y+1) ) ? 1 : 0;
+            // on compte les coins présents
+            int coin_count = 0;
+
+            Ens * coins = EnsAlloc();
+                // coins etendu <OK>
+                /*
+                   cx . . x
+                    . o . .
+                    . . . .
+                    x . . x
+                */
+
+            Ens * cote_oppose = EnsAlloc();
+                // coté opposés <OK>
+                /*
+                    c . . .
+                    . o . x
+                    . . . x
+                    . x x .
+                */
+
+
+            Ens *tour = EnsAlloc();
+                // tour de la case
+                /*
+                    c x x .
+                    x o x .
+                    x x x .
+                    . . . .
+                */
+            EnsAjoute(tour,x-1,y-1);
+            EnsAjoute(tour,x-1,y);
+            EnsAjoute(tour,x-1,y+1);
+            EnsAjoute(tour,x,y+1);
+            EnsAjoute(tour,x+1,y+1);
+            EnsAjoute(tour,x+1,y);
+            EnsAjoute(tour,x+1,y-1);
+            EnsAjoute(tour,x,y-1);
+
+            Ens *tour_coin_opp = EnsAlloc();
+                // tour coin opposee de la case <OK>
+                /*
+                    c . . .
+                    . o x .
+                    . x x .
+                    . . . .
+                */
+
+            // Case En-Haut Gauche
+            if( EnsEstDans(c , x-1 , y-1 ) ){
+
+                EnsAjoute(coins,x-1,y-1);
+                EnsAjoute(coins,x-1,y+2);
+                EnsAjoute(coins,x+2,y+2);
+                EnsAjoute(coins,x+2,y-1);
+
+                EnsAjoute(cote_oppose,x,y+2);
+                EnsAjoute(cote_oppose,x+1,y+2);
+                EnsAjoute(cote_oppose,x+2,y);
+                EnsAjoute(cote_oppose,x+2,y+1);
+
+                EnsAjoute(tour_coin_opp,x,y+1);
+                EnsAjoute(tour_coin_opp,x+1,y+1);
+                EnsAjoute(tour_coin_opp,x+1,y);
+
+                coin_count++;
             }
-            else if(adjcent[1] == 1){
-                return (!EnsEstDans(c,x-1,y+1) && !EnsEstDans(c,x+1,y+1) ) ? 1 : 0;
+            // Case En-Haut Droite
+            if( EnsEstDans(c , x-1 , y+1 ) ){
+
+                EnsAjoute(coins,x-1,y-2);
+                EnsAjoute(coins,x-1,y+1);
+                EnsAjoute(coins,x+2,y+1);
+                EnsAjoute(coins,x+2,y-2);
+
+                EnsAjoute(cote_oppose,x,y-2);
+                EnsAjoute(cote_oppose,x+1,y-2);
+                EnsAjoute(cote_oppose,x+2,y-1);
+                EnsAjoute(cote_oppose,x+2,y);
+
+                EnsAjoute(tour_coin_opp,x+1,y);
+                EnsAjoute(tour_coin_opp,x+1,y-1);
+                EnsAjoute(tour_coin_opp,x,y-1);
+
+                coin_count++;
             }
-            else if(adjcent[2] == 1){
-                return (!EnsEstDans(c,x-1,y-1) && !EnsEstDans(c,x-1,y+1) ) ? 1 : 0;
+            // Case En-Bas Droite
+            if( EnsEstDans(c , x+1 , y+1 ) ){
+
+                EnsAjoute(coins,x-2,y-2);
+                EnsAjoute(coins,x-2,y+1);
+                EnsAjoute(coins,x+1,y+1);
+                EnsAjoute(coins,x+1,y-2);
+
+                EnsAjoute(cote_oppose,x,y-2);
+                EnsAjoute(cote_oppose,x-1,y-2);
+                EnsAjoute(cote_oppose,x-2,y);
+                EnsAjoute(cote_oppose,x-2,y-1);
+
+                EnsAjoute(tour_coin_opp,x-1,y);
+                EnsAjoute(tour_coin_opp,x-1,y-1);
+                EnsAjoute(tour_coin_opp,x,y-1);
+
+                coin_count++;
             }
-            else if(adjcent[3] == 1){
-                return (!EnsEstDans(c,x-1,y-1) && !EnsEstDans(c,x+1,y-1) ) ? 1 : 0;
+            // Case En-Bas Gauche
+            if( EnsEstDans(c , x+1 , y-1 ) ){
+
+                EnsAjoute(coins,x-2,y-1);
+                EnsAjoute(coins,x-2,y+2);
+                EnsAjoute(coins,x+1,y+2);
+                EnsAjoute(coins,x+1,y-1);
+
+                EnsAjoute(cote_oppose,x,y+2);
+                EnsAjoute(cote_oppose,x-1,y+2);
+                EnsAjoute(cote_oppose,x-2,y+1);
+                EnsAjoute(cote_oppose,x-2,y);
+
+                EnsAjoute(tour_coin_opp,x-1,y);
+                EnsAjoute(tour_coin_opp,x-1,y+1);
+                EnsAjoute(tour_coin_opp,x,y+1);
+
+                coin_count++;
+            }
+
+            // Si y a 2 coins : Supprime
+            if(coin_count >= 2)
+                res = -1;
+            else if (coin_count == 1 ) // Si il y a strictement 1 coin
+            {
+                Ens * cote_trouve = EnsAlloc();
+
+                int i,counter_tour = 0;
+                Noeud * n = tour->premier;
+                for(i = 0; i<8 && counter_tour < 4 ; i++ , n = n->next){
+                    counter_tour += (EnsEstDans(v,n->x,n->y))? 1 : 0 ;
+                    EnsAjoute(cote_trouve,n->x , n->y);
+                }
+
+                int counter_tour_opp = 0;
+                n = tour_coin_opp->premier;
+                for(i = 0; i<3 && counter_tour > 0 ; i++ , n = n->next){
+                    counter_tour_opp += (EnsEstDans(v,n->x,n->y))? 1 : 0 ;
+
+                }
+
+                // Si auccune case du tour n'est constructible : Construit
+                // Si + de 3 case constructible : Rien
+
+                int counter_coin = 0;
+                n = coins->premier;
+                for(i = 0; i < 4 && counter_tour > 0 ; i++ , n = n->next){
+                    counter_coin += (EnsEstDans(c,n->x,n->y))? 1 : 0 ;
+                }
+
+                // Si les coin etendu construit != 4 : Rien
+
+
+                int counter_opp = 0;
+                n = cote_oppose->premier;
+                for(i = 0; i < 4 && counter_tour > 0  ; i++ , n = n->next){
+                    counter_opp += (EnsEstDans(v,n->x,n->y))? 1 : 0 ;
+                }
+
+                // Si auccune case du tour n'est constructible : Construit
+
+                printf("ct : %i cc : %i co : %i , x : %i , y : %i \n",counter_tour,counter_coin,counter_opp ,x,y);
+
+
+                if(counter_tour == 4 ) //Si il y a plus 3 cases constructibles
+                    res == 0;
+                if(counter_tour == 0)  //Si il n'y a rien de constructible sur sur le tour et qu'il y a 1 coin//Si il n'y a rien de constructible sur sur le tour et qu'il y a 1 coin
+                    res = 1;
+                else if( counter_tour == 3  && counter_tour == counter_tour_opp && counter_coin == 4 && counter_opp == 0 ){
+                    res = 1;
+                }
+                else if(counter_tour == 1 && counter_tour == counter_tour_opp  && counter_coin >= 3  && counter_opp <= 1){
+                    int count_constructible = 0;
+                    n = cote_trouve->premier;
+                    if(init != -1)
+                        count_constructible += (EstConstructible(lab,c,v,n,-1))? 1 : 0;
+
+                    res = (count_constructible == 0 || init == -1 )? 1 : -1;
+                }
+                else if(counter_tour == 2 && counter_tour == counter_tour_opp  && counter_coin < 4 && counter_opp == 0){
+                    int count_constructible = 0;
+                    n = cote_trouve->premier;
+                    for(i = 0 ; i < 2 ; i++){
+                        count_constructible += (EstConstructible(lab,c,v,n,0))? 1 : 0;
+                    }
+
+                    res = (count_constructible == 0 )? 1 : 0;
+                }
+                else if (counter_tour == 2){
+                    int w = lab->map->l;
+                    int h = lab->map->h;
+                    if((x == 2 && y == 3 && !EnsEstDans(c,4,2) ) || (x == 3 && y == 2 && !EnsEstDans(c,2,4))
+                        || (x == 2 && y == w-4 && !EnsEstDans(c,4,w-3)) || (x == 3 && y == w-3 && !EnsEstDans(c,2,w-5))
+                        || (x == h-3 && y == 3 && !EnsEstDans(c,h-5,2)) || (x == h-4  && y == 2 && !EnsEstDans(c,h-3,4))
+                        || (x == h-3 && y == w-4 && !EnsEstDans(c,h-5,w-3)) || (x == h-4 && y == w-3 && !EnsEstDans(c,h-3,w-5))
+                        )
+                        res = 1;
+                    else
+                        res = 0;
+                }
+                else
+                    res == 0;
+
+                EnsFree(cote_trouve);
+
+                //res = ( ( (counter_tour == 3 || counter_tour == 1) && counter_coin == 4 && counter_opp <= 1 ) || counter_tour == 0 )? 1 : 0;
+                if(res == 1)
+                   scanf("\n" );
+            }
+            else if(init) // Si y a 0 coins et 0 coté et qu'on initialise : Construit
+                res = 1;
+            else{ //Si y a 0 coins et 0 coté
+
+                int i,counter_tour = 0;
+                Noeud * n = tour->premier;
+                for(i = 0; i<8 && counter_tour < 1 ; i++ , n = n->next){
+                    counter_tour += (EnsEstDans(v,n->x,n->y))? 1 : 0 ;
+                }
+
+                // Si auccune case du tour est constructible (dans v) : Construit sinon Rien
+                res = (counter_tour == 0)? 1 : 0;
+            }
+
+            EnsFree(tour);
+            EnsFree(tour_coin_opp);
+            EnsFree(coins);
+            EnsFree(cote_oppose);
+
+        }
+        else if(adj_count == 1){ // si il y a strictement un coté : Construit / Supprime
+
+            //<OK>
+            if(adjcent[0] == 1){ // Si a gauche
+                res = (!EnsEstDans(c,x-1,y+1) && !EnsEstDans(c,x+1,y+1) ) ? 1 : -1;
+            }
+            else if(adjcent[1] == 1){ // Si en-haut
+                res = (!EnsEstDans(c,x+1,y-1) && !EnsEstDans(c,x+1,y+1) ) ? 1 : -1;
+            }
+            else if(adjcent[2] == 1){ // si a droite
+                res = (!EnsEstDans(c,x-1,y-1) && !EnsEstDans(c,x+1,y-1) ) ? 1 : -1;
+            }
+            else if(adjcent[3] == 1){ // si en bas
+                res = (!EnsEstDans(c,x-1,y-1) && !EnsEstDans(c,x-1,y+1) ) ? 1 : -1;
             }
         }
-        else
+        else // plus d'un coté : Supprime
         {
-            return -1;
+            res = -1;
         }
 
     }
+    else   //si deja construit : Supprime
+        res = -1;
 
-    return 0;
+    return res;
 }
 
 void Granularise(Labyrinthe *lab , Ens *c , Ens *v , int nb){
@@ -145,7 +382,7 @@ void Granularise(Labyrinthe *lab , Ens *c , Ens *v , int nb){
     while( count < nb && !EnsEstVide(v)){
 
         Noeud * tirage = EnsTirage(v);
-        res = EstConstructible(lab, c , tirage  , 1);
+        res = EstConstructible(lab, c , v , tirage  , 1);
 
         if(res == 1){
 
@@ -162,6 +399,9 @@ void Granularise(Labyrinthe *lab , Ens *c , Ens *v , int nb){
 
     }
 
+    printf("Granularise : Constuite : %i , Non-Cont. : %i \n",EnsTaille(c) ,EnsTaille(v) );
+    LabPrint(lab);
+
 }
 
 void LabConstruit(Labyrinthe *lab , Ens *c , Ens *v){
@@ -170,20 +410,34 @@ void LabConstruit(Labyrinthe *lab , Ens *c , Ens *v){
     while(!EnsEstVide(v)){
 
         Noeud * tirage = EnsTirage(v);
-        res = EstConstructible(lab, c , tirage  , 0);
+        res = EstConstructible(lab, c , v , tirage , 0);
 
-        if(res == 1){
+        int tv =  EnsTaille(v) ;
+
+        printf("Construit : %i , Vide %i , x : %i , y : %i\n", EnsTaille(c), tv,tirage->x ,tirage->y  );
+
+        if(tirage->x > lab->map->l || tirage->x < 0 || tirage->y > lab->map->h || tirage->y <0){
+            printf("ERREUR : %i %i\n" , tirage->x , tirage->y);
+            scanf("\n");
+        }
+        else if(res == 1){
 
             MatSet2(lab->map, tirage->x ,tirage->y , 1);
             EnsAjoute(c, tirage->x ,tirage->y);
             EnsSuppr(v, tirage->x ,tirage->y);
 
+
         }
         else if(res == -1)
         {
             EnsSuppr(v, tirage->x ,tirage->y);
+
+
         }
 
+        if( tv <= 4 )
+            LabPrint(lab);
+        // scanf("\n");
     }
 
 }
@@ -195,8 +449,11 @@ void LabPrint(Labyrinthe *lab){
 
     int i,j;
     for(i = 0; i < w ; i++){
+        printf("%i\t: ", i );
         for(j = 0 ; j < h ; j++){
-            printf("%i \n", MatVal2(lab->map,i,j) );
+            char c = MatVal2(lab->map,i,j) ? '0' : ' ';
+
+            printf("%c ", c );
         }
         printf("\n");
     }
