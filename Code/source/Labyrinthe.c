@@ -279,7 +279,7 @@ int EstConstructible(Labyrinthe *lab ,  Ens *c , Ens *v, Noeud * point, int init
 
                 // Si auccune case du tour n'est constructible : Construit
 
-                printf("ct : %i cc : %i co : %i , x : %i , y : %i \n",counter_tour,counter_coin,counter_opp ,x,y);
+                //printf("ct : %i cc : %i co : %i , x : %i , y : %i \n",counter_tour,counter_coin,counter_opp ,x,y);
 
 
                 if(counter_tour == 4 ) //Si il y a plus 3 cases constructibles
@@ -324,8 +324,8 @@ int EstConstructible(Labyrinthe *lab ,  Ens *c , Ens *v, Noeud * point, int init
                 EnsFree(cote_trouve);
 
                 //res = ( ( (counter_tour == 3 || counter_tour == 1) && counter_coin == 4 && counter_opp <= 1 ) || counter_tour == 0 )? 1 : 0;
-                if(res == 1)
-                   scanf("\n" );
+                //if(res == 1)
+                  // scanf("\n" );
             }
             else if(init) // Si y a 0 coins et 0 coté et qu'on initialise : Construit
                 res = 1;
@@ -379,6 +379,11 @@ void Granularise(Labyrinthe *lab , Ens *c , Ens *v , int nb){
     int count = 0;
     int res;
 
+    if(nb == 0){
+        printf("Ratio trop petit !\n");
+        exit(50);
+    }
+
     while( count < nb && !EnsEstVide(v)){
 
         Noeud * tirage = EnsTirage(v);
@@ -414,7 +419,7 @@ void LabConstruit(Labyrinthe *lab , Ens *c , Ens *v){
 
         int tv =  EnsTaille(v) ;
 
-        printf("Construit : %i , Vide %i , x : %i , y : %i\n", EnsTaille(c), tv,tirage->x ,tirage->y  );
+        //printf("Construit : %i , Vide %i , x : %i , y : %i\n", EnsTaille(c), tv,tirage->x ,tirage->y  );
 
         if(tirage->x > lab->map->l || tirage->x < 0 || tirage->y > lab->map->h || tirage->y <0){
             printf("ERREUR : %i %i\n" , tirage->x , tirage->y);
@@ -435,8 +440,8 @@ void LabConstruit(Labyrinthe *lab , Ens *c , Ens *v){
 
         }
 
-        if( tv <= 4 )
-            LabPrint(lab);
+        //if( tv <= 4 )
+        //    LabPrint(lab);
         // scanf("\n");
     }
 
