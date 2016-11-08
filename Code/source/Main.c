@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "Labyrinthe.h"
+#include "Labyrinthe0.h"
 
 // utilisation : ./program largeur(>10) hauteur(>10) ratio_granularisation( <= 0.3)
 int main(int argc, char *argv[]){

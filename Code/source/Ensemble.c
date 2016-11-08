@@ -58,7 +58,7 @@ void EnsFree(Ens *e){
 }
 
 int EnsEstVide(Ens *e){
-    return (EnsTaille(e) == 0)? 1 : 0;
+    return (EnsTaille(e) == 0);
 }
 
 void EnsAjoute(Ens *e, int x, int y){
@@ -89,9 +89,6 @@ int EnsFind(Ens *e, int x, int y){
 }
 
 void EnsSuppr(Ens *e, int x, int y){
-
-    //int index = EnsFind(e, x, y);
-
     int founded = 0;
 
     Noeud * n = e->premier;
@@ -116,29 +113,6 @@ void EnsSuppr(Ens *e, int x, int y){
             before = before->next;
         }
     }
-
-
-
-
-    // if(index == -1){
-    //     return;
-    // }
-    // else if (index == 0) {
-    //     Noeud * n = e->premier;
-    //     e->premier = e->premier->next;
-    //     NoeudSuppr(n);
-    // }
-    // else {
-    //     Noeud *before = e->premier;
-    //     while (index > 1) {
-    //         before = before->next;
-    //         index--;
-    //     }
-    //
-    //     Noeud * n = before->next;
-    //     before->next = before->next->next;
-    //     NoeudSuppr(n);
-    // }
 }
 
 int EnsEstDans(Ens *e, int x,int y){
@@ -166,15 +140,11 @@ void EnsPrint(Ens *e){
     }
 }
 
-
-Noeud * EnsTirage(Ens *e){
-    int * res = malloc(sizeof(int)*2);
+Noeud * EnsTirage(Ens *e,int taille){
     int index;
 
     /* tirage */
-
-    //srand(time(NULL));
-    index = rand() % EnsTaille(e);
+    index = rand() % taille;//EnsTaille(e);
 
     /* recherche */
 
@@ -183,6 +153,5 @@ Noeud * EnsTirage(Ens *e){
         n = n->next;
         index--;
     }
-
     return n;
 }

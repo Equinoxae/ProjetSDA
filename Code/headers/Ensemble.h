@@ -41,4 +41,4 @@ int EnsTaille(Ens *e); // nombre d’éléments dans l’ensemble
 
 void EnsPrint(Ens *e);
 
-Noeud * EnsTirage(Ens *e); // tire un couple aléatoirement dans un ensemble, et le retire de l’ensemble
+Noeud * EnsTirage(Ens *e,int taille); // tire un couple aléatoirement dans un ensemble, et le retire de l’ensemble
