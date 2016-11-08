@@ -192,7 +192,7 @@ int Granularise(Labyrinthe *lab  , Ens *v, int tv , Ens * v_fin , int tv_fin, in
     while( count < nb && t > 0){
         Noeud * tirage = EnsTirage(v,t);
 
-        if( EstConstructible(lab , v, tirage,1 ) ){
+        if( EstConstructible(lab , v, tirage,1 ) == 1 ){
 
             MatSet2(lab->map, tirage->x ,tirage->y , 1);
             t_fin = verifTour(lab,v_fin,tirage,t_fin);
