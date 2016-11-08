@@ -402,6 +402,9 @@ void Granularise(Labyrinthe *lab , Ens *c , Ens *v , int nb){
             EnsSuppr(v, tirage->x ,tirage->y);
         }
 
+
+        //printf("Granularise : Constuite : %i , Non-Cont. : %i \n",EnsTaille(c) ,EnsTaille(v) );
+
     }
 
     printf("Granularise : Constuite : %i , Non-Cont. : %i \n",EnsTaille(c) ,EnsTaille(v) );

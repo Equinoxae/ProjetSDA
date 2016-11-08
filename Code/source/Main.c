@@ -30,6 +30,8 @@ int main(int argc, char *argv[]){
 
     lab = LabCreate(arg1,arg2, arg3 );
 
+    MatSauve(lab->map,"Labyrinthe.pgm");
+
     printf("FINI\n" );
     LabPrint(lab);
 

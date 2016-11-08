@@ -37,12 +37,12 @@ void MatSauve(Matrice * m,char* file){
     FILE * f ;
 
     f = fopen(file,"w");
-    fprintf(f, "%i %i \n",m->h,m->l);
+    fprintf(f, "P5\n");
+    fprintf(f, "%i %i \n1\n",m->l,m->h);
 
     int i;
     for(i = 0 ; i < m->h * m->l ; i++ ){
-        putc(m->points[i],f);
-        putc(' ',f);
+        fprintf(f, "%c",!m->points[i]);
     }
 
     fclose(f);

@@ -90,27 +90,55 @@ int EnsFind(Ens *e, int x, int y){
 
 void EnsSuppr(Ens *e, int x, int y){
 
-    int index = EnsFind(e, x, y);
+    //int index = EnsFind(e, x, y);
 
-    if(index == -1){
-        return;
-    }
-    else if (index == 0) {
-        Noeud * n = e->premier;
+    int founded = 0;
+
+    Noeud * n = e->premier;
+
+    if(n == NULL)
+        exit(2);
+
+    if(n->x == x && n->y == y){
         e->premier = e->premier->next;
         NoeudSuppr(n);
+        founded = 1;
     }
-    else {
+    else{
         Noeud *before = e->premier;
-        while (index > 1) {
+        while (before->next != NULL && !founded) {
+            if (before->next->x == x && before->next->y == y) {
+                n = before->next;
+                before->next = before->next->next;
+                NoeudSuppr(n);
+                founded = 1;
+            }
             before = before->next;
-            index--;
         }
-
-        Noeud * n = before->next;
-        before->next = before->next->next;
-        NoeudSuppr(n);
     }
+
+
+
+
+    // if(index == -1){
+    //     return;
+    // }
+    // else if (index == 0) {
+    //     Noeud * n = e->premier;
+    //     e->premier = e->premier->next;
+    //     NoeudSuppr(n);
+    // }
+    // else {
+    //     Noeud *before = e->premier;
+    //     while (index > 1) {
+    //         before = before->next;
+    //         index--;
+    //     }
+    //
+    //     Noeud * n = before->next;
+    //     before->next = before->next->next;
+    //     NoeudSuppr(n);
+    // }
 }
 
 int EnsEstDans(Ens *e, int x,int y){
