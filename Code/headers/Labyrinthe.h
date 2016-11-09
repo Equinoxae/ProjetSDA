@@ -16,10 +16,10 @@ int EstConstructible(Labyrinthe *lab  , Ens *v, Noeud * point, int init);
 
 void LabInit(Labyrinthe *lab, Ens *v, int w ,int h); // construit les bords initialise les Ens
 
-int verifTour(Labyrinthe *lab  , Ens *v, Noeud * point,int tv);
+void verifTour(Labyrinthe *lab  , Ens *v, Noeud * point,int init);
 
-int Granularise(Labyrinthe *lab ,Ens *v, int tv , Ens * v_fin , int tv_fin, int nb);
+void Granularise(Labyrinthe *lab ,Ens *v, Ens * v_fin , int nb);
 
-void LabConstruit(Labyrinthe *lab ,Ens *v,int tv);
+void LabConstruit(Labyrinthe *lab ,Ens *v);
 
 void LabPrint(Labyrinthe *lab);

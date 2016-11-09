@@ -16,22 +16,19 @@ Labyrinthe *LabCreate(int w,int h,float r){
     int H = h + 2;
 
     // init
-    l->map = MatAlloc(W,H);
 
+    l->map = MatAlloc(W,H);
     // Ensemble vide
     v = EnsAlloc();
     v_init = EnsAlloc();
 
     // Tour + Graine
-    int tv_init = w * h;
     LabInit( l, v_init, W, H);
 
-    int tv = Granularise(l ,v_init, tv_init , v , 0 , (int)( w * h * r ) );
+    Granularise(l ,v_init , v , (int)( w * h * r ) );
 
     // Expention graine
-    //int tv = LabSupprBordInter(l , v);
-
-    LabConstruit(l, v , tv);
+    LabConstruit(l, v);
 
     EnsFree(v);
     EnsFree(v_init);
@@ -53,9 +50,11 @@ int EstConstructible(Labyrinthe *lab , Ens *v, Noeud * point, int init){
 
     int x = point->x;
     int y = point->y;
+    int w = MatGetL(lab->map);
+    int h = MatGetH(lab->map);
 
-    if(EstConstruit(lab,x,y))
-        return -1;
+    if(EstConstruit(lab,x,y) || ( !init && (x<= 1|| y <= 1 || x >= h-2 || y >= w-2) ) )
+        return 0;
 
     int res = 0;
 
@@ -83,29 +82,30 @@ int EstConstructible(Labyrinthe *lab , Ens *v, Noeud * point, int init){
         adj_count++;
     }
 
-
     if(adj_count == 0){
 
         if(init){
-            res = 1;
-            Ens * coin = EnsAlloc();
-            EnsAjoute(coin,x-1,y-1);
-            EnsAjoute(coin,x-1,y+1);
-            EnsAjoute(coin,x+1,y+1);
-            EnsAjoute(coin,x+1,y-1);
 
-            Noeud * n = coin->premier;
-            while(n->next != NULL && res == 1){
-                if(EstConstruit(lab,n->x,n->y)){
-                    res = 0;
-                }
-                n=n->next;
+            // Case Haut Gauche
+            if( EstConstruit(lab , x-1 , y-1 ) ){
+                res += 1;
+            }
+            // Case En-Haut Droite
+            if( EstConstruit(lab , x-1 , y+1 ) ){
+                res +=1;
+            }
+            // Case Bas Droite
+            if( EstConstruit(lab , x+1 , y+1 ) ){
+                res +=1;
+            }
+            // Case Bas Gauche
+            if( EstConstruit(lab , x+1 , y-1 ) ){
+                res +=1;
             }
 
-            EnsFree(coin);
+            res = !(res >= 1);
+
         }
-        else
-            res = 0;
     }
     else if(adj_count == 1){ // si il y a strictement un coté : Construit / Supprime
 
@@ -125,39 +125,54 @@ int EstConstructible(Labyrinthe *lab , Ens *v, Noeud * point, int init){
     }
     else // plus d'un coté : Supprime
     {
-        res = -1;
+        res = 0;
     }
 
     return res;
 }
 
-int verifTour(Labyrinthe *lab  , Ens *v, Noeud * point,int tv){
-    int t = tv;
+void verifTour(Labyrinthe *lab  , Ens *v, Noeud * point,int init){
+
     int cb;
-    Ens *tour = EnsAlloc();
-    EnsAjoute(tour,point->x-1,point->y);
-    EnsAjoute(tour,point->x+1,point->y);
-    EnsAjoute(tour,point->x,point->y+1);
-    EnsAjoute(tour,point->x,point->y-1);
+    int x = point->x;
+    int y = point->y;
 
-    Noeud * n = tour->premier;
-    while(n->next != NULL){
-        if(!EstConstruit(lab,n->x,n->y)){
-            cb = EstConstructible(lab,v,n,0);
-            if(cb){
-                EnsAjoute(v,n->x,n->y);
-                t++;
-            }
-            else if(cb == -1){
-                EnsSuppr(v,n->x,n->y);
-                t--;
-            }
+    // Case Gauche
+    if( !EstConstruit(lab , x , y-1 ) ){
+        if(EstConstructible(lab,v,NoeudInit(x,y-1),init)){
+            EnsAjoute(v,x,y-1);
         }
-
-        n=n->next;
+        else{
+            EnsSuppr(v,x,y-1);
+        }
     }
-    EnsFree(tour);
-    return t;
+    // Case En-Haut
+    if( !EstConstruit(lab , x-1 , y ) ){
+        if(EstConstructible(lab,v,NoeudInit(x-1,y),init)){
+            EnsAjoute(v,x-1,y);
+        }
+        else{
+            EnsSuppr(v,x-1,y);
+        }
+    }
+    // Case Droite
+    if( !EstConstruit(lab , x , y+1 ) ){
+        if(EstConstructible(lab,v,NoeudInit(x,y+1),init)){
+            EnsAjoute(v,x,y+1);
+        }
+        else{
+            EnsSuppr(v,x,y+1);
+        }
+    }
+    // Case En-Bas
+    if( !EstConstruit(lab , x+1 , y )){
+        if(EstConstructible(lab,v,NoeudInit(x+1,y),init)){
+            EnsAjoute(v,x+1,y);
+        }
+        else{
+            EnsSuppr(v,x+1,y);
+        }
+    }
 }
 
 // Init matice
@@ -177,10 +192,8 @@ void LabInit(Labyrinthe *lab,  Ens *v, int w ,int h){
 
 }
 
-int Granularise(Labyrinthe *lab  , Ens *v, int tv , Ens * v_fin , int tv_fin, int nb){
+void Granularise(Labyrinthe *lab  , Ens *v, Ens * v_fin , int nb){
 
-    int t = tv;
-    int t_fin = tv_fin;
     int count = 0;
     int res;
 
@@ -189,46 +202,44 @@ int Granularise(Labyrinthe *lab  , Ens *v, int tv , Ens * v_fin , int tv_fin, in
         exit(50);
     }
 
-    while( count < nb && t > 0){
-        Noeud * tirage = EnsTirage(v,t);
+    while( count < nb && !EnsEstVide(v)){
 
-        if( EstConstructible(lab , v, tirage,1 ) == 1 ){
+        Noeud * tirage = EnsTirage(v);
+
+        if( EstConstructible(lab , v, tirage,1 ) ){
 
             MatSet2(lab->map, tirage->x ,tirage->y , 1);
-            t_fin = verifTour(lab,v_fin,tirage,t_fin);
+            verifTour(lab,v_fin,tirage,1);
             count++;
+
         }
 
-        EnsSuppr(v, tirage->x ,tirage->y);
-        t--;
+        EnsSuppr(v,tirage->x,tirage->y);
 
     }
-    //NoeudSuppr(tirage);
 
-    printf("Granularise : Non-Const. : %i \n" ,EnsTaille(v) );
+    printf("Granularise : Non-Const. : %i \n" ,EnsTaille(v_fin) );
     LabPrint(lab);
 
-    return t_fin;
+    EnsSuppr(v,0,0);
 }
 
 // construit
-void LabConstruit(Labyrinthe *lab  , Ens *v,int tv){
-    int t = tv;
+void LabConstruit(Labyrinthe *lab  , Ens * v){
+
     int res;
 
-    while( t > 0){
+    while( !EnsEstVide(v) ){
+        Noeud * tirage = EnsTirage(v);
 
-        Noeud * tirage = EnsTirage(v,t);
-
-        if(EstConstructible(lab,v,tirage,0)==1){
+        if(EstConstructible(lab,v,tirage,0)){
             MatSet2(lab->map, tirage->x ,tirage->y , 1);
-            t=verifTour(lab ,v,tirage,t);
+            verifTour(lab ,v,tirage,0);
         }
 
         EnsSuppr(v, tirage->x ,tirage->y);
-        t--;
     }
-    //NoeudSuppr(tirage);
+
 }
 
 void LabPrint(Labyrinthe *lab){

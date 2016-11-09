@@ -13,6 +13,7 @@ Noeud *NoeudAlloc(){
     n->x = -1;
     n->y = -1;
     n->next = NULL;
+    n->previous = NULL;
 
     return n;
 }
@@ -23,10 +24,10 @@ Noeud *NoeudInit(int x,int y){
     n->x = x;
     n->y = y;
     n->next = NULL;
+    n->previous = NULL;
 
     return n;
 }
-
 
 void NoeudSuppr(Noeud *n){
     free(n);
@@ -34,45 +35,57 @@ void NoeudSuppr(Noeud *n){
 
 /* Ensemble */
 
+// complexité O(1)
 Ens * EnsAlloc(){
     Ens *e = malloc(sizeof(Ens));
     //assert(e != NULL);
 
-    Noeud * n = NoeudAlloc();
-    e->premier = n;
+    e->taille = 0;
+    e->premier = NULL;
+    e->dernier = NULL;
 
     return e;
 }
 
+// complexité O(n)
 void EnsFree(Ens *e){
-    //assert(e != NULL);
-
     Noeud * n = e->premier;
     Noeud * next;
     while (n != NULL) {
         next = n->next;
-        free(n);
+        NoeudSuppr(n);
         n = next;
     }
 
 }
 
+// complexité o(1)
 int EnsEstVide(Ens *e){
-    return (EnsTaille(e) == 0);
+    return (e->premier == NULL);
 }
 
+// complexté O(1)
 void EnsAjoute(Ens *e, int x, int y){
 
-    Noeud * n = e->premier;
-    while (n->next != NULL) {
-        n = n->next;
+    if(e->dernier == NULL){
+        e->premier = NoeudInit(x,y);
+        e->dernier = e->premier;
+        //printf("Ensemble Ajoute au début => %i %i\n",x,y);
     }
+    else{
+        //printf("Ensemble Ajoute à la suite => %i %i\n",x,y);
+        Noeud * n = NoeudInit(x,y);
+        n->previous = e->dernier;
+        e->dernier->next = n;
+        e->dernier = n;
+    }
+    e->taille++;
 
-    n->x = x;
-    n->y = y;
-    n->next = NoeudAlloc();
+    //if( x == 0 || y == 0)
+    //    scanf(" ");
 }
 
+// complexité O(n)
 int EnsFind(Ens *e, int x, int y){
 
     int index = 0;
@@ -88,70 +101,102 @@ int EnsFind(Ens *e, int x, int y){
     return -1;
 }
 
-void EnsSuppr(Ens *e, int x, int y){
-    int founded = 0;
+// complexité O(n/2)
+Noeud *EnsFindIndex(Ens *e, int index){
 
-    Noeud * n = e->premier;
+    //printf("EnsFind\n");
+    //EnsPrint(e);
 
-    if(n == NULL)
-        exit(2);
+    //printf("Ensemble Find index: %i , EnsTaille : %i\n", index , EnsTaille(e));
+    if(index <= EnsTaille(e)/2) {
+        //printf("par debut\n");
+        Noeud *n = e->premier;
+        int i;
+        for( i = 0; i<index && n->next != NULL  ;i++){
+            n=n->next;
+        }
+        //printf("fin parcour par début\n");
 
-    if(n->x == x && n->y == y){
-        e->premier = e->premier->next;
-        NoeudSuppr(n);
-        founded = 1;
+        return n;
     }
     else{
-        Noeud *before = e->premier;
-        while (before->next != NULL && !founded) {
-            if (before->next->x == x && before->next->y == y) {
-                n = before->next;
-                before->next = before->next->next;
-                NoeudSuppr(n);
-                founded = 1;
-            }
-            before = before->next;
+        //printf("par fin\n" );
+        Noeud *n = e->dernier;
+        int i;
+        for(i = EnsTaille(e); i>index && n->previous != NULL;i--){
+            n=n->previous;
         }
+    //    printf("fin parcour par fin\n");
+
+        return n;
     }
 }
 
+// complexité O(n)
+void EnsSuppr(Ens *e, int x, int y){
+
+    Noeud *n = e->premier;
+    while (n != NULL) {
+        if (n->x == x && n->y == y) {
+
+            if(n->next == NULL && n->previous == NULL){
+                e->premier = NULL;
+                e->dernier = NULL;
+                e->taille = 0;
+            }
+            else if(n->next == NULL){
+                n->previous->next = NULL;
+                e->dernier = n->previous;
+            }
+            else if(n->previous == NULL){
+                n->next->previous = NULL;
+                e->premier = n->next;
+            }
+            else{
+                n->previous->next = n->next;
+                n->next->previous = n->previous;
+            }
+
+            //printf("Ensemble supprime => %i %i\n",n->x,n->y);
+            //scanf(" ");
+            NoeudSuppr(n);
+            e->taille--;
+            break;
+        }
+        else
+            n = n->next;
+    }
+
+}
+
+// complexité O(n)
 int EnsEstDans(Ens *e, int x,int y){
-    return (EnsFind(e,x,y) != -1)? 1 : 0;
+    return (EnsFind(e,x,y) != -1);
 }
 
+// complextité O(1)
 int EnsTaille(Ens *e){
-
-    Noeud * n = e->premier;
-    int length = 0;
-    while (n->next != NULL) {
-        length++;
-        n = n->next;
-    }
-
-    return length;
+    return e->taille;
 }
 
+// complexité O(n)
 void EnsPrint(Ens *e){
 
     Noeud * n = e->premier;
-    while (n->next != NULL) {
-        printf("x : %i , y : %i\n",n->x,n->y);
+    printf("{\n");
+    while (n != NULL) {
+        printf("(%i,%i)",n->x,n->y);
         n = n->next;
     }
+    printf("}\n");
 }
 
-Noeud * EnsTirage(Ens *e,int taille){
+// complexité O(n/2)
+Noeud * EnsTirage(Ens *e){
     int index;
 
     /* tirage */
-    index = rand() % taille;//EnsTaille(e);
-
-    /* recherche */
-
-    Noeud * n = e->premier;
-    while (index > 0) {
-        n = n->next;
-        index--;
-    }
-    return n;
+    index = rand() % EnsTaille(e);
+    //printf("index : %i\n",index );
+    return EnsFindIndex(e,index);
 }
