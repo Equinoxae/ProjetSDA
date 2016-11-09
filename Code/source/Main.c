@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "Labyrinthe0.h"
+#include "Labyrinthe.h"
 
 // utilisation : ./program largeur(>10) hauteur(>10) ratio_granularisation( <= 0.3)
 int main(int argc, char *argv[]){
@@ -34,6 +34,19 @@ int main(int argc, char *argv[]){
 
     printf("FINI\n" );
     LabPrint(lab);
+
+    /*
+    STAT
+
+    50*50 (2 500) : 0.060s
+    100*100 (10 000) : 0.505s
+    200*200 (40 000) : 10.228s
+    300*300 (90 000) : 1m0.543s
+    400*400 (160 000): 3m50.151s
+    400*500 (200 000): 4m28.105s
+    500*500 (250 000): 9m31.116s
+    600*600 (360 000): 28m37.985s
+    */
 
     return 0;
 }
