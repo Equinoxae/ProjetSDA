@@ -3,6 +3,7 @@
 #include <time.h>
 #include "Labyrinthe.h"
 #include "graph.h"
+#include <string.h>
 
 void set_v(){
     v_graph = 1;
@@ -303,7 +304,7 @@ void SetPointGraphe(int x, int y, char * color){
             setcolor(newcolor(1,1,1));
     else if (!strcmp(color,"noir"))
             setcolor(newcolor(0,0,0));
-    else if (!strcmp(color,"rouge"))_*
+    else if (!strcmp(color,"rouge"))
             setcolor(newcolor(1,0,0));
     else if (!strcmp(color,"vert") )
             setcolor(newcolor(0,1,0));

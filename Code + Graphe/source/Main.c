@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "Labyrinthe.h"
 #include "graph.h"
 
@@ -34,7 +35,7 @@ int main(int argc, char *argv[]){
 
     }
 
-    if(h< 10 || l < 10 ){
+    if( h < 10 || l < 10 ){
         printf("Taille invalide ! La largeur et la hauteur doivent être > 10\n");
         exit(2);
     }
@@ -44,7 +45,7 @@ int main(int argc, char *argv[]){
         exit(3);
     }
 
-    lab = LabCreate(w,l,g);
+    lab = LabCreate(l,h,g);
 
     MatSauve(lab->map,fichier);
 
