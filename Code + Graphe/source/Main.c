@@ -19,24 +19,19 @@ int main(int argc, char *argv[]){
 
     int i;
     for(i = 1;i<argc;i++){
-        switch (argv[i]) {
-            case "-v":
-                set_v();
-                break;
-            case "-d":
-                set_v();
-                set_d();
-                break;
-            case "-l":
-                l = atoi(argv[++i]);
-                break;
-            case "-h":
-                h = atoi(argv[++i]);
-            case "-g":
-                g = atof(argv[++i]);
-            default:
-                sprintf(fichier,"%s.pgm",argv[i]);
-        }
+        if ( !strcmp(argv[i],"-v"))
+            set_v();
+        else if ( !strcmp(argv[i],"-d"))
+            set_d();
+        else if ( !strcmp(argv[i],"-l"))
+            l = atoi(argv[++i]);
+        else if ( !strcmp(argv[i],"-h"))
+            h = atoi(argv[++i]);
+        else if ( !strcmp(argv[i],"-g"))
+            g = atof(argv[++i]);
+        else
+            sprintf(fichier,"%s.pgm",argv[i]);
+
     }
 
     if(h< 10 || l < 10 ){
@@ -49,7 +44,7 @@ int main(int argc, char *argv[]){
         exit(3);
     }
 
-    lab = LabCreate(x,y,g);
+    lab = LabCreate(w,l,g);
 
     MatSauve(lab->map,fichier);
 

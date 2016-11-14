@@ -70,7 +70,7 @@ Matrice * MatLit(char* file){
     MatSet(m,i,in);
     }
 
-    close(f);
+    fclose(f);
 
     return m;
 

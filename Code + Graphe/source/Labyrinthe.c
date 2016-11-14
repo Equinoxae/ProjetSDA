@@ -9,6 +9,7 @@ void set_v(){
 }
 
 void set_d(){
+    v_graph = 1;
     d_graph = 1;
 }
 
@@ -249,7 +250,7 @@ void Granularise(Labyrinthe *lab  , Ens *v, Ens * v_fin , int nb){
             count++;
 
         }
-        else if(d_graph)
+        else if(d_graph){
                 SetPointGraphe(tirage->x,tirage->y,"blanc");
         }
 
@@ -270,7 +271,7 @@ void LabConstruit(Labyrinthe *lab  , Ens * v){
             SetPointGraphe(tirage->x,tirage->y,"noir");
             verifTour(lab ,v,tirage,0);
         }
-        else if(d_graph)
+        else if(d_graph){
                 SetPointGraphe(tirage->x,tirage->y,"blanc");
         }
 
@@ -298,25 +299,17 @@ void LabPrint(Labyrinthe *lab){
 
 void SetPointGraphe(int x, int y, char * color){
 
-    switch(color){
-        case strcmp(color,"blanc") :
+    if (!strcmp(color,"blanc"))
             setcolor(newcolor(1,1,1));
-            break;
-        case strcmp(color,"noir") :
+    else if (!strcmp(color,"noir"))
             setcolor(newcolor(0,0,0));
-            break;
-        case strcmp(color,"rouge") :
+    else if (!strcmp(color,"rouge"))_*
             setcolor(newcolor(1,0,0));
-            break;
-        case strcmp(color,"vert") :
+    else if (!strcmp(color,"vert") )
             setcolor(newcolor(0,1,0));
-            break;
-        case strcmp(color,"bleu") :
+    else if (!strcmp(color,"bleu"))
             setcolor(newcolor(0,0,1));
-            break;
-        default:
-            setcolor(newcolor(1,1,1));
-    }
+
 
     putpixel(x,y);
     refresh();
