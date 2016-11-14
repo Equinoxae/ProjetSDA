@@ -32,8 +32,8 @@ int main(int argc, char *argv[]){
 
     MatSauve(lab->map,"Labyrinthe.pgm");
 
-    printf("FINI\n" );
-    LabPrint(lab);
+    //printf("FINI\n" );
+    //LabPrint(lab);
 
     /*
     STAT

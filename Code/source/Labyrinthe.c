@@ -218,8 +218,8 @@ void Granularise(Labyrinthe *lab  , Ens *v, Ens * v_fin , int nb){
 
     }
 
-    printf("Granularise : Non-Const. : %i \n" ,EnsTaille(v_fin) );
-    LabPrint(lab);
+    //printf("Granularise : Non-Const. : %i \n" ,EnsTaille(v_fin) );
+    //LabPrint(lab);
 
     EnsSuppr(v,0,0);
 }
