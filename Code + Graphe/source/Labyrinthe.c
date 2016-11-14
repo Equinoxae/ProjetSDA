@@ -299,19 +299,21 @@ void LabPrint(Labyrinthe *lab){
 void SetPointGraphe(int x, int y, char * color){
 
     switch(color){
-        case "blanc" :
+        case strcmp(color,"blanc") :
             setcolor(newcolor(1,1,1));
             break;
-        case "noir" :
+        case strcmp(color,"noir") :
             setcolor(newcolor(0,0,0));
             break;
-        case "rouge" :
+        case strcmp(color,"rouge") :
             setcolor(newcolor(1,0,0));
             break;
-        case "vert" :
+        case strcmp(color,"vert") :
             setcolor(newcolor(0,1,0));
-        case "bleu" :
+            break;
+        case strcmp(color,"bleu") :
             setcolor(newcolor(0,0,1));
+            break;
         default:
             setcolor(newcolor(1,1,1));
     }

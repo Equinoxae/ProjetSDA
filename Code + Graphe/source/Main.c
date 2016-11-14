@@ -9,7 +9,7 @@ int main(int argc, char *argv[]){
     Labyrinthe *lab;
     int h = 200;
     int l = 300;
-    float g = 0.005
+    float g = 0.005;
     char * fichier;
 
     if(argc != 4){
@@ -21,25 +21,25 @@ int main(int argc, char *argv[]){
     for(i = 1;i<argc;i++){
         switch (argv[i]) {
             case "-v":
-                set_v(1);
+                set_v();
                 break;
             case "-d":
-                set_v(1);
-                set_d(1);
+                set_v();
+                set_d();
                 break;
-            case "-l"
+            case "-l":
                 l = atoi(argv[++i]);
                 break;
             case "-h":
                 h = atoi(argv[++i]);
-            case "-g"
+            case "-g":
                 g = atof(argv[++i]);
             default:
                 sprintf(fichier,"%s.pgm",argv[i]);
         }
     }
 
-    if(x< 10 || y < 10 ){
+    if(h< 10 || l < 10 ){
         printf("Taille invalide ! La largeur et la hauteur doivent être > 10\n");
         exit(2);
     }

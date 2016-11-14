@@ -9,9 +9,9 @@ typedef struct Lab{
 }Labyrinthe;
 
 
-void set_v(int v);
+void set_v();
 
-void set_d(int v);
+void set_d();
 
 Labyrinthe *LabCreate(int w,int h,float r);
 
