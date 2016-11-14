@@ -4,12 +4,12 @@
 #include "Labyrinthe.h"
 #include "graph.h"
 
-void set_v(int v){
-    v_graph = v;
+void set_v(){
+    v_graph = 1;
 }
 
-void set_d(int v){
-    d_graph = d;
+void set_d(){
+    d_graph = 1;
 }
 
 Labyrinthe *LabCreate(int w,int h,float r){
