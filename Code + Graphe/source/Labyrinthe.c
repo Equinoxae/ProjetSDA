@@ -221,8 +221,6 @@ void LabInit(Labyrinthe *lab,  Ens *v, int w ,int h){
             }
             else{
                 EnsAjoute(v, i, j);
-                if(d_graph)
-                    SetPointGraphe(i,j,"rouge");
             }
         }
     }
