@@ -23,7 +23,7 @@ Labyrinthe *LabCreate(int w,int h,float r){
     Ens * v, *v_init; // case vide (constructible)
 
     if(v_graph){
-        initgraph(w,h);
+        initgraph((w+2)*3,(h+2)*3);
         flushgraph();
     }
 
@@ -310,6 +310,15 @@ void SetPointGraphe(int x, int y, char * color){
             setcolor(newcolor(0,0,1));
 
 
-    putpixel(x,y);
+    putpixel(x*3,y*3);
+    putpixel(x*3,y*3+1);
+    putpixel(x*3,y*3+2);
+    putpixel(x*3+1,y*3);
+    putpixel(x*3+1,y*3+1);
+    putpixel(x*3+1,y*3+2);
+    putpixel(x*3+2,y*3);
+    putpixel(x*3+2,y*3+1);
+    putpixel(x*3+2,y*3+2);
+   
     refresh();
 }
