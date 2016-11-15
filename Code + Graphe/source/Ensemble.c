@@ -70,10 +70,8 @@ void EnsAjoute(Ens *e, int x, int y){
     if(e->dernier == NULL){
         e->premier = NoeudInit(x,y);
         e->dernier = e->premier;
-        //printf("Ensemble Ajoute au début => %i %i\n",x,y);
     }
     else{
-        //printf("Ensemble Ajoute à la suite => %i %i\n",x,y);
         Noeud * n = NoeudInit(x,y);
         n->previous = e->dernier;
         e->dernier->next = n;
@@ -81,8 +79,6 @@ void EnsAjoute(Ens *e, int x, int y){
     }
     e->taille++;
 
-    //if( x == 0 || y == 0)
-    //    scanf(" ");
 }
 
 // complexité O(n)
@@ -104,30 +100,22 @@ int EnsFind(Ens *e, int x, int y){
 // complexité O(n/2)
 Noeud *EnsFindIndex(Ens *e, int index){
 
-    //printf("EnsFind\n");
-    //EnsPrint(e);
-
-    //printf("Ensemble Find index: %i , EnsTaille : %i\n", index , EnsTaille(e));
     if(index <= EnsTaille(e)/2) {
-        //printf("par debut\n");
         Noeud *n = e->premier;
         int i;
         for( i = 0; i<index && n->next != NULL  ;i++){
             n=n->next;
         }
-        //printf("fin parcour par début\n");
-
+        
         return n;
     }
     else{
-        //printf("par fin\n" );
         Noeud *n = e->dernier;
         int i;
         for(i = EnsTaille(e); i>index && n->previous != NULL;i--){
             n=n->previous;
         }
-    //    printf("fin parcour par fin\n");
-
+    
         return n;
     }
 }

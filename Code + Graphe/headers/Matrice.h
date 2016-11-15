@@ -7,7 +7,7 @@ typedef struct Matrice{
 
 } Matrice;
 
-Matrice *MatAlloc(int l1,int h1); // création d’une nouvelle Matrice h * l initialisée à 0
+Matrice *MatAlloc(int h1,int l1); // création d’une nouvelle Matrice h * l initialisée à 0
 
 void MatFree(Matrice * m); // libération éventuelle de la mémoire utilisée
 

@@ -41,7 +41,7 @@ void MatSauve(Matrice * m,char* file){
     fprintf(f, "%i %i \n1\n",m->l,m->h);
 
     int i;
-    for(i = 0 ; i < m->h * m->l ; i++ ){
+    for(i = 0 ; i < m->l * m->h ; i++ ){
         fprintf(f, "%c",!m->points[i]);
     }
 

@@ -22,14 +22,16 @@ Labyrinthe *LabCreate(int w,int h,float r){
     Labyrinthe * l = malloc(sizeof(Labyrinthe));
     Ens * v, *v_init; // case vide (constructible)
 
-    if(v_graph){
-        initgraph((w+2)*3,(h+2)*3);
-        flushgraph();
-    }
+    
 
     // taille bordure
     int W = w + 2;
     int H = h + 2;
+
+    if(v_graph){
+        initgraph((W)*3,(H)*3);
+        flushgraph();
+    }
 
     // init
 
@@ -49,7 +51,10 @@ Labyrinthe *LabCreate(int w,int h,float r){
     EnsFree(v);
     EnsFree(v_init);
 
-    waitgraph();
+    if(v_graph){
+       waitgraph();
+       closegraph();
+    }
 
     return l;
 }
@@ -212,12 +217,13 @@ void verifTour(Labyrinthe *lab  , Ens *v, Noeud * point,int init){
 // Init matice
 void LabInit(Labyrinthe *lab,  Ens *v, int w ,int h){
 
-    int i,j;
-    for(i = 0; i < w ; i++){
-        for(j = 0 ; j < h ; j++){
-            if( i == 0 || i == w-1 || j == 0 || j == h-1 ){
+    int i,j; //x , y
+    for(i = 0; i < h ; i++){
+        for(j = 0 ; j < w ; j++){
+            if( i == 0 || i == h-1 || j == 0 || j == w-1 ){
                 MatSet2(lab->map, i, j, 1);
-                SetPointGraphe(i,j,"noir");
+		if(v_graph)                
+		    SetPointGraphe(i,j,"noir");
             }
             else{
                 EnsAjoute(v, i, j);
@@ -244,13 +250,14 @@ void Granularise(Labyrinthe *lab  , Ens *v, Ens * v_fin , int nb){
         if( EstConstructible(lab , v, tirage,1 ) ){
 
             MatSet2(lab->map, tirage->x ,tirage->y , 1);
-            SetPointGraphe(tirage->x,tirage->y,"noir");
+	    if(v_graph)            
+		SetPointGraphe(tirage->x,tirage->y,"noir");
             verifTour(lab,v_fin,tirage,1);
             count++;
 
         }
         else if(d_graph){
-                SetPointGraphe(tirage->x,tirage->y,"blanc");
+            SetPointGraphe(tirage->x,tirage->y,"blanc");
         }
 
         EnsSuppr(v, tirage->x ,tirage->y);
@@ -267,7 +274,8 @@ void LabConstruit(Labyrinthe *lab  , Ens * v){
 
         if(EstConstructible(lab,v,tirage,0)){
             MatSet2(lab->map, tirage->x ,tirage->y , 1);
-            SetPointGraphe(tirage->x,tirage->y,"noir");
+	    if(v_graph)            
+		SetPointGraphe(tirage->x,tirage->y,"noir");
             verifTour(lab ,v,tirage,0);
         }
         else if(d_graph){
@@ -310,15 +318,15 @@ void SetPointGraphe(int x, int y, char * color){
             setcolor(newcolor(0,0,1));
 
 
-    putpixel(x*3,y*3);
-    putpixel(x*3,y*3+1);
-    putpixel(x*3,y*3+2);
-    putpixel(x*3+1,y*3);
-    putpixel(x*3+1,y*3+1);
-    putpixel(x*3+1,y*3+2);
-    putpixel(x*3+2,y*3);
-    putpixel(x*3+2,y*3+1);
-    putpixel(x*3+2,y*3+2);
+    putpixel(y*3,x*3);
+    putpixel(y*3,x*3+1);
+    putpixel(y*3,x*3+2);
+    putpixel(y*3+1,x*3);
+    putpixel(y*3+1,x*3+1);
+    putpixel(y*3+1,x*3+2);
+    putpixel(y*3+2,x*3);
+    putpixel(y*3+2,x*3+1);
+    putpixel(y*3+2,x*3+2);
    
     refresh();
 }
