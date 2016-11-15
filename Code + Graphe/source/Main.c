@@ -13,11 +13,6 @@ int main(int argc, char *argv[]){
     float g = 0.005;
     char * fichier;
 
-    if(argc != 4){
-        printf("Format d'appel non valide.\nUtilisez : ./program largeur(>10) hauteur(>10) ratio_granularisation( <= 0.3) \n");
-        exit(1);
-    }
-
     int i;
     for(i = 1;i<argc;i++){
         if ( !strcmp(argv[i],"-v"))
