@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <limits.h>
 #include "Labyrinthe.h"
 #include "graph.h"
 #include <string.h>
@@ -22,7 +23,7 @@ Labyrinthe *LabCreate(int w,int h,float r){
     Labyrinthe * l = malloc(sizeof(Labyrinthe));
     Ens * v, *v_init; // case vide (constructible)
 
-    
+
 
     // taille bordure
     int W = w + 2;
@@ -52,6 +53,8 @@ Labyrinthe *LabCreate(int w,int h,float r){
     EnsFree(v_init);
 
     if(v_graph){
+       waitgraph();
+       dijkstra(l);
        waitgraph();
        closegraph();
     }
@@ -222,7 +225,7 @@ void LabInit(Labyrinthe *lab,  Ens *v, int w ,int h){
         for(j = 0 ; j < w ; j++){
             if( i == 0 || i == h-1 || j == 0 || j == w-1 ){
                 MatSet2(lab->map, i, j, 1);
-		if(v_graph)                
+		if(v_graph)
 		    SetPointGraphe(i,j,"noir");
             }
             else{
@@ -250,7 +253,7 @@ void Granularise(Labyrinthe *lab  , Ens *v, Ens * v_fin , int nb){
         if( EstConstructible(lab , v, tirage,1 ) ){
 
             MatSet2(lab->map, tirage->x ,tirage->y , 1);
-	    if(v_graph)            
+	    if(v_graph)
 		SetPointGraphe(tirage->x,tirage->y,"noir");
             verifTour(lab,v_fin,tirage,1);
             count++;
@@ -274,7 +277,7 @@ void LabConstruit(Labyrinthe *lab  , Ens * v){
 
         if(EstConstructible(lab,v,tirage,0)){
             MatSet2(lab->map, tirage->x ,tirage->y , 1);
-	    if(v_graph)            
+	    if(v_graph)
 		SetPointGraphe(tirage->x,tirage->y,"noir");
             verifTour(lab ,v,tirage,0);
         }
@@ -327,6 +330,82 @@ void SetPointGraphe(int x, int y, char * color){
     putpixel(y*3+2,x*3);
     putpixel(y*3+2,x*3+1);
     putpixel(y*3+2,x*3+2);
-   
+
     refresh();
+}
+
+void dijkstra(Labyrinthe * lab){
+
+
+    Matrice * dist = MatAlloc(lab->map->l,lab->map->h);
+    //int dist[V];     // The output array.  dist[i] will hold the shortest
+    // distance from src to i
+
+    Matrice * isSet = MatAlloc(lab->map->l,lab->map->h);
+    //bool sptSet[V]; // sptSet[i] will true if vertex i is included in shortest
+    // path tree or shortest distance from src to i is finalized
+
+    int V = lab->map->l*lab->map->h;
+
+    // Initialize all distances as INFINITE and stpSet[] as false
+    int i;
+    for (i = 0; i < V; i++)
+        MatSet(dist,i,INT_MAX);
+
+    // Distance of source vertex from itself is always 0
+    MatSet2(dist,1,1,0);
+    SetPointGraphe(1,1, "vert");
+
+    int l = lab->map->l;
+
+    // Find shortest path for all vertices
+    int count;
+    for (count = lab->map->l + 2; count < V -1 - l; count++) {
+        // Pick the minimum distance vertex from the set of vertices not
+        // yet processed. u is always equal to src in first iteration.
+        int u;
+
+        // Initialize min value
+        int min = INT_MAX;
+
+        int v;
+        for (v = l; v < V-l; v++){
+            if (!MatVal(lab->map,v) && !MatVal(isSet,v) && MatVal(dist,v) <= min){
+                min = MatVal(dist,u);
+                u = v;
+            }
+        }
+
+        // Mark the picked vertex as processed
+        MatSet(isSet,u,1);
+
+
+        if (!MatVal(isSet,u+1) && !MatVal(lab->map,u+1) && MatVal(dist,u) != INT_MAX
+                                    && MatVal(dist,u)+1 < MatVal(dist,u+1)){
+            MatSet(dist,u+1,MatVal(dist,u)+1);
+            SetPointGraphe((int)(u+1)/l,(int)(u+1)%l, "vert");
+        }
+
+        if (!MatVal(isSet,u-1) && !MatVal(lab->map,u-1) && MatVal(dist,u) != INT_MAX
+                                    && MatVal(dist,u)+1 < MatVal(dist,u-1)){
+            MatSet(dist,u-1,MatVal(dist,u)+1);
+            SetPointGraphe((int)(u-1)/l,(int)(u-1)%l, "vert");
+        }
+
+        if (!MatVal(isSet,u+l) && !MatVal(lab->map,u+l) && MatVal(dist,u) != INT_MAX
+                                    && MatVal(dist,u)+1 < MatVal(dist,u+l)){
+            MatSet(dist,u+l,MatVal(dist,u)+1);
+            SetPointGraphe((int)(u+l)/l,(int)(u+l)%l, "vert");
+        }
+
+        if (!MatVal(isSet,u-l) && !MatVal(lab->map,u-l) && MatVal(dist,u) != INT_MAX
+                                    && MatVal(dist,u)+1 < MatVal(dist,u-l)){
+            MatSet(dist,u-l,MatVal(dist,u)+1);
+            SetPointGraphe((int)(u-l)/l,(int)(u-l)%l, "vert");
+        }
+
+
+        // print the constructed distance array
+
+    }
 }

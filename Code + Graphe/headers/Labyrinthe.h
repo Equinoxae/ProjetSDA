@@ -32,3 +32,5 @@ void LabConstruit(Labyrinthe *lab ,Ens *v);
 void LabPrint(Labyrinthe *lab);
 
 void SetPointGraphe(int x, int y, char * color);
+
+void dijkstra(Labyrinthe * lab);

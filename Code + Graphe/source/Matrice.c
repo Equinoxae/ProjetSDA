@@ -6,8 +6,8 @@ Matrice * MatAlloc(int l1,int h1){
 
   Matrice * m = malloc(sizeof(Matrice));
 
-  m->h = h1;
   m->l = l1;
+  m->h = h1;
   m->points = calloc(l1*h1,sizeof(int));
   return m;
 
