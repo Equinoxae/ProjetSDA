@@ -380,25 +380,25 @@ void dijkstra(Labyrinthe * lab){
         MatSet(isSet,u,1);
 
 
-        if (!MatVal(isSet,u+1) && !MatVal(lab->map,u+1) && MatVal(dist,u) != INT_MAX
+        if (!MatVal(isSet,u+1) && !MatVal(lab->map,u+1) 
                                     && MatVal(dist,u)+1 < MatVal(dist,u+1)){
             MatSet(dist,u+1,MatVal(dist,u)+1);
             SetPointGraphe((int)(u+1)/l,(int)(u+1)%l, "vert");
         }
 
-        if (!MatVal(isSet,u-1) && !MatVal(lab->map,u-1) && MatVal(dist,u) != INT_MAX
+        if (!MatVal(isSet,u-1) && !MatVal(lab->map,u-1) 
                                     && MatVal(dist,u)+1 < MatVal(dist,u-1)){
             MatSet(dist,u-1,MatVal(dist,u)+1);
             SetPointGraphe((int)(u-1)/l,(int)(u-1)%l, "vert");
         }
 
-        if (!MatVal(isSet,u+l) && !MatVal(lab->map,u+l) && MatVal(dist,u) != INT_MAX
+        if (!MatVal(isSet,u+l) && !MatVal(lab->map,u+l) 
                                     && MatVal(dist,u)+1 < MatVal(dist,u+l)){
             MatSet(dist,u+l,MatVal(dist,u)+1);
             SetPointGraphe((int)(u+l)/l,(int)(u+l)%l, "vert");
         }
 
-        if (!MatVal(isSet,u-l) && !MatVal(lab->map,u-l) && MatVal(dist,u) != INT_MAX
+        if (!MatVal(isSet,u-l) && !MatVal(lab->map,u-l) 
                                     && MatVal(dist,u)+1 < MatVal(dist,u-l)){
             MatSet(dist,u-l,MatVal(dist,u)+1);
             SetPointGraphe((int)(u-l)/l,(int)(u-l)%l, "vert");
