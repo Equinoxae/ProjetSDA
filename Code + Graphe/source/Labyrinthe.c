@@ -225,8 +225,8 @@ void LabInit(Labyrinthe *lab,  Ens *v, int w ,int h){
         for(j = 0 ; j < w ; j++){
             if( i == 0 || i == h-1 || j == 0 || j == w-1 ){
                 MatSet2(lab->map, i, j, 1);
-		if(v_graph)
-		    SetPointGraphe(i,j,"noir");
+        if(v_graph)
+            SetPointGraphe(i,j,"noir");
             }
             else{
                 EnsAjoute(v, i, j);
@@ -253,8 +253,8 @@ void Granularise(Labyrinthe *lab  , Ens *v, Ens * v_fin , int nb){
         if( EstConstructible(lab , v, tirage,1 ) ){
 
             MatSet2(lab->map, tirage->x ,tirage->y , 1);
-	    if(v_graph)
-		SetPointGraphe(tirage->x,tirage->y,"noir");
+        if(v_graph)
+        SetPointGraphe(tirage->x,tirage->y,"noir");
             verifTour(lab,v_fin,tirage,1);
             count++;
 
@@ -277,8 +277,8 @@ void LabConstruit(Labyrinthe *lab  , Ens * v){
 
         if(EstConstructible(lab,v,tirage,0)){
             MatSet2(lab->map, tirage->x ,tirage->y , 1);
-	    if(v_graph)
-		SetPointGraphe(tirage->x,tirage->y,"noir");
+        if(v_graph)
+        SetPointGraphe(tirage->x,tirage->y,"noir");
             verifTour(lab ,v,tirage,0);
         }
         else if(d_graph){
@@ -355,8 +355,10 @@ void dijkstra(Labyrinthe * lab){
     // Distance of source vertex from itself is always 0
     MatSet2(dist,1,1,0);
     SetPointGraphe(1,1, "vert");
+    printf("%i \n",MatVal2(isSet,1,1));
 
     int l = lab->map->l;
+    int h = lab->map->h;
 
     // Find shortest path for all vertices
     int count;
@@ -369,9 +371,13 @@ void dijkstra(Labyrinthe * lab){
         int min = INT_MAX;
 
         int v;
-        for (v = l; v < V-l; v++){
-            if (!MatVal(lab->map,v) && !MatVal(isSet,v) && MatVal(dist,v) <= min){
-                min = MatVal(dist,u);
+        for (v = 0; v < V-l; v++){
+
+
+
+            if (!MatVal(lab->map,v)
+            && !MatVal(isSet,v) && MatVal(dist,v) <= min){
+                min = MatVal(dist,v);
                 u = v;
             }
         }
@@ -380,25 +386,25 @@ void dijkstra(Labyrinthe * lab){
         MatSet(isSet,u,1);
 
 
-        if (!MatVal(isSet,u+1) && !MatVal(lab->map,u+1) && MatVal(dist,u) != INT_MAX
+        if (!MatVal(isSet,u+1) && !MatVal(lab->map,u+1)
                                     && MatVal(dist,u)+1 < MatVal(dist,u+1)){
             MatSet(dist,u+1,MatVal(dist,u)+1);
             SetPointGraphe((int)(u+1)/l,(int)(u+1)%l, "vert");
         }
 
-        if (!MatVal(isSet,u-1) && !MatVal(lab->map,u-1) && MatVal(dist,u) != INT_MAX
+        if (!MatVal(isSet,u-1) && !MatVal(lab->map,u-1)
                                     && MatVal(dist,u)+1 < MatVal(dist,u-1)){
             MatSet(dist,u-1,MatVal(dist,u)+1);
             SetPointGraphe((int)(u-1)/l,(int)(u-1)%l, "vert");
         }
 
-        if (!MatVal(isSet,u+l) && !MatVal(lab->map,u+l) && MatVal(dist,u) != INT_MAX
+        if (!MatVal(isSet,u+l) && !MatVal(lab->map,u+l)
                                     && MatVal(dist,u)+1 < MatVal(dist,u+l)){
             MatSet(dist,u+l,MatVal(dist,u)+1);
             SetPointGraphe((int)(u+l)/l,(int)(u+l)%l, "vert");
         }
 
-        if (!MatVal(isSet,u-l) && !MatVal(lab->map,u-l) && MatVal(dist,u) != INT_MAX
+        if (!MatVal(isSet,u-l) && !MatVal(lab->map,u-l)
                                     && MatVal(dist,u)+1 < MatVal(dist,u-l)){
             MatSet(dist,u-l,MatVal(dist,u)+1);
             SetPointGraphe((int)(u-l)/l,(int)(u-l)%l, "vert");
@@ -407,5 +413,33 @@ void dijkstra(Labyrinthe * lab){
 
         // print the constructed distance array
 
+    }
+
+
+    int d = MatVal2(dist,h-2,l-2);
+    int p = (h-2)*l+l-2;
+
+    while(d>=0){
+        SetPointGraphe((int)(p-l)/l+1,(int)(p-l)%l, "rouge");
+        if(!d){
+            // fin
+        }
+        else if(MatVal(dist,p-1) == d-1){
+            p = p-1;
+        }
+        else if(MatVal(dist,p-l) == d-1){
+            p = p-l;
+        }
+        else if(MatVal(dist,p+1) == d-1){
+            p = p+1;
+        }
+        else if(MatVal(dist,p+l) == d-1){
+            p = p+l;
+        }
+        else{
+            printf("erreur chemin\n");
+            d=0;
+        }
+        d--;
     }
 }
