@@ -159,16 +159,22 @@ void EnsSuppr(Ens *e, int x, int y){
 
 void EnsSupprPremier(Ens *e){
     Noeud *n = e->premier;
-    n->next->previous = NULL;
-    e->premier = n->next;
+
+	if(n->next!=NULL)
+    	n->next->previous = NULL;
+    
+	e->premier = n->next;
     NoeudSuppr(n);
     e->taille--;
 }
 
 void EnsSupprDernier(Ens *e){
     Noeud *n = e->dernier;
-    n->previous->next = NULL;
-    e->dernier = n->previous;
+	
+	if(n->previous!=NULL)
+    	n->previous->next = NULL;
+    
+	e->dernier = n->previous;
     NoeudSuppr(n);
     e->taille--;
 }

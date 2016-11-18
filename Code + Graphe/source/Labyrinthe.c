@@ -358,11 +358,11 @@ void dijkstra(Labyrinthe * lab){
     // Distance of source vertex from itself is always 0
     MatSet2(dist,1,1,0);
     SetPointGraphe(1,1, "vert");
-    printf("%i \n",MatVal2(isSet,1,1));
     EnsAjoute(plusPetit,1,1);
 
     int l = lab->map->l;
     int h = lab->map->h;
+
 
     // Find shortest path for all vertices
 
@@ -371,8 +371,7 @@ void dijkstra(Labyrinthe * lab){
         // yet processed. u is always equal to src in first iteration.
 
         Noeud * n = plusPetit->premier;
-        EnsSupprPremier(plusPetit);
-
+        
         int u = n->x*l+n->y;
 
         // Initialize min value
@@ -409,6 +408,8 @@ void dijkstra(Labyrinthe * lab){
             EnsAjoute(plusPetit, (int)(u-l)/l , (u-l)%l);
             SetPointGraphe((int)(u-l)/l,(int)(u-l)%l, "vert");
         }
+
+		EnsSupprPremier(plusPetit);
 
     }
 
