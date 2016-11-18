@@ -205,6 +205,7 @@ void verifTour(Labyrinthe *lab  , Ens *v, Noeud * point,int init){
     // Case En-Bas
     if( !EstConstruit(lab , x+1 , y )){
         if(EstConstructible(lab,v,NoeudInit(x+1,y),init)){
+
             EnsAjoute(v,x+1,y);
             if(d_graph)
                 SetPointGraphe(x+1,y,"rouge");
@@ -225,11 +226,12 @@ void LabInit(Labyrinthe *lab,  Ens *v, int w ,int h){
         for(j = 0 ; j < w ; j++){
             if( i == 0 || i == h-1 || j == 0 || j == w-1 ){
                 MatSet2(lab->map, i, j, 1);
-        if(v_graph)
-            SetPointGraphe(i,j,"noir");
+        	
+			if(v_graph)
+            	SetPointGraphe(i,j,"noir");
             }
             else{
-                EnsAjoute(v, i, j);
+                //EnsAjoute(v, i, j);
             }
         }
     }
@@ -238,24 +240,74 @@ void LabInit(Labyrinthe *lab,  Ens *v, int w ,int h){
 
 void Granularise(Labyrinthe *lab  , Ens *v, Ens * v_fin , int nb){
 
+	int h = lab->map->h;
+	int l = lab->map->l;
+
+	int gg = rand()%(h-10)+5;
+	int gh = rand()%(l-10)+5;
+	int gd = rand()%(h-10)+5;
+	int gb = rand()%(l-10)+5;
+
+	// Noeud gauche
+
+	MatSet2(lab->map, gg , 1 , 1);
+
+	if(v_graph)
+		SetPointGraphe(gg,1,"noir");
+    
+	verifTour(lab,v_fin,NoeudInit(gg,1),1);
+
+    EnsSuppr(v, gg ,1);
+
+	// Noeud haut
+
+	MatSet2(lab->map, 1 , gh , 1);
+
+	if(v_graph)
+		SetPointGraphe(1 , gh ,"noir");
+    
+	verifTour(lab,v_fin,NoeudInit(1,gh),1);
+
+    EnsSuppr(v, 1 ,gh);
+
+	// Noeud droite
+
+	MatSet2(lab->map, gd , l-2 , 1);
+
+	if(v_graph)
+		SetPointGraphe(gd,l-2,"noir");
+    
+	verifTour(lab,v_fin,NoeudInit(gd,l-2),1);
+
+    EnsSuppr(v, gd ,l-2);
+
+	// Noeud bas
+
+	MatSet2(lab->map, h-2 , gb , 1);
+
+	if(v_graph)
+		SetPointGraphe(h-2 , gb ,"noir");
+    
+	verifTour(lab,v_fin,NoeudInit(h-2,gb),1);
+
+    EnsSuppr(v, h-2 ,gb);
+
+	
     int count = 0;
     int res;
 
-    if(nb == 0){
-        printf("Ratio trop petit !\n");
-        exit(50);
-    }
+    while( count < nb /*&& !EnsEstVide(v)*/){
 
-    while( count < nb && !EnsEstVide(v)){
-
-        Noeud * tirage = EnsTirage(v);
+        Noeud * tirage = NoeudInit(rand()%(h-2)+1,rand()%(l-2)+1);
 
         if( EstConstructible(lab , v, tirage,1 ) ){
 
             MatSet2(lab->map, tirage->x ,tirage->y , 1);
-        if(v_graph)
-        SetPointGraphe(tirage->x,tirage->y,"noir");
-            verifTour(lab,v_fin,tirage,1);
+
+        	if(v_graph)
+        		SetPointGraphe(tirage->x,tirage->y,"noir");
+            
+			verifTour(lab,v_fin,tirage,1);
             count++;
 
         }
@@ -263,7 +315,9 @@ void Granularise(Labyrinthe *lab  , Ens *v, Ens * v_fin , int nb){
             SetPointGraphe(tirage->x,tirage->y,"blanc");
         }
 
-        EnsSuppr(v, tirage->x ,tirage->y);
+		NoeudSuppr(tirage);
+
+        //EnsSuppr(v, tirage->x ,tirage->y);
     }
 }
 
@@ -315,8 +369,19 @@ void SetPointGraphe(int x, int y, char * color){
             setcolor(newcolor(0,0,0));
     else if (!strcmp(color,"rouge"))
             setcolor(newcolor(1,0,0));
-    else if (!strcmp(color,"vert") )
-            setcolor(newcolor(0,1,0));
+    else if (!strcmp(color,"vert") ){
+    	/*switch(rand()%3){
+			case 0 :
+	         setcolor(newcolor(0,0.8,0));
+			break;
+			case 1 :
+	         setcolor(newcolor(0,1,0.4));
+			break;
+			case 2 :
+	         setcolor(newcolor(0,1,0));
+		}*/
+		setcolor(newcolor(0,1,0));
+	}
     else if (!strcmp(color,"bleu"))
             setcolor(newcolor(0,0,1));
 
@@ -366,7 +431,7 @@ void dijkstra(Labyrinthe * lab){
 
     // Find shortest path for all vertices
 
-    while(!EnsEstVide(plusPetit)){
+    while(!EnsEstVide(plusPetit) && MatVal2(dist,h-2,l-2) == INT_MAX){
         // Pick the minimum distance vertex from the set of vertices not
         // yet processed. u is always equal to src in first iteration.
 
@@ -444,5 +509,9 @@ void dijkstra(Labyrinthe * lab){
         }
         d--;
     }
+
+	MatFree(dist);
+	MatFree(isSet);
+	EnsFree(plusPetit);
 
 }
