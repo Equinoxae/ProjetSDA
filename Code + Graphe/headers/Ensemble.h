@@ -34,11 +34,19 @@ int EnsEstVide(Ens *e); // teste si un ensemble est vide
 
 void EnsAjoute(Ens *e, int x, int y); // ajoute un couple à un ensemble
 
-int EnsFind(Ens *e, int x, int y);
+void EnsAjouteTrie(Ens *e, int x, int y);
 
-Noeud *EnsFindIndex(Ens *e, int index);
+int EnsFind(Ens *e, int x, int y); // OK
+
+Noeud *EnsFindIndex(Ens *e, int index); // OK
+
+Noeud *EnsFindSupprIndex(Ens *e, int index);
 
 void EnsSuppr(Ens *e, int x, int y); // retire un couple à un ensemble
+
+void EnsSupprPremier(Ens *e);
+
+void EnsSupprDernier(Ens *e);
 
 int EnsEstDans(Ens *e, int x,int y); // teste si un couple appartient à un ensemble
 

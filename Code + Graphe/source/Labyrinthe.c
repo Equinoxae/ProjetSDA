@@ -345,6 +345,9 @@ void dijkstra(Labyrinthe * lab){
     //bool sptSet[V]; // sptSet[i] will true if vertex i is included in shortest
     // path tree or shortest distance from src to i is finalized
 
+    // Ensemble donnant le sommet avec la distance la plus petite en premiere position
+    Ens *plusPetit = EnsAlloc();
+
     int V = lab->map->l*lab->map->h;
 
     // Initialize all distances as INFINITE and stpSet[] as false
@@ -356,31 +359,24 @@ void dijkstra(Labyrinthe * lab){
     MatSet2(dist,1,1,0);
     SetPointGraphe(1,1, "vert");
     printf("%i \n",MatVal2(isSet,1,1));
+    EnsAjoute(plusPetit,1,1);
 
     int l = lab->map->l;
     int h = lab->map->h;
 
     // Find shortest path for all vertices
-    int count;
-    for (count = lab->map->l + 2; count < V -1 - l; count++) {
+
+    while(!EnsEstVide(plusPetit)){
         // Pick the minimum distance vertex from the set of vertices not
         // yet processed. u is always equal to src in first iteration.
-        int u;
+
+        Noeud * n = plusPetit->premier;
+        EnsSupprPremier(plusPetit);
+
+        int u = n->x*l+n->y;
 
         // Initialize min value
-        int min = INT_MAX;
-
-        int v;
-        for (v = 0; v < V-l; v++){
-
-
-
-            if (!MatVal(lab->map,v)
-            && !MatVal(isSet,v) && MatVal(dist,v) <= min){
-                min = MatVal(dist,v);
-                u = v;
-            }
-        }
+        int min = MatVal(dist,u);
 
         // Mark the picked vertex as processed
         MatSet(isSet,u,1);
@@ -388,34 +384,35 @@ void dijkstra(Labyrinthe * lab){
 
         if (!MatVal(isSet,u+1) && !MatVal(lab->map,u+1)
                                     && MatVal(dist,u)+1 < MatVal(dist,u+1)){
-            MatSet(dist,u+1,MatVal(dist,u)+1);
-            SetPointGraphe((int)(u+1)/l,(int)(u+1)%l, "vert");
+            MatSet(dist ,u+1 ,MatVal(dist,u)+1);
+            EnsAjoute(plusPetit, (int)(u+1)/l , (u+1)%l);
+            SetPointGraphe((int)(u+1)/l , (u+1)%l, "vert");
         }
 
         if (!MatVal(isSet,u-1) && !MatVal(lab->map,u-1)
                                     && MatVal(dist,u)+1 < MatVal(dist,u-1)){
             MatSet(dist,u-1,MatVal(dist,u)+1);
+            EnsAjoute(plusPetit, (int)(u-1)/l , (u-1)%l);
             SetPointGraphe((int)(u-1)/l,(int)(u-1)%l, "vert");
         }
 
         if (!MatVal(isSet,u+l) && !MatVal(lab->map,u+l)
                                     && MatVal(dist,u)+1 < MatVal(dist,u+l)){
             MatSet(dist,u+l,MatVal(dist,u)+1);
+            EnsAjoute(plusPetit, (int)(u+l)/l , (u+l)%l);
             SetPointGraphe((int)(u+l)/l,(int)(u+l)%l, "vert");
         }
 
         if (!MatVal(isSet,u-l) && !MatVal(lab->map,u-l)
                                     && MatVal(dist,u)+1 < MatVal(dist,u-l)){
             MatSet(dist,u-l,MatVal(dist,u)+1);
+            EnsAjoute(plusPetit, (int)(u-l)/l , (u-l)%l);
             SetPointGraphe((int)(u-l)/l,(int)(u-l)%l, "vert");
         }
 
-
-        // print the constructed distance array
-
     }
 
-
+    // print the constructed distance array
     int d = MatVal2(dist,h-2,l-2);
     int p = (h-2)*l+l-2;
 
@@ -436,10 +433,15 @@ void dijkstra(Labyrinthe * lab){
         else if(MatVal(dist,p+l) == d-1){
             p = p+l;
         }
+        else if(MatVal(dist,p) == INT_MAX){
+            printf("Il n'y a pas de sortie\n");
+            d=0;
+        }
         else{
-            printf("erreur chemin\n");
+            printf("Erreur\n");
             d=0;
         }
         d--;
     }
+
 }

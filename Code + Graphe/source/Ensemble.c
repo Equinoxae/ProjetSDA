@@ -106,7 +106,7 @@ Noeud *EnsFindIndex(Ens *e, int index){
         for( i = 0; i<index && n->next != NULL  ;i++){
             n=n->next;
         }
-        
+
         return n;
     }
     else{
@@ -115,7 +115,7 @@ Noeud *EnsFindIndex(Ens *e, int index){
         for(i = EnsTaille(e); i>index && n->previous != NULL;i--){
             n=n->previous;
         }
-    
+
         return n;
     }
 }
@@ -155,6 +155,22 @@ void EnsSuppr(Ens *e, int x, int y){
             n = n->next;
     }
 
+}
+
+void EnsSupprPremier(Ens *e){
+    Noeud *n = e->premier;
+    n->next->previous = NULL;
+    e->premier = n->next;
+    NoeudSuppr(n);
+    e->taille--;
+}
+
+void EnsSupprDernier(Ens *e){
+    Noeud *n = e->dernier;
+    n->previous->next = NULL;
+    e->dernier = n->previous;
+    NoeudSuppr(n);
+    e->taille--;
 }
 
 // complexité O(n)
