@@ -21,11 +21,11 @@ int EstConstruit(Labyrinthe *lab , int x ,int y);
 
 int EstConstructible(Labyrinthe *lab  , Ens *v, Noeud * point, int init);
 
-void LabInit(Labyrinthe *lab, Ens *v, int w ,int h); // construit les bords initialise les Ens
+void LabInit(Labyrinthe *lab, int w ,int h); // construit les bords initialise les Ens
 
 void verifTour(Labyrinthe *lab  , Ens *v, Noeud * point,int init);
 
-void Granularise(Labyrinthe *lab ,Ens *v, Ens * v_fin , int nb);
+void Granularise(Labyrinthe *lab ,Ens *v, int nb);
 
 void LabConstruit(Labyrinthe *lab ,Ens *v);
 

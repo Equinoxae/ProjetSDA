@@ -39,23 +39,21 @@ Labyrinthe *LabCreate(int w,int h,float r){
     l->map = MatAlloc(W,H);
     // Ensemble vide
     v = EnsAlloc();
-    v_init = EnsAlloc();
 
     // Tour + Graine
-    LabInit( l, v_init, W, H);
+    LabInit( l, W, H);
 
-    Granularise(l ,v_init , v , (int)( w * h * r ) );
+    Granularise(l , v , (int)( w * h * r ) );
 
     // Expention graine
     LabConstruit(l, v);
 
     EnsFree(v);
-    EnsFree(v_init);
 
     if(v_graph){
-       waitgraph();
+      // waitgraph();
        dijkstra(l);
-       waitgraph();
+      // waitgraph();
        closegraph();
     }
 
@@ -219,26 +217,42 @@ void verifTour(Labyrinthe *lab  , Ens *v, Noeud * point,int init){
 }
 
 // Init matice
-void LabInit(Labyrinthe *lab,  Ens *v, int w ,int h){
+void LabInit(Labyrinthe *lab, int w ,int h){
 
-    int i,j; //x , y
-    for(i = 0; i < h ; i++){
-        for(j = 0 ; j < w ; j++){
-            if( i == 0 || i == h-1 || j == 0 || j == w-1 ){
-                MatSet2(lab->map, i, j, 1);
+    int i;
+
+    for(i = 0; i < w ; i++){
+		MatSet2(lab->map, 0, i, 1);
         	
-			if(v_graph)
-            	SetPointGraphe(i,j,"noir");
-            }
-            else{
-                //EnsAjoute(v, i, j);
-            }
-        }
-    }
+		if(v_graph)
+           	SetPointGraphe(0,i,"noir");
+	}
+	
+    for(i = 1; i < h-1 ; i++){
+		MatSet2(lab->map, i, w-1, 1);
+        	
+		if(v_graph)
+           	SetPointGraphe(i,w-1,"noir");
+	}
 
+
+	for(i = w-1; i >= 0; i--){
+		MatSet2(lab->map, h-1, i, 1);
+        	
+		if(v_graph)
+           	SetPointGraphe(h-1,i,"noir");
+	}
+
+	for(i = h-2; i > 0; i--){
+		MatSet2(lab->map,i, 0, 1);
+        	
+		if(v_graph)
+           	SetPointGraphe(i,0,"noir");
+	}	
+	
 }
 
-void Granularise(Labyrinthe *lab  , Ens *v, Ens * v_fin , int nb){
+void Granularise(Labyrinthe *lab  , Ens *v, int nb){
 
 	int h = lab->map->h;
 	int l = lab->map->l;
@@ -255,9 +269,7 @@ void Granularise(Labyrinthe *lab  , Ens *v, Ens * v_fin , int nb){
 	if(v_graph)
 		SetPointGraphe(gg,1,"noir");
     
-	verifTour(lab,v_fin,NoeudInit(gg,1),1);
-
-    EnsSuppr(v, gg ,1);
+	verifTour(lab,v,NoeudInit(gg,1),1);
 
 	// Noeud haut
 
@@ -266,9 +278,7 @@ void Granularise(Labyrinthe *lab  , Ens *v, Ens * v_fin , int nb){
 	if(v_graph)
 		SetPointGraphe(1 , gh ,"noir");
     
-	verifTour(lab,v_fin,NoeudInit(1,gh),1);
-
-    EnsSuppr(v, 1 ,gh);
+	verifTour(lab,v,NoeudInit(1,gh),1);
 
 	// Noeud droite
 
@@ -277,9 +287,7 @@ void Granularise(Labyrinthe *lab  , Ens *v, Ens * v_fin , int nb){
 	if(v_graph)
 		SetPointGraphe(gd,l-2,"noir");
     
-	verifTour(lab,v_fin,NoeudInit(gd,l-2),1);
-
-    EnsSuppr(v, gd ,l-2);
+	verifTour(lab,v,NoeudInit(gd,l-2),1);
 
 	// Noeud bas
 
@@ -288,11 +296,8 @@ void Granularise(Labyrinthe *lab  , Ens *v, Ens * v_fin , int nb){
 	if(v_graph)
 		SetPointGraphe(h-2 , gb ,"noir");
     
-	verifTour(lab,v_fin,NoeudInit(h-2,gb),1);
+	verifTour(lab,v,NoeudInit(h-2,gb),1);
 
-    EnsSuppr(v, h-2 ,gb);
-
-	
     int count = 0;
     int res;
 
@@ -307,17 +312,15 @@ void Granularise(Labyrinthe *lab  , Ens *v, Ens * v_fin , int nb){
         	if(v_graph)
         		SetPointGraphe(tirage->x,tirage->y,"noir");
             
-			verifTour(lab,v_fin,tirage,1);
+			verifTour(lab,v,tirage,1);
             count++;
 
         }
-        else if(d_graph){
+        else if(d_graph && !EstConstruit(lab,tirage->x,tirage->y)){
             SetPointGraphe(tirage->x,tirage->y,"blanc");
         }
 
 		NoeudSuppr(tirage);
-
-        //EnsSuppr(v, tirage->x ,tirage->y);
     }
 }
 
@@ -331,11 +334,11 @@ void LabConstruit(Labyrinthe *lab  , Ens * v){
 
         if(EstConstructible(lab,v,tirage,0)){
             MatSet2(lab->map, tirage->x ,tirage->y , 1);
-        if(v_graph)
-        SetPointGraphe(tirage->x,tirage->y,"noir");
+        	if(v_graph)
+        		SetPointGraphe(tirage->x,tirage->y,"noir");
             verifTour(lab ,v,tirage,0);
         }
-        else if(d_graph){
+        else if(d_graph && !EstConstruit(lab,tirage->x,tirage->y)){
                 SetPointGraphe(tirage->x,tirage->y,"blanc");
         }
 
@@ -403,24 +406,17 @@ void dijkstra(Labyrinthe * lab){
 
 
     Matrice * dist = MatAlloc(lab->map->l,lab->map->h);
-    //int dist[V];     // The output array.  dist[i] will hold the shortest
-    // distance from src to i
-
     Matrice * isSet = MatAlloc(lab->map->l,lab->map->h);
-    //bool sptSet[V]; // sptSet[i] will true if vertex i is included in shortest
-    // path tree or shortest distance from src to i is finalized
 
     // Ensemble donnant le sommet avec la distance la plus petite en premiere position
     Ens *plusPetit = EnsAlloc();
 
     int V = lab->map->l*lab->map->h;
 
-    // Initialize all distances as INFINITE and stpSet[] as false
     int i;
     for (i = 0; i < V; i++)
         MatSet(dist,i,INT_MAX);
 
-    // Distance of source vertex from itself is always 0
     MatSet2(dist,1,1,0);
     SetPointGraphe(1,1, "vert");
     EnsAjoute(plusPetit,1,1);
@@ -429,22 +425,15 @@ void dijkstra(Labyrinthe * lab){
     int h = lab->map->h;
 
 
-    // Find shortest path for all vertices
 
     while(!EnsEstVide(plusPetit) && MatVal2(dist,h-2,l-2) == INT_MAX){
-        // Pick the minimum distance vertex from the set of vertices not
-        // yet processed. u is always equal to src in first iteration.
 
         Noeud * n = plusPetit->premier;
         
         int u = n->x*l+n->y;
-
-        // Initialize min value
         int min = MatVal(dist,u);
 
-        // Mark the picked vertex as processed
         MatSet(isSet,u,1);
-
 
         if (!MatVal(isSet,u+1) && !MatVal(lab->map,u+1)
                                     && MatVal(dist,u)+1 < MatVal(dist,u+1)){
@@ -478,13 +467,15 @@ void dijkstra(Labyrinthe * lab){
 
     }
 
-    // print the constructed distance array
+    // print 
     int d = MatVal2(dist,h-2,l-2);
     int p = (h-2)*l+l-2;
 
     while(d>=0){
+
         SetPointGraphe((int)(p-l)/l+1,(int)(p-l)%l, "rouge");
-        if(!d){
+        
+		if(!d){
             // fin
         }
         else if(MatVal(dist,p-1) == d-1){
@@ -500,7 +491,7 @@ void dijkstra(Labyrinthe * lab){
             p = p+l;
         }
         else if(MatVal(dist,p) == INT_MAX){
-            printf("Il n'y a pas de sortie\n");
+            printf("Il n'y a pas de chemin vers la sortie\n");
             d=0;
         }
         else{
