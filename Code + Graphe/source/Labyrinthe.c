@@ -21,7 +21,7 @@ Labyrinthe *LabCreate(int w,int h,float r){
 
     //var
     Labyrinthe * l = malloc(sizeof(Labyrinthe));
-    Ens * v, *v_init; // case vide (constructible)
+    Ens * v; // case vide (constructible)
 
 
 
@@ -35,7 +35,6 @@ Labyrinthe *LabCreate(int w,int h,float r){
     }
 
     // init
-
     l->map = MatAlloc(W,H);
     // Ensemble vide
     v = EnsAlloc();
@@ -51,9 +50,9 @@ Labyrinthe *LabCreate(int w,int h,float r){
     EnsFree(v);
 
     if(v_graph){
-      // waitgraph();
+      waitgraph();
        dijkstra(l);
-      // waitgraph();
+       waitgraph();
        closegraph();
     }
 
@@ -342,7 +341,9 @@ void LabConstruit(Labyrinthe *lab  , Ens * v){
                 SetPointGraphe(tirage->x,tirage->y,"blanc");
         }
 
-        EnsSuppr(v, tirage->x ,tirage->y);
+		NoeudSuppr(tirage);
+		//EnsSuppr(v,tirage->x,tirage->y);
+
     }
 
 }

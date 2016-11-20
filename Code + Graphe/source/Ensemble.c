@@ -120,6 +120,69 @@ Noeud *EnsFindIndex(Ens *e, int index){
     }
 }
 
+Noeud *EnsFindSupprIndex(Ens *e, int index){
+
+    if(index <= EnsTaille(e)/2) {
+        Noeud *n = e->premier;
+        int i;
+        for( i = 0; i<index && n->next != NULL  ;i++)
+            n=n->next;
+			
+			if(n->next == NULL && n->previous == NULL){
+                e->premier = NULL;
+                e->dernier = NULL;
+                e->taille = 0;
+            }
+            else if(n->next == NULL){
+                n->previous->next = NULL;
+                e->dernier = n->previous;
+				e->taille--;
+            }
+            else if(n->previous == NULL){
+                n->next->previous = NULL;
+                e->premier = n->next;
+				e->taille--;
+            }
+            else{
+                n->previous->next = n->next;
+                n->next->previous = n->previous;
+				e->taille--;
+            }
+
+        return n;
+    }
+    else{
+        Noeud *n = e->dernier;
+        int i;
+        for(i = EnsTaille(e); i>index && n->previous != NULL;i--)
+            n=n->previous;
+
+			if(n->next == NULL && n->previous == NULL){
+                e->premier = NULL;
+                e->dernier = NULL;
+                e->taille = 0;
+            }
+            else if(n->next == NULL){
+                n->previous->next = NULL;
+                e->dernier = n->previous;
+				e->taille--;            
+			}
+            else if(n->previous == NULL){
+                n->next->previous = NULL;
+                e->premier = n->next;
+	            e->taille--;
+            }
+            else{
+                n->previous->next = n->next;
+                n->next->previous = n->previous;
+				e->taille--;
+            }
+
+
+        return n;
+    }
+}
+
 // complexité O(n)
 void EnsSuppr(Ens *e, int x, int y){
 
@@ -208,5 +271,5 @@ Noeud * EnsTirage(Ens *e){
     /* tirage */
     index = rand() % EnsTaille(e);
     //printf("index : %i\n",index );
-    return EnsFindIndex(e,index);
+    return EnsFindSupprIndex(e,index);
 }
