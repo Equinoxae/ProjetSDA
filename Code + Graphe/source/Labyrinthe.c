@@ -49,7 +49,7 @@ Labyrinthe *LabCreate(int w,int h,float r){
 
     if(v_graph){
       	waitgraph();
-      	//dijkstra(l);
+      	dijkstra(l);
 		A_Star(l);      
 		waitgraph();
     	closegraph();
@@ -418,7 +418,8 @@ void dijkstra(Labyrinthe * lab){
         MatSet(dist,i,INT_MAX);
 
     MatSet2(dist,1,1,0);
-    SetPointGraphe(1,1, "vert");
+	if(d_graph)
+	    SetPointGraphe(1,1, "vert");
     EnsAjoute(plusPetit,1,1);
 
     int l = lab->map->l;
@@ -439,28 +440,32 @@ void dijkstra(Labyrinthe * lab){
                                     && MatVal(dist,u)+1 < MatVal(dist,u+1)){
             MatSet(dist ,u+1 ,MatVal(dist,u)+1);
             EnsAjoute(plusPetit, (int)(u+1)/l , (u+1)%l);
-            SetPointGraphe((int)(u+1)/l , (u+1)%l, "vert");
+			if(d_graph)	
+	            SetPointGraphe((int)(u+1)/l , (u+1)%l, "vert");
         }
 
         if (!MatVal(isSet,u-1) && !MatVal(lab->map,u-1)
                                     && MatVal(dist,u)+1 < MatVal(dist,u-1)){
             MatSet(dist,u-1,MatVal(dist,u)+1);
             EnsAjoute(plusPetit, (int)(u-1)/l , (u-1)%l);
-            SetPointGraphe((int)(u-1)/l,(int)(u-1)%l, "vert");
+			if(d_graph)        
+			    SetPointGraphe((int)(u-1)/l,(int)(u-1)%l, "vert");
         }
 
         if (!MatVal(isSet,u+l) && !MatVal(lab->map,u+l)
                                     && MatVal(dist,u)+1 < MatVal(dist,u+l)){
             MatSet(dist,u+l,MatVal(dist,u)+1);
             EnsAjoute(plusPetit, (int)(u+l)/l , (u+l)%l);
-            SetPointGraphe((int)(u+l)/l,(int)(u+l)%l, "vert");
+			if(d_graph)    
+	        	SetPointGraphe((int)(u+l)/l,(int)(u+l)%l, "vert");
         }
 
         if (!MatVal(isSet,u-l) && !MatVal(lab->map,u-l)
                                     && MatVal(dist,u)+1 < MatVal(dist,u-l)){
             MatSet(dist,u-l,MatVal(dist,u)+1);
             EnsAjoute(plusPetit, (int)(u-l)/l , (u-l)%l);
-            SetPointGraphe((int)(u-l)/l,(int)(u-l)%l, "vert");
+			if(d_graph)
+	            SetPointGraphe((int)(u-l)/l,(int)(u-l)%l, "vert");
         }
 
 		EnsSupprPremier(plusPetit);
@@ -469,6 +474,7 @@ void dijkstra(Labyrinthe * lab){
 
     // print
     int d = MatVal2(dist,h-2,l-2);
+	printf("Dijsktra : %i\n",d);
     int p = (h-2)*l+l-2;
 
     while(d>=0){
@@ -521,20 +527,21 @@ void A_Star(Labyrinthe * lab){
 	EnsAjouteTrie(openList,NoeudInit(1,1),heuristique);
 	MatSet2(cout,1,1,0);
 	MatSet2(heuristique,1,1,0);
-    SetPointGraphe(1,1, "vert");
+	if(d_graph)
+    	SetPointGraphe(1,1, "vert");
 
     while(!EnsEstVide(openList)){
 
         Noeud * u = EnsDepilePremier(openList);
-	    SetPointGraphe(u->x,u->y, "bleu");	
+		if(d_graph)	    
+			SetPointGraphe(u->x,u->y, "bleu");	
 		MatSet2(closedList,u->x,u->y,MatVal2(cout,u->x,u->y));        
 
 		
-        if( u->x == h-2 && u->y == h-2){
+        if( u->x == h-2 && u->y == l-2){
 
             break;
         }
-
 
 		if (!MatVal2(lab->map,u->x,u->y-1)){
 
@@ -545,7 +552,8 @@ void A_Star(Labyrinthe * lab){
 					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
 					MatSet2(heuristique,v->x,v->y,
 							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) ); 
-                	SetPointGraphe(v->x,v->y, "vert");
+					if(d_graph)
+	                	SetPointGraphe(v->x,v->y, "vert");
 				}
 				else{
 					NoeudSuppr(v);			
@@ -555,7 +563,7 @@ void A_Star(Labyrinthe * lab){
 				NoeudSuppr(v);
         }
 
-        if (!MatVal2(lab->map,u->x-1,u->y)){
+		if (!MatVal2(lab->map,u->x-1,u->y)){
 
             Noeud *v = NoeudInit(u->x-1,u->y);
 
@@ -564,8 +572,8 @@ void A_Star(Labyrinthe * lab){
 					EnsAjouteTrie(openList,v,heuristique);
 					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
 					MatSet2(heuristique,v->x,v->y,
-							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) );  
-                	SetPointGraphe(v->x,v->y, "vert");
+							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) );  	if(d_graph)
+                		SetPointGraphe(v->x,v->y, "vert");
 				}
 				else{
 					NoeudSuppr(v);			
@@ -574,6 +582,26 @@ void A_Star(Labyrinthe * lab){
 			else
 				NoeudSuppr(v);
 
+        }
+
+		if (!MatVal2(lab->map,u->x,u->y+1)){
+
+            Noeud *v = NoeudInit(u->x,u->y+1);
+            if( MatVal2(cout,v->x,v->y) == 0){
+				if( MatVal2(heuristique,v->x,v->y) == 0){
+					EnsAjouteTrie(openList,v,heuristique);
+					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
+					MatSet2(heuristique,v->x,v->y,
+							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) ); 
+					if(d_graph)
+	                	SetPointGraphe(v->x,v->y, "vert");
+				}
+				else{
+					NoeudSuppr(v);			
+				}
+			}
+			else
+				NoeudSuppr(v);
         }
 
 
@@ -587,26 +615,8 @@ void A_Star(Labyrinthe * lab){
 					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
 					MatSet2(heuristique,v->x,v->y,
 							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) ); 
-                	SetPointGraphe(v->x,v->y, "vert");
-				}
-				else{
-					NoeudSuppr(v);			
-				}
-			}
-			else
-				NoeudSuppr(v);
-        }
-
-        if (!MatVal2(lab->map,u->x,u->y+1)){
-
-            Noeud *v = NoeudInit(u->x,u->y+1);
-            if( MatVal2(cout,v->x,v->y) == 0){
-				if( MatVal2(heuristique,v->x,v->y) == 0){
-					EnsAjouteTrie(openList,v,heuristique);
-					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
-					MatSet2(heuristique,v->x,v->y,
-							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) ); 
-                	SetPointGraphe(v->x,v->y, "vert");
+					if(d_graph)
+	                	SetPointGraphe(v->x,v->y, "vert");
 				}
 				else{
 					NoeudSuppr(v);			
@@ -617,17 +627,20 @@ void A_Star(Labyrinthe * lab){
         }
 
         
+
+        
 		
     }
 
 
 	// print
     int d = MatVal2(closedList,h-2,l-2);
+	printf("A* : %i\n",d);
     int p = (h-2)*l+l-2;
 
     while(d>=0){
 
-        SetPointGraphe((int)(p-l)/l+1,(int)(p-l)%l, "rouge");
+        SetPointGraphe((int)(p-l)/l+1,(int)(p-l)%l, "bleu");
 
 		if(!d){
             // fin
