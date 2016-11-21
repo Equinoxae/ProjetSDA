@@ -15,6 +15,30 @@ void set_d(){
     d_graph = 1;
 }
 
+void set_Dij(){
+	Dij = 1;
+}
+
+void set_Dij_rech(){
+	Dij = 1;
+	Dij_rech = 1;
+	v_graph = 1;
+}
+
+void set_AStar(){
+	AStar = 1;
+}
+
+void set_AStar_rech(){
+	AStar = 1;
+	AStar_rech = 1;
+	v_graph = 1;
+}
+
+void set_Auto(){
+	Auto = 1;
+}
+
 Labyrinthe *LabCreate(int w,int h,float r){
     // init random
     srand(time(NULL));
@@ -46,14 +70,6 @@ Labyrinthe *LabCreate(int w,int h,float r){
     LabConstruit(l, v);
 
     EnsFree(v);
-
-    if(v_graph){
-      	waitgraph();
-      	dijkstra(l);
-		A_Star(l);      
-		waitgraph();
-    	closegraph();
-    }
 
     return l;
 }
@@ -373,17 +389,10 @@ void SetPointGraphe(int x, int y, char * color){
     else if (!strcmp(color,"rouge"))
             setcolor(newcolor(1,0,0));
     else if (!strcmp(color,"vert") ){
-    	/*switch(rand()%3){
-			case 0 :
-	         setcolor(newcolor(0,0.8,0));
-			break;
-			case 1 :
-	         setcolor(newcolor(0,1,0.4));
-			break;
-			case 2 :
-	         setcolor(newcolor(0,1,0));
-		}*/
 		setcolor(newcolor(0,1,0));
+	}
+	else if (!strcmp(color,"vertf") ){
+		setcolor(newcolor(0,0.4,0));
 	}
     else if (!strcmp(color,"bleu"))
             setcolor(newcolor(0,0.5,1));
@@ -402,6 +411,29 @@ void SetPointGraphe(int x, int y, char * color){
     refresh();
 }
 
+void lanceRecherche(Labyrinthe *lab){
+
+	if(!Auto && Dij)
+		waitgraph();
+
+	if(Dij)
+		dijkstra(lab);
+
+	if(!Auto && AStar)
+		waitgraph();
+
+	if(AStar)
+		A_Star(lab);
+	
+	if(v_graph)
+		waitgraph();
+	
+	if(v_graph)
+		closegraph();
+
+}
+
+
 void dijkstra(Labyrinthe * lab){
 
 
@@ -418,7 +450,7 @@ void dijkstra(Labyrinthe * lab){
         MatSet(dist,i,INT_MAX);
 
     MatSet2(dist,1,1,0);
-	if(d_graph)
+	if(Dij_rech)
 	    SetPointGraphe(1,1, "vert");
     EnsAjoute(plusPetit,1,1);
 
@@ -440,7 +472,7 @@ void dijkstra(Labyrinthe * lab){
                                     && MatVal(dist,u)+1 < MatVal(dist,u+1)){
             MatSet(dist ,u+1 ,MatVal(dist,u)+1);
             EnsAjoute(plusPetit, (int)(u+1)/l , (u+1)%l);
-			if(d_graph)	
+			if(Dij_rech)	
 	            SetPointGraphe((int)(u+1)/l , (u+1)%l, "vert");
         }
 
@@ -448,7 +480,7 @@ void dijkstra(Labyrinthe * lab){
                                     && MatVal(dist,u)+1 < MatVal(dist,u-1)){
             MatSet(dist,u-1,MatVal(dist,u)+1);
             EnsAjoute(plusPetit, (int)(u-1)/l , (u-1)%l);
-			if(d_graph)        
+			if(Dij_rech)        
 			    SetPointGraphe((int)(u-1)/l,(int)(u-1)%l, "vert");
         }
 
@@ -456,7 +488,7 @@ void dijkstra(Labyrinthe * lab){
                                     && MatVal(dist,u)+1 < MatVal(dist,u+l)){
             MatSet(dist,u+l,MatVal(dist,u)+1);
             EnsAjoute(plusPetit, (int)(u+l)/l , (u+l)%l);
-			if(d_graph)    
+			if(Dij_rech)    
 	        	SetPointGraphe((int)(u+l)/l,(int)(u+l)%l, "vert");
         }
 
@@ -464,7 +496,7 @@ void dijkstra(Labyrinthe * lab){
                                     && MatVal(dist,u)+1 < MatVal(dist,u-l)){
             MatSet(dist,u-l,MatVal(dist,u)+1);
             EnsAjoute(plusPetit, (int)(u-l)/l , (u-l)%l);
-			if(d_graph)
+			if(Dij_rech)
 	            SetPointGraphe((int)(u-l)/l,(int)(u-l)%l, "vert");
         }
 
@@ -476,36 +508,36 @@ void dijkstra(Labyrinthe * lab){
     int d = MatVal2(dist,h-2,l-2);
 	printf("Dijsktra : %i\n",d);
     int p = (h-2)*l+l-2;
+	if(v_graph)
+		while(d>=0){
 
-    while(d>=0){
+		    SetPointGraphe((int)(p-l)/l+1,(int)(p-l)%l, "rouge");
 
-        SetPointGraphe((int)(p-l)/l+1,(int)(p-l)%l, "rouge");
-
-		if(!d){
-            // fin
-        }
-        else if(MatVal(dist,p-1) == d-1){
-            p = p-1;
-        }
-        else if(MatVal(dist,p-l) == d-1){
-            p = p-l;
-        }
-        else if(MatVal(dist,p+1) == d-1){
-            p = p+1;
-        }
-        else if(MatVal(dist,p+l) == d-1){
-            p = p+l;
-        }
-        else if(MatVal(dist,p) == INT_MAX){
-            printf("Il n'y a pas de chemin vers la sortie\n");
-            d=0;
-        }
-        else{
-            printf("Erreur\n");
-            d=0;
-        }
-        d--;
-    }
+			if(!d){
+		        // fin
+		    }
+		    else if(MatVal(dist,p-1) == d-1){
+		        p = p-1;
+		    }
+		    else if(MatVal(dist,p-l) == d-1){
+		        p = p-l;
+		    }
+		    else if(MatVal(dist,p+1) == d-1){
+		        p = p+1;
+		    }
+		    else if(MatVal(dist,p+l) == d-1){
+		        p = p+l;
+		    }
+		    else if(MatVal(dist,p) == INT_MAX){
+		        printf("Il n'y a pas de chemin vers la sortie\n");
+		        d=0;
+		    }
+		    else{
+		        printf("Erreur\n");
+		        d=0;
+		    }
+		    d--;
+		}
 
 	MatFree(dist);
 	MatFree(isSet);
@@ -527,14 +559,12 @@ void A_Star(Labyrinthe * lab){
 	EnsAjouteTrie(openList,NoeudInit(1,1),heuristique);
 	MatSet2(cout,1,1,0);
 	MatSet2(heuristique,1,1,0);
-	if(d_graph)
-    	SetPointGraphe(1,1, "vert");
+	if(AStar_rech)
+    	SetPointGraphe(1,1, "vertf");
 
     while(!EnsEstVide(openList)){
 
         Noeud * u = EnsDepilePremier(openList);
-		if(d_graph)	    
-			SetPointGraphe(u->x,u->y, "bleu");	
 		MatSet2(closedList,u->x,u->y,MatVal2(cout,u->x,u->y));        
 
 		
@@ -552,8 +582,8 @@ void A_Star(Labyrinthe * lab){
 					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
 					MatSet2(heuristique,v->x,v->y,
 							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) ); 
-					if(d_graph)
-	                	SetPointGraphe(v->x,v->y, "vert");
+					if(AStar_rech)
+	                	SetPointGraphe(v->x,v->y, "vertf");
 				}
 				else{
 					NoeudSuppr(v);			
@@ -572,8 +602,8 @@ void A_Star(Labyrinthe * lab){
 					EnsAjouteTrie(openList,v,heuristique);
 					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
 					MatSet2(heuristique,v->x,v->y,
-							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) );  	if(d_graph)
-                		SetPointGraphe(v->x,v->y, "vert");
+							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) );  	if(AStar_rech)
+                		SetPointGraphe(v->x,v->y, "vertf");
 				}
 				else{
 					NoeudSuppr(v);			
@@ -593,8 +623,8 @@ void A_Star(Labyrinthe * lab){
 					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
 					MatSet2(heuristique,v->x,v->y,
 							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) ); 
-					if(d_graph)
-	                	SetPointGraphe(v->x,v->y, "vert");
+					if(AStar_rech)
+	                	SetPointGraphe(v->x,v->y, "vertf");
 				}
 				else{
 					NoeudSuppr(v);			
@@ -615,8 +645,8 @@ void A_Star(Labyrinthe * lab){
 					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
 					MatSet2(heuristique,v->x,v->y,
 							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) ); 
-					if(d_graph)
-	                	SetPointGraphe(v->x,v->y, "vert");
+					if(AStar_rech)
+	                	SetPointGraphe(v->x,v->y, "vertf");
 				}
 				else{
 					NoeudSuppr(v);			
@@ -626,10 +656,7 @@ void A_Star(Labyrinthe * lab){
 				NoeudSuppr(v);
         }
 
-        
 
-        
-		
     }
 
 
@@ -638,35 +665,36 @@ void A_Star(Labyrinthe * lab){
 	printf("A* : %i\n",d);
     int p = (h-2)*l+l-2;
 
-    while(d>=0){
+	if(v_graph)
+		while(d>=0){
 
-        SetPointGraphe((int)(p-l)/l+1,(int)(p-l)%l, "bleu");
+		    SetPointGraphe((int)(p-l)/l+1,(int)(p-l)%l, "bleu");
 
-		if(!d){
-            // fin
-        }
-        else if(MatVal(closedList,p-1) == d-1){
-            p = p-1;
-        }
-        else if(MatVal(closedList,p-l) == d-1){
-            p = p-l;
-        }
-        else if(MatVal(closedList,p+1) == d-1){
-            p = p+1;
-        }
-        else if(MatVal(closedList,p+l) == d-1){
-            p = p+l;
-        }
-        else if(MatVal(closedList,p) == INT_MAX){
-            printf("Il n'y a pas de chemin vers la sortie\n");
-            d=0;
-        }
-        else{
-            printf("Erreur\n");
-            d=0;
-        }
-        d--;
-    }
+			if(!d){
+		        // fin
+		    }
+		    else if(MatVal(closedList,p-1) == d-1){
+		        p = p-1;
+		    }
+		    else if(MatVal(closedList,p-l) == d-1){
+		        p = p-l;
+		    }
+		    else if(MatVal(closedList,p+1) == d-1){
+		        p = p+1;
+		    }
+		    else if(MatVal(closedList,p+l) == d-1){
+		        p = p+l;
+		    }
+		    else if(!MatVal(closedList,p)){
+		        printf("Il n'y a pas de chemin vers la sortie\n");
+		        d=0;
+		    }
+		    else{
+		        printf("Erreur\n");
+		        d=0;
+		    }
+		    d--;
+		}
 
 	MatFree(cout);
 	MatFree(heuristique);

@@ -25,6 +25,16 @@ int main(int argc, char *argv[]){
             h = atoi(argv[++i]);
         else if ( !strcmp(argv[i],"-g"))
             g = atof(argv[++i]);
+		else if ( !strcmp(argv[i],"-A"))
+			set_AStar();
+		else if ( !strcmp(argv[i],"-Ad"))
+			set_AStar_rech();
+		else if ( !strcmp(argv[i],"-D"))
+			set_Dij();
+		else if ( !strcmp(argv[i],"-Dd"))
+			set_Dij_rech();	
+		else if ( !strcmp(argv[i],"-Auto"))
+			set_Auto();	
         else
             sprintf(fichier,"%s.pgm",argv[i]);
 
@@ -42,6 +52,8 @@ int main(int argc, char *argv[]){
 
     lab = LabCreate(l,h,g);
 
+	lanceRecherche(lab);
+
     MatSauve(lab->map,fichier);
 
     /*
@@ -56,6 +68,8 @@ int main(int argc, char *argv[]){
     500*500 (250 000):
     600*600 (360 000):
     */
+
+
 
     return 0;
 }
