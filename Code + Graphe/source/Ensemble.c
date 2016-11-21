@@ -82,37 +82,64 @@ void EnsAjoute(Ens *e, int x, int y){
 
 }
 
-void EnsAjouteTrie(Ens *e, Noeud *n){
-    Noeud * nl = e->premier;
+void EnsAjouteNoeud(Ens *e,Noeud * n){
 
-    while (nl->next != NULL) {
-        if (n->x <= nl->x && n->y <= nl->y) {
-            if(nl->next == NULL && nl->previous == NULL){
-                e->premier = n;
-                e->dernier = n;
-            }
-            else if(nl->next == NULL){
-                nl->next = n;
-                n->previous = nl;
-                e->dernier = n;
-            }
-            else if(nl->previous == NULL){
-                n->next = nl;
-                nl->previous = n;
-                e->premier = n;
-            }
-            else{
-                n->previous = nl->previous;
-                nl->previous->next = n;
-                n->next = nl;
-                nl->previous = n;
-            }
-            break;
-        }
-        n = n->next;
+    if(e->dernier == NULL){
+        e->premier = n;
+        e->dernier = e->premier;
     }
-
+    else{
+        Noeud * n = n;
+        n->previous = e->dernier;
+        e->dernier->next = n;
+        e->dernier = n;
+    }
     e->taille++;
+
+}
+
+
+void EnsAjouteTrie(Ens *e, Noeud *n,Matrice *heuristique){
+    
+	if( e->premier == NULL && e->dernier == NULL){
+		e->premier = n;
+		e->dernier = n;
+		e->taille++;
+	}
+	else{
+		if(MatVal2(heuristique,e->premier->x,e->premier->y) >= MatVal2(heuristique,n->x,n->y)){		
+			e->premier->previous = n;
+			n->next = e->premier;
+			e->premier = n;
+			e->taille++;
+		}
+		else if(MatVal2(heuristique,e->dernier->x,e->dernier->y) <= MatVal2(heuristique,n->x,n->y)){
+			e->dernier->next = n;
+			n->previous = e->dernier;
+			e->dernier = n;
+			e->taille++;
+		}
+		else{
+			Noeud * np = e->premier->next;
+			
+			while(np != e->dernier){
+				if(MatVal2(heuristique,n->x,n->y) <= MatVal2(heuristique,np->x,np->y)){
+					n->next = np;
+					n->previous = np->previous;
+					np->previous->next = n;
+					np->previous = n;
+					e->taille++;
+					return;
+				}
+
+				np = np->next;
+
+			}
+
+		}
+
+	}
+
 }
 
 // complexité O(n)
@@ -131,18 +158,6 @@ int EnsFind(Ens *e, int x, int y){
     return -1;
 }
 
-// complexité O(n)
-Noeud * EnsFindHeuristique(Ens *e,int x,int y){
-
-    Noeud * n = e->premier;
-    while (n->next != NULL) {
-        if (n->x == x && n->y == y) {
-            return n;
-        }
-        n = n->next;
-    }
-    return NULL;
-}
 
 // complexité O(n/2)
 Noeud *EnsFindIndex(Ens *e, int index){
@@ -235,8 +250,6 @@ void EnsSuppr(Ens *e, int x, int y){
                 n->next->previous = n->previous;
             }
 
-            //printf("Ensemble supprime => %i %i\n",n->x,n->y);
-            //scanf(" ");
             NoeudSuppr(n);
             e->taille--;
             break;
@@ -247,11 +260,29 @@ void EnsSuppr(Ens *e, int x, int y){
 
 }
 
+Noeud * EnsDepilePremier(Ens *e){
+	Noeud *n = e->premier;
+
+	if(n->next!=NULL){
+    	n->next->previous = NULL;
+		e->premier = n->next;
+	}
+	else{
+		e->premier = NULL;
+		e->dernier = NULL;	
+	}
+
+    e->taille--;
+	return n;
+}
+
 void EnsSupprPremier(Ens *e){
     Noeud *n = e->premier;
 
 	if(n->next!=NULL)
     	n->next->previous = NULL;
+	else
+		e->dernier = NULL;
 
 	e->premier = n->next;
     NoeudSuppr(n);

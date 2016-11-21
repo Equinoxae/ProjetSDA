@@ -48,10 +48,11 @@ Labyrinthe *LabCreate(int w,int h,float r){
     EnsFree(v);
 
     if(v_graph){
-      waitgraph();
-       dijkstra(l);
-       waitgraph();
-       closegraph();
+      	waitgraph();
+      	//dijkstra(l);
+		A_Star(l);      
+		waitgraph();
+    	closegraph();
     }
 
     return l;
@@ -385,7 +386,7 @@ void SetPointGraphe(int x, int y, char * color){
 		setcolor(newcolor(0,1,0));
 	}
     else if (!strcmp(color,"bleu"))
-            setcolor(newcolor(0,0,1));
+            setcolor(newcolor(0,0.5,1));
 
 
     putpixel(y*3,x*3);
@@ -507,106 +508,156 @@ void dijkstra(Labyrinthe * lab){
 }
 
 void A_Star(Labyrinthe * lab){
-
-    Ens * closedList =  EnsAlloc();
-    Ens * openList = EnsAlloc();
-    Noeud * depart = NoeudInit(1,1);
-    depart->cout = 0;
-    depart->heuristique = 0;
-    EnsAjouteTrie(openList,depart);
-
-    int l = lab->map->l;
+	
+	int l = lab->map->l;
     int h = lab->map->h;
+    
+	Ens * openList = EnsAlloc();
+	Matrice * heuristique = MatAlloc(l,h);
+	Matrice * cout = MatAlloc(l,h);
+
+	Matrice * closedList = MatAlloc(l,h);
+
+	EnsAjouteTrie(openList,NoeudInit(1,1),heuristique);
+	MatSet2(cout,1,1,0);
+	MatSet2(heuristique,1,1,0);
+    SetPointGraphe(1,1, "vert");
 
     while(!EnsEstVide(openList)){
-        Noeud * u = openList->premier;
 
+        Noeud * u = EnsDepilePremier(openList);
+	    SetPointGraphe(u->x,u->y, "bleu");	
+		MatSet2(closedList,u->x,u->y,MatVal2(cout,u->x,u->y));        
+
+		
         if( u->x == h-2 && u->y == h-2){
-            //reconstituerChemin(u)
+
             break;
         }
 
 
-        if (!MatVal2(lab->map,u->x,u->y+1)){
-
-            Noeud *v = NoeudInit(u->x,u->y+1);
-            v->cout = u->cout+1;
-            v->heuristique = v->cout + (h-2 - v->x) + (l-2 - v->y) ;
-
-            Noeud *o = EnsFindHeuristique(closedList,v->x,v->y);
-            Noeud *c = EnsFindHeuristique(openList,v->x,v->y);
-
-            if( (o == NULL || o->heuristique > v->heuristique)
-                            && (o == NULL && c->heuristique > v->heuristique) ){
-                EnsAjouteTrie(openList,v);
-                SetPointGraphe(v->x,v->y, "vert");
-            }
-            else{
-                NoeudSuppr(v);
-            }
-
-        }
-
-        if (!MatVal2(lab->map,u->x,u->y-1)){
+		if (!MatVal2(lab->map,u->x,u->y-1)){
 
             Noeud *v = NoeudInit(u->x,u->y-1);
-            v->cout = u->cout+1;
-            v->heuristique = v->cout + (h-2 - v->x) + (l-2 - v->y) ;
-
-            Noeud *o = EnsFindHeuristique(closedList,v->x,v->y);
-            Noeud *c = EnsFindHeuristique(openList,v->x,v->y);
-
-            if( (o == NULL || o->heuristique > v->heuristique)
-                            && (o == NULL && c->heuristique > v->heuristique) ){
-                EnsAjouteTrie(openList,v);
-                SetPointGraphe(v->x,v->y, "vert");
-            }
-            else{
-                NoeudSuppr(v);
-            }
-
-        }
-
-        if (!MatVal2(lab->map,u->x+1,u->y)){
-
-            Noeud *v = NoeudInit(u->x+1,u->y);
-            v->cout = u->cout+1;
-            v->heuristique = v->cout + (h-2 - v->x) + (l-2 - v->y) ;
-
-            Noeud *o = EnsFindHeuristique(closedList,v->x,v->y);
-            Noeud *c = EnsFindHeuristique(openList,v->x,v->y);
-
-            if( (o == NULL || o->heuristique > v->heuristique)
-                            && (o == NULL && c->heuristique > v->heuristique) ){
-                EnsAjouteTrie(openList,v);
-                SetPointGraphe(v->x,v->y, "vert");
-            }
-            else{
-                NoeudSuppr(v);
-            }
+            if( MatVal2(cout,v->x,v->y) == 0){
+				if( MatVal2(heuristique,v->x,v->y) == 0){
+					EnsAjouteTrie(openList,v,heuristique);
+					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
+					MatSet2(heuristique,v->x,v->y,
+							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) ); 
+                	SetPointGraphe(v->x,v->y, "vert");
+				}
+				else{
+					NoeudSuppr(v);			
+				}
+			}
+			else
+				NoeudSuppr(v);
         }
 
         if (!MatVal2(lab->map,u->x-1,u->y)){
 
             Noeud *v = NoeudInit(u->x-1,u->y);
-            v->cout = u->cout+1;
-            v->heuristique = v->cout + (h-2 - v->x) + (l-2 - v->y) ;
 
-            Noeud *o = EnsFindHeuristique(closedList,v->x,v->y);
-            Noeud *c = EnsFindHeuristique(openList,v->x,v->y);
-
-            if( (o == NULL || o->heuristique > v->heuristique)
-                            && (o == NULL && c->heuristique > v->heuristique) ){
-                EnsAjouteTrie(openList,v);
-                SetPointGraphe(v->x,v->y, "vert");
-            }
-            else{
-                NoeudSuppr(v);
-            }
+            if( MatVal2(cout,v->x,v->y) == 0){
+				if( MatVal2(heuristique,v->x,v->y) == 0){
+					EnsAjouteTrie(openList,v,heuristique);
+					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
+					MatSet2(heuristique,v->x,v->y,
+							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) );  
+                	SetPointGraphe(v->x,v->y, "vert");
+				}
+				else{
+					NoeudSuppr(v);			
+				}
+			}
+			else
+				NoeudSuppr(v);
 
         }
 
-        EnsAjoute(closedList,u->x,u->y);
-        EnsSupprPremier(openList);
+
+		if (!MatVal2(lab->map,u->x+1,u->y)){
+
+            Noeud *v = NoeudInit(u->x+1,u->y);
+			
+			if( MatVal2(cout,v->x,v->y) == 0){
+				if( MatVal2(heuristique,v->x,v->y) == 0){
+					EnsAjouteTrie(openList,v,heuristique);
+					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
+					MatSet2(heuristique,v->x,v->y,
+							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) ); 
+                	SetPointGraphe(v->x,v->y, "vert");
+				}
+				else{
+					NoeudSuppr(v);			
+				}
+			}
+			else
+				NoeudSuppr(v);
+        }
+
+        if (!MatVal2(lab->map,u->x,u->y+1)){
+
+            Noeud *v = NoeudInit(u->x,u->y+1);
+            if( MatVal2(cout,v->x,v->y) == 0){
+				if( MatVal2(heuristique,v->x,v->y) == 0){
+					EnsAjouteTrie(openList,v,heuristique);
+					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
+					MatSet2(heuristique,v->x,v->y,
+							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) ); 
+                	SetPointGraphe(v->x,v->y, "vert");
+				}
+				else{
+					NoeudSuppr(v);			
+				}
+			}
+			else
+				NoeudSuppr(v);
+        }
+
+        
+		
     }
+
+
+	// print
+    int d = MatVal2(closedList,h-2,l-2);
+    int p = (h-2)*l+l-2;
+
+    while(d>=0){
+
+        SetPointGraphe((int)(p-l)/l+1,(int)(p-l)%l, "rouge");
+
+		if(!d){
+            // fin
+        }
+        else if(MatVal(closedList,p-1) == d-1){
+            p = p-1;
+        }
+        else if(MatVal(closedList,p-l) == d-1){
+            p = p-l;
+        }
+        else if(MatVal(closedList,p+1) == d-1){
+            p = p+1;
+        }
+        else if(MatVal(closedList,p+l) == d-1){
+            p = p+l;
+        }
+        else if(MatVal(closedList,p) == INT_MAX){
+            printf("Il n'y a pas de chemin vers la sortie\n");
+            d=0;
+        }
+        else{
+            printf("Erreur\n");
+            d=0;
+        }
+        d--;
+    }
+
+	MatFree(cout);
+	MatFree(heuristique);
+	MatFree(closedList);
+	EnsFree(openList);
+
 }
