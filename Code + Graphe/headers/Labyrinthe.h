@@ -34,3 +34,5 @@ void LabPrint(Labyrinthe *lab);
 void SetPointGraphe(int x, int y, char * color);
 
 void dijkstra(Labyrinthe * lab);
+
+void A_Star(Labyrinthe * lab);

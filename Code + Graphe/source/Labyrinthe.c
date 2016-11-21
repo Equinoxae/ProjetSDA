@@ -1,4 +1,4 @@
-#include <stdlib.h>
+ #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 #include <limits.h>
@@ -22,8 +22,6 @@ Labyrinthe *LabCreate(int w,int h,float r){
     //var
     Labyrinthe * l = malloc(sizeof(Labyrinthe));
     Ens * v; // case vide (constructible)
-
-
 
     // taille bordure
     int W = w + 2;
@@ -222,14 +220,14 @@ void LabInit(Labyrinthe *lab, int w ,int h){
 
     for(i = 0; i < w ; i++){
 		MatSet2(lab->map, 0, i, 1);
-        	
+
 		if(v_graph)
            	SetPointGraphe(0,i,"noir");
 	}
-	
+
     for(i = 1; i < h-1 ; i++){
 		MatSet2(lab->map, i, w-1, 1);
-        	
+
 		if(v_graph)
            	SetPointGraphe(i,w-1,"noir");
 	}
@@ -237,18 +235,18 @@ void LabInit(Labyrinthe *lab, int w ,int h){
 
 	for(i = w-1; i >= 0; i--){
 		MatSet2(lab->map, h-1, i, 1);
-        	
+
 		if(v_graph)
            	SetPointGraphe(h-1,i,"noir");
 	}
 
 	for(i = h-2; i > 0; i--){
 		MatSet2(lab->map,i, 0, 1);
-        	
+
 		if(v_graph)
            	SetPointGraphe(i,0,"noir");
-	}	
-	
+	}
+
 }
 
 void Granularise(Labyrinthe *lab  , Ens *v, int nb){
@@ -267,7 +265,7 @@ void Granularise(Labyrinthe *lab  , Ens *v, int nb){
 
 	if(v_graph)
 		SetPointGraphe(gg,1,"noir");
-    
+
 	verifTour(lab,v,NoeudInit(gg,1),1);
 
 	// Noeud haut
@@ -276,7 +274,7 @@ void Granularise(Labyrinthe *lab  , Ens *v, int nb){
 
 	if(v_graph)
 		SetPointGraphe(1 , gh ,"noir");
-    
+
 	verifTour(lab,v,NoeudInit(1,gh),1);
 
 	// Noeud droite
@@ -285,7 +283,7 @@ void Granularise(Labyrinthe *lab  , Ens *v, int nb){
 
 	if(v_graph)
 		SetPointGraphe(gd,l-2,"noir");
-    
+
 	verifTour(lab,v,NoeudInit(gd,l-2),1);
 
 	// Noeud bas
@@ -294,7 +292,7 @@ void Granularise(Labyrinthe *lab  , Ens *v, int nb){
 
 	if(v_graph)
 		SetPointGraphe(h-2 , gb ,"noir");
-    
+
 	verifTour(lab,v,NoeudInit(h-2,gb),1);
 
     int count = 0;
@@ -310,7 +308,7 @@ void Granularise(Labyrinthe *lab  , Ens *v, int nb){
 
         	if(v_graph)
         		SetPointGraphe(tirage->x,tirage->y,"noir");
-            
+
 			verifTour(lab,v,tirage,1);
             count++;
 
@@ -430,7 +428,7 @@ void dijkstra(Labyrinthe * lab){
     while(!EnsEstVide(plusPetit) && MatVal2(dist,h-2,l-2) == INT_MAX){
 
         Noeud * n = plusPetit->premier;
-        
+
         int u = n->x*l+n->y;
         int min = MatVal(dist,u);
 
@@ -468,14 +466,14 @@ void dijkstra(Labyrinthe * lab){
 
     }
 
-    // print 
+    // print
     int d = MatVal2(dist,h-2,l-2);
     int p = (h-2)*l+l-2;
 
     while(d>=0){
 
         SetPointGraphe((int)(p-l)/l+1,(int)(p-l)%l, "rouge");
-        
+
 		if(!d){
             // fin
         }
@@ -506,4 +504,109 @@ void dijkstra(Labyrinthe * lab){
 	MatFree(isSet);
 	EnsFree(plusPetit);
 
+}
+
+void A_Star(Labyrinthe * lab){
+
+    Ens * closedList =  EnsAlloc();
+    Ens * openList = EnsAlloc();
+    Noeud * depart = NoeudInit(1,1);
+    depart->cout = 0;
+    depart->heuristique = 0;
+    EnsAjouteTrie(openList,depart);
+
+    int l = lab->map->l;
+    int h = lab->map->h;
+
+    while(!EnsEstVide(openList)){
+        Noeud * u = openList->premier;
+
+        if( u->x == h-2 && u->y == h-2){
+            //reconstituerChemin(u)
+            break;
+        }
+
+
+        if (!MatVal2(lab->map,u->x,u->y+1)){
+
+            Noeud *v = NoeudInit(u->x,u->y+1);
+            v->cout = u->cout+1;
+            v->heuristique = v->cout + (h-2 - v->x) + (l-2 - v->y) ;
+
+            Noeud *o = EnsFindHeuristique(closedList,v->x,v->y);
+            Noeud *c = EnsFindHeuristique(openList,v->x,v->y);
+
+            if( (o == NULL || o->heuristique > v->heuristique)
+                            && (o == NULL && c->heuristique > v->heuristique) ){
+                EnsAjouteTrie(openList,v);
+                SetPointGraphe(v->x,v->y, "vert");
+            }
+            else{
+                NoeudSuppr(v);
+            }
+
+        }
+
+        if (!MatVal2(lab->map,u->x,u->y-1)){
+
+            Noeud *v = NoeudInit(u->x,u->y-1);
+            v->cout = u->cout+1;
+            v->heuristique = v->cout + (h-2 - v->x) + (l-2 - v->y) ;
+
+            Noeud *o = EnsFindHeuristique(closedList,v->x,v->y);
+            Noeud *c = EnsFindHeuristique(openList,v->x,v->y);
+
+            if( (o == NULL || o->heuristique > v->heuristique)
+                            && (o == NULL && c->heuristique > v->heuristique) ){
+                EnsAjouteTrie(openList,v);
+                SetPointGraphe(v->x,v->y, "vert");
+            }
+            else{
+                NoeudSuppr(v);
+            }
+
+        }
+
+        if (!MatVal2(lab->map,u->x+1,u->y)){
+
+            Noeud *v = NoeudInit(u->x+1,u->y);
+            v->cout = u->cout+1;
+            v->heuristique = v->cout + (h-2 - v->x) + (l-2 - v->y) ;
+
+            Noeud *o = EnsFindHeuristique(closedList,v->x,v->y);
+            Noeud *c = EnsFindHeuristique(openList,v->x,v->y);
+
+            if( (o == NULL || o->heuristique > v->heuristique)
+                            && (o == NULL && c->heuristique > v->heuristique) ){
+                EnsAjouteTrie(openList,v);
+                SetPointGraphe(v->x,v->y, "vert");
+            }
+            else{
+                NoeudSuppr(v);
+            }
+        }
+
+        if (!MatVal2(lab->map,u->x-1,u->y)){
+
+            Noeud *v = NoeudInit(u->x-1,u->y);
+            v->cout = u->cout+1;
+            v->heuristique = v->cout + (h-2 - v->x) + (l-2 - v->y) ;
+
+            Noeud *o = EnsFindHeuristique(closedList,v->x,v->y);
+            Noeud *c = EnsFindHeuristique(openList,v->x,v->y);
+
+            if( (o == NULL || o->heuristique > v->heuristique)
+                            && (o == NULL && c->heuristique > v->heuristique) ){
+                EnsAjouteTrie(openList,v);
+                SetPointGraphe(v->x,v->y, "vert");
+            }
+            else{
+                NoeudSuppr(v);
+            }
+
+        }
+
+        EnsAjoute(closedList,u->x,u->y);
+        EnsSupprPremier(openList);
+    }
 }

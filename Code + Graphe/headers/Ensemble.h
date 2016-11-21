@@ -4,6 +4,11 @@ typedef struct Noeud{
     /* data*/
     int x; // [x,y]
     int y;
+
+    /* data A* */
+    int cout;
+    int heuristique;
+
     /* list suite */
     struct Noeud * next ;
     struct Noeud * previous;
@@ -34,13 +39,15 @@ int EnsEstVide(Ens *e); // teste si un ensemble est vide
 
 void EnsAjoute(Ens *e, int x, int y); // ajoute un couple à un ensemble
 
-void EnsAjouteTrie(Ens *e, int x, int y);
+void EnsAjouteTrie(Ens *e, Noeud *n);
 
 int EnsFind(Ens *e, int x, int y); // OK
 
+Noeud *EnsFindHeuristique(Ens *e,int x,int y);
+
 Noeud *EnsFindIndex(Ens *e, int index); // OK
 
-Noeud *EnsFindSupprIndex(Ens *e, int index);
+Noeud *EnsFindSupprIndex(Ens *e, int index); //OK
 
 void EnsSuppr(Ens *e, int x, int y); // retire un couple à un ensemble
 

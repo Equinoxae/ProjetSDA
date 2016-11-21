@@ -3,6 +3,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <string.h>
+#include <limits.h>
 #include "Ensemble.h"
 
 /* Noued */
@@ -81,6 +82,39 @@ void EnsAjoute(Ens *e, int x, int y){
 
 }
 
+void EnsAjouteTrie(Ens *e, Noeud *n){
+    Noeud * nl = e->premier;
+
+    while (nl->next != NULL) {
+        if (n->x <= nl->x && n->y <= nl->y) {
+            if(nl->next == NULL && nl->previous == NULL){
+                e->premier = n;
+                e->dernier = n;
+            }
+            else if(nl->next == NULL){
+                nl->next = n;
+                n->previous = nl;
+                e->dernier = n;
+            }
+            else if(nl->previous == NULL){
+                n->next = nl;
+                nl->previous = n;
+                e->premier = n;
+            }
+            else{
+                n->previous = nl->previous;
+                nl->previous->next = n;
+                n->next = nl;
+                nl->previous = n;
+            }
+            break;
+        }
+        n = n->next;
+    }
+
+    e->taille++;
+}
+
 // complexité O(n)
 int EnsFind(Ens *e, int x, int y){
 
@@ -95,6 +129,19 @@ int EnsFind(Ens *e, int x, int y){
         index++;
     }
     return -1;
+}
+
+// complexité O(n)
+Noeud * EnsFindHeuristique(Ens *e,int x,int y){
+
+    Noeud * n = e->premier;
+    while (n->next != NULL) {
+        if (n->x == x && n->y == y) {
+            return n;
+        }
+        n = n->next;
+    }
+    return NULL;
 }
 
 // complexité O(n/2)
@@ -121,66 +168,46 @@ Noeud *EnsFindIndex(Ens *e, int index){
 }
 
 Noeud *EnsFindSupprIndex(Ens *e, int index){
+    Noeud *n;
 
     if(index <= EnsTaille(e)/2) {
-        Noeud *n = e->premier;
+        n = e->premier;
         int i;
         for( i = 0; i<index && n->next != NULL  ;i++)
             n=n->next;
-			
-			if(n->next == NULL && n->previous == NULL){
-                e->premier = NULL;
-                e->dernier = NULL;
-                e->taille = 0;
-            }
-            else if(n->next == NULL){
-                n->previous->next = NULL;
-                e->dernier = n->previous;
-				e->taille--;
-            }
-            else if(n->previous == NULL){
-                n->next->previous = NULL;
-                e->premier = n->next;
-				e->taille--;
-            }
-            else{
-                n->previous->next = n->next;
-                n->next->previous = n->previous;
-				e->taille--;
-            }
 
-        return n;
     }
     else{
-        Noeud *n = e->dernier;
+        n = e->dernier;
         int i;
         for(i = EnsTaille(e); i>index && n->previous != NULL;i--)
             n=n->previous;
 
-			if(n->next == NULL && n->previous == NULL){
-                e->premier = NULL;
-                e->dernier = NULL;
-                e->taille = 0;
-            }
-            else if(n->next == NULL){
-                n->previous->next = NULL;
-                e->dernier = n->previous;
-				e->taille--;            
-			}
-            else if(n->previous == NULL){
-                n->next->previous = NULL;
-                e->premier = n->next;
-	            e->taille--;
-            }
-            else{
-                n->previous->next = n->next;
-                n->next->previous = n->previous;
-				e->taille--;
-            }
-
-
-        return n;
     }
+
+    if(n->next == NULL && n->previous == NULL){
+        e->premier = NULL;
+        e->dernier = NULL;
+        e->taille = 0;
+    }
+    else if(n->next == NULL){
+        n->previous->next = NULL;
+        e->dernier = n->previous;
+        e->taille--;
+    }
+    else if(n->previous == NULL){
+        n->next->previous = NULL;
+        e->premier = n->next;
+        e->taille--;
+    }
+    else{
+        n->previous->next = n->next;
+        n->next->previous = n->previous;
+        e->taille--;
+    }
+
+    return n;
+
 }
 
 // complexité O(n)
@@ -225,7 +252,7 @@ void EnsSupprPremier(Ens *e){
 
 	if(n->next!=NULL)
     	n->next->previous = NULL;
-    
+
 	e->premier = n->next;
     NoeudSuppr(n);
     e->taille--;
@@ -233,10 +260,10 @@ void EnsSupprPremier(Ens *e){
 
 void EnsSupprDernier(Ens *e){
     Noeud *n = e->dernier;
-	
+
 	if(n->previous!=NULL)
     	n->previous->next = NULL;
-    
+
 	e->dernier = n->previous;
     NoeudSuppr(n);
     e->taille--;
