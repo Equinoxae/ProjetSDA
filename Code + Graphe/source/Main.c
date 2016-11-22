@@ -56,6 +56,8 @@ int main(int argc, char *argv[]){
 
     MatSauve(lab->map,fichier);
 
+	LabFree(lab);
+
     /*
     STAT
 

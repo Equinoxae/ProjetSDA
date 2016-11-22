@@ -177,7 +177,8 @@ void verifTour(Labyrinthe *lab  , Ens *v, Noeud * point,int init){
 
     // Case Gauche
     if( !EstConstruit(lab , x , y-1 ) ){
-        if(EstConstructible(lab,v,NoeudInit(x,y-1),init)){
+		Noeud * g = NoeudInit(x,y-1);
+        if(EstConstructible(lab,v,g,init)){
             EnsAjoute(v,x,y-1);
             if(d_graph)
                 SetPointGraphe(x,y-1,"rouge");
@@ -187,10 +188,12 @@ void verifTour(Labyrinthe *lab  , Ens *v, Noeud * point,int init){
             if(d_graph)
                 SetPointGraphe(x,y-1,"blanc");
         }
+		NoeudSuppr(g);
     }
     // Case En-Haut
     if( !EstConstruit(lab , x-1 , y ) ){
-        if(EstConstructible(lab,v,NoeudInit(x-1,y),init)){
+		Noeud * h = NoeudInit(x-1,y);
+        if(EstConstructible(lab,v,h,init)){
             EnsAjoute(v,x-1,y);
             if(d_graph)
                 SetPointGraphe(x-1,y,"rouge");
@@ -200,10 +203,12 @@ void verifTour(Labyrinthe *lab  , Ens *v, Noeud * point,int init){
             if(d_graph)
                 SetPointGraphe(x-1,y,"blanc");
         }
+		NoeudSuppr(h);
     }
     // Case Droite
     if( !EstConstruit(lab , x , y+1 ) ){
-        if(EstConstructible(lab,v,NoeudInit(x,y+1),init)){
+		Noeud * d = NoeudInit(x,y+1);
+        if(EstConstructible(lab,v,d,init)){
             EnsAjoute(v,x,y+1);
             if(d_graph)
                 SetPointGraphe(x,y+1,"rouge");
@@ -213,10 +218,12 @@ void verifTour(Labyrinthe *lab  , Ens *v, Noeud * point,int init){
             if(d_graph)
                 SetPointGraphe(x,y+1,"blanc");
         }
+		NoeudSuppr(d);
     }
     // Case En-Bas
     if( !EstConstruit(lab , x+1 , y )){
-        if(EstConstructible(lab,v,NoeudInit(x+1,y),init)){
+		Noeud * b = NoeudInit(x+1,y);
+        if(EstConstructible(lab,v,b,init)){
 
             EnsAjoute(v,x+1,y);
             if(d_graph)
@@ -227,7 +234,10 @@ void verifTour(Labyrinthe *lab  , Ens *v, Noeud * point,int init){
             if(d_graph)
                 SetPointGraphe(x+1,y,"blanc");
         }
+		NoeudSuppr(b);
     }
+
+	NoeudSuppr(point);
 }
 
 // Init matice
@@ -334,7 +344,7 @@ void Granularise(Labyrinthe *lab  , Ens *v, int nb){
             SetPointGraphe(tirage->x,tirage->y,"blanc");
         }
 
-		NoeudSuppr(tirage);
+		//NoeudSuppr(tirage);
     }
 }
 
@@ -356,8 +366,7 @@ void LabConstruit(Labyrinthe *lab  , Ens * v){
                 SetPointGraphe(tirage->x,tirage->y,"blanc");
         }
 
-		NoeudSuppr(tirage);
-		//EnsSuppr(v,tirage->x,tirage->y);
+		//NoeudSuppr(tirage);
 
     }
 
