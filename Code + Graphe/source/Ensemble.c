@@ -51,13 +51,13 @@ Ens * EnsAlloc(){
 // complexité O(n)
 void EnsFree(Ens *e){
     Noeud * n = e->premier;
-    Noeud * next;
     while (n != NULL) {
-        next = n->next;
-        NoeudSuppr(n);
-        n = next;
+        Noeud * tmp = n;
+		n=n->next;
+        NoeudSuppr(tmp);
+	//e->taille--;
     }
-
+    free(e);
 }
 
 // complexité o(1)
@@ -77,7 +77,8 @@ void EnsAjoute(Ens *e, int x, int y){
         n->previous = e->dernier;
         e->dernier->next = n;
         e->dernier = n;
-    }
+ 
+   }
     e->taille++;
 
 }
@@ -264,7 +265,7 @@ Noeud * EnsDepilePremier(Ens *e){
 	Noeud *n = e->premier;
 
 	if(n->next!=NULL){
-    	n->next->previous = NULL;
+	n->next->previous = NULL;
 		e->premier = n->next;
 	}
 	else{
@@ -272,7 +273,7 @@ Noeud * EnsDepilePremier(Ens *e){
 		e->dernier = NULL;	
 	}
 
-    e->taille--;
+	e->taille--;
 	return n;
 }
 
@@ -324,10 +325,7 @@ void EnsPrint(Ens *e){
 
 // complexité O(n/2)
 Noeud * EnsTirage(Ens *e){
-    int index;
-
     /* tirage */
-    index = rand() % EnsTaille(e);
-    //printf("index : %i\n",index );
+    int index = rand() % EnsTaille(e);
     return EnsFindSupprIndex(e,index);
 }

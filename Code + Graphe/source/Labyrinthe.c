@@ -75,6 +75,7 @@ Labyrinthe *LabCreate(int w,int h,float r){
 }
 
 void LabFree(Labyrinthe *lab){
+	MatFree(lab->map);
     free(lab);
 }
 
@@ -363,10 +364,11 @@ void LabConstruit(Labyrinthe *lab  , Ens * v){
             verifTour(lab ,v,tirage,0);
         }
         else if(d_graph && !EstConstruit(lab,tirage->x,tirage->y)){
-                SetPointGraphe(tirage->x,tirage->y,"blanc");
+            SetPointGraphe(tirage->x,tirage->y,"blanc");
+			NoeudSuppr(tirage);
         }
-
-		//NoeudSuppr(tirage);
+		else
+			NoeudSuppr(tirage);
 
     }
 
@@ -434,11 +436,11 @@ void lanceRecherche(Labyrinthe *lab){
 	if(AStar)
 		A_Star(lab);
 	
-	if(v_graph)
+	if(v_graph){
 		waitgraph();
-	
-	if(v_graph)
 		closegraph();
+	}
+	
 
 }
 
@@ -470,10 +472,12 @@ void dijkstra(Labyrinthe * lab){
 
     while(!EnsEstVide(plusPetit) && MatVal2(dist,h-2,l-2) == INT_MAX){
 
-        Noeud * n = plusPetit->premier;
+        Noeud * n = EnsDepilePremier(plusPetit);
 
         int u = n->x*l+n->y;
         int min = MatVal(dist,u);
+		
+		NoeudSuppr(n);
 
         MatSet(isSet,u,1);
 
@@ -501,6 +505,7 @@ void dijkstra(Labyrinthe * lab){
 	        	SetPointGraphe((int)(u+l)/l,(int)(u+l)%l, "vert");
         }
 
+
         if (!MatVal(isSet,u-l) && !MatVal(lab->map,u-l)
                                     && MatVal(dist,u)+1 < MatVal(dist,u-l)){
             MatSet(dist,u-l,MatVal(dist,u)+1);
@@ -509,7 +514,6 @@ void dijkstra(Labyrinthe * lab){
 	            SetPointGraphe((int)(u-l)/l,(int)(u-l)%l, "vert");
         }
 
-		EnsSupprPremier(plusPetit);
 
     }
 
@@ -562,7 +566,6 @@ void A_Star(Labyrinthe * lab){
 	Ens * openList = EnsAlloc();
 	Matrice * heuristique = MatAlloc(l,h);
 	Matrice * cout = MatAlloc(l,h);
-
 	Matrice * closedList = MatAlloc(l,h);
 
 	EnsAjouteTrie(openList,NoeudInit(1,1),heuristique);
@@ -665,6 +668,7 @@ void A_Star(Labyrinthe * lab){
 				NoeudSuppr(v);
         }
 
+		NoeudSuppr(u);
 
     }
 
@@ -675,11 +679,12 @@ void A_Star(Labyrinthe * lab){
     int p = (h-2)*l+l-2;
 
 	if(v_graph)
-		while(d>=0){
+		while(d>0){
 
 		    SetPointGraphe((int)(p-l)/l+1,(int)(p-l)%l, "bleu");
 
-			if(!d){
+			if(!(d-1)){
+				SetPointGraphe(1,1, "bleu");
 		        // fin
 		    }
 		    else if(MatVal(closedList,p-1) == d-1){

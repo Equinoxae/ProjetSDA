@@ -15,6 +15,7 @@ Matrice * MatAlloc(int l1,int h1){
 
 void MatFree(Matrice * m){
   free(m->points);
+  free(m);
 }
 
 int MatVal(Matrice * m, int p){
