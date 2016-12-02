@@ -76,7 +76,7 @@ Labyrinthe *LabCreate(int w,int h,float r){
     // temps_fin
     gettimeofday(&temps_fin,NULL);
     int dif_sec;
-    printf("Génération : %i.%ld secondes\n", dif_sec = (int) ( temps_fin.tv_sec - temps_debut.tv_sec) ,
+    printf("Génération \n %i.%ld secondes\n", dif_sec = (int) ( temps_fin.tv_sec - temps_debut.tv_sec) ,
         (temps_fin.tv_usec  + 1000000 * dif_sec) - temps_debut.tv_usec );
 
 
@@ -532,7 +532,7 @@ void dijkstra(Labyrinthe * lab){
 
     // print
     int d = MatVal2(dist,h-2,l-2);
-	printf("Dijsktra loungueur du chemin : %i\n",d);
+	printf("\nDijsktra\n loungueur du chemin : %i\n",d);
     int p = (h-2)*l+l-2;
 	if(v_graph)
 		while(d>=0){
@@ -691,7 +691,7 @@ void A_Star(Labyrinthe * lab){
 
 	// print
     int d = MatVal2(closedList,h-2,l-2);
-	printf("A*: longueur du chemin: %i\n",d);
+	printf("\nA*\n longueur du chemin: %i\n",d);
     int p = (h-2)*l+l-2;
 
 	if(v_graph)
@@ -729,7 +729,7 @@ void A_Star(Labyrinthe * lab){
     // temps_fin
     gettimeofday(&temps_fin,NULL);
     int dif_sec;
-    printf("temp d'execution: %i.%ld secondes\n\n", dif_sec = (int) ( temps_fin.tv_sec - temps_debut.tv_sec) ,
+    printf("temps d'execution: %i.%ld secondes\n", dif_sec = (int) ( temps_fin.tv_sec - temps_debut.tv_sec) ,
         (temps_fin.tv_usec  + 1000000 * dif_sec) - temps_debut.tv_usec );
 
 	MatFree(cout);
