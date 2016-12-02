@@ -1,6 +1,7 @@
  #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <sys/time.h>
 #include <limits.h>
 #include "Labyrinthe.h"
 #include "graph.h"
@@ -74,8 +75,8 @@ Labyrinthe *LabCreate(int w,int h,float r){
 
     // temps_fin
     gettimeofday(&temps_fin,NULL);
-    long int dif_sec;
-    printf("Génération : %ld.%ld secondes\n", dif_sec = ( temps_fin.tv_sec - temps_debut.tv_sec) ,
+    int dif_sec;
+    printf("Génération : %i.%ld secondes\n", dif_sec = (int) ( temps_fin.tv_sec - temps_debut.tv_sec) ,
         (temps_fin.tv_usec  + 1000000 * dif_sec) - temps_debut.tv_usec );
 
 
@@ -434,13 +435,13 @@ void SetPointGraphe(int x, int y, char * color){
 
 void lanceRecherche(Labyrinthe *lab){
 
-	if(!Auto && Dij)
+	if(v_graph && !Auto && Dij)
 		waitgraph();
 
 	if(Dij)
 		dijkstra(lab);
 
-	if(!Auto && AStar)
+	if(v_graph && !Auto && AStar)
 		waitgraph();
 
 	if(AStar)
@@ -531,7 +532,7 @@ void dijkstra(Labyrinthe * lab){
 
     // print
     int d = MatVal2(dist,h-2,l-2);
-	printf("Dijsktra : %i\n",d);
+	printf("Dijsktra loungueur du chemin : %i\n",d);
     int p = (h-2)*l+l-2;
 	if(v_graph)
 		while(d>=0){
@@ -566,8 +567,8 @@ void dijkstra(Labyrinthe * lab){
 
     // temps_fin
     gettimeofday(&temps_fin,NULL);
-    long int dif_sec;
-    printf("Dijsktra : %ld.%ld secondes\n", dif_sec = ( temps_fin.tv_sec - temps_debut.tv_sec) ,
+    int dif_sec;
+    printf("temps d'execution: %i.%ld secondes\n", dif_sec = (int)( temps_fin.tv_sec - temps_debut.tv_sec) ,
         (temps_fin.tv_usec  + 1000000 * dif_sec) - temps_debut.tv_usec );
 
 	MatFree(dist);
@@ -690,7 +691,7 @@ void A_Star(Labyrinthe * lab){
 
 	// print
     int d = MatVal2(closedList,h-2,l-2);
-	printf("A* : %i\n",d);
+	printf("A*: longueur du chemin: %i\n",d);
     int p = (h-2)*l+l-2;
 
 	if(v_graph)
@@ -727,8 +728,8 @@ void A_Star(Labyrinthe * lab){
 
     // temps_fin
     gettimeofday(&temps_fin,NULL);
-    long int dif_sec;
-    printf("A* : %ld.%ld secondes\n", dif_sec = ( temps_fin.tv_sec - temps_debut.tv_sec) ,
+    int dif_sec;
+    printf("temp d'execution: %i.%ld secondes\n\n", dif_sec = (int) ( temps_fin.tv_sec - temps_debut.tv_sec) ,
         (temps_fin.tv_usec  + 1000000 * dif_sec) - temps_debut.tv_usec );
 
 	MatFree(cout);
