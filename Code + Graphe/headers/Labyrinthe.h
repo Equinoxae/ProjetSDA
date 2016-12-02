@@ -1,5 +1,7 @@
 #include "Ensemble.h"
 
+static struct timeval temps_debut,temps_fin;
+
 static int v_graph = 0;
 static int d_graph = 0;
 

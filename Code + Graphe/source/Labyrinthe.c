@@ -43,6 +43,9 @@ Labyrinthe *LabCreate(int w,int h,float r){
     // init random
     srand(time(NULL));
 
+    // temps_debut
+    gettimeofday(&temps_debut,NULL);
+
     //var
     Labyrinthe * l = malloc(sizeof(Labyrinthe));
     Ens * v; // case vide (constructible)
@@ -68,6 +71,13 @@ Labyrinthe *LabCreate(int w,int h,float r){
 
     // Expention graine
     LabConstruit(l, v);
+
+    // temps_fin
+    gettimeofday(&temps_fin,NULL);
+    long int dif_sec;
+    printf("Génération : %ld.%ld secondes\n", dif_sec = ( temps_fin.tv_sec - temps_debut.tv_sec) ,
+        (temps_fin.tv_usec  + 1000000 * dif_sec) - temps_debut.tv_usec );
+
 
     EnsFree(v);
 
@@ -447,6 +457,8 @@ void lanceRecherche(Labyrinthe *lab){
 
 void dijkstra(Labyrinthe * lab){
 
+    // temps_debut
+    gettimeofday(&temps_debut,NULL);
 
     Matrice * dist = MatAlloc(lab->map->l,lab->map->h);
     Matrice * isSet = MatAlloc(lab->map->l,lab->map->h);
@@ -552,6 +564,12 @@ void dijkstra(Labyrinthe * lab){
 		    d--;
 		}
 
+    // temps_fin
+    gettimeofday(&temps_fin,NULL);
+    long int dif_sec;
+    printf("Dijsktra : %ld.%ld secondes\n", dif_sec = ( temps_fin.tv_sec - temps_debut.tv_sec) ,
+        (temps_fin.tv_usec  + 1000000 * dif_sec) - temps_debut.tv_usec );
+
 	MatFree(dist);
 	MatFree(isSet);
 	EnsFree(plusPetit);
@@ -559,6 +577,9 @@ void dijkstra(Labyrinthe * lab){
 }
 
 void A_Star(Labyrinthe * lab){
+
+    // temps_debut
+    gettimeofday(&temps_debut,NULL);
 
 	int l = lab->map->l;
     int h = lab->map->h;
@@ -703,6 +724,12 @@ void A_Star(Labyrinthe * lab){
 		    }
 		    d--;
 		}
+
+    // temps_fin
+    gettimeofday(&temps_fin,NULL);
+    long int dif_sec;
+    printf("A* : %ld.%ld secondes\n", dif_sec = ( temps_fin.tv_sec - temps_debut.tv_sec) ,
+        (temps_fin.tv_usec  + 1000000 * dif_sec) - temps_debut.tv_usec );
 
 	MatFree(cout);
 	MatFree(heuristique);
