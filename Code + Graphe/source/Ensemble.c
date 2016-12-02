@@ -77,7 +77,7 @@ void EnsAjoute(Ens *e, int x, int y){
         n->previous = e->dernier;
         e->dernier->next = n;
         e->dernier = n;
- 
+
    }
     e->taille++;
 
@@ -101,14 +101,14 @@ void EnsAjouteNoeud(Ens *e,Noeud * n){
 
 
 void EnsAjouteTrie(Ens *e, Noeud *n,Matrice *heuristique){
-    
+
 	if( e->premier == NULL && e->dernier == NULL){
 		e->premier = n;
 		e->dernier = n;
 		e->taille++;
 	}
 	else{
-		if(MatVal2(heuristique,e->premier->x,e->premier->y) >= MatVal2(heuristique,n->x,n->y)){		
+		if(MatVal2(heuristique,e->premier->x,e->premier->y) >= MatVal2(heuristique,n->x,n->y)){
 			e->premier->previous = n;
 			n->next = e->premier;
 			e->premier = n;
@@ -122,7 +122,7 @@ void EnsAjouteTrie(Ens *e, Noeud *n,Matrice *heuristique){
 		}
 		else{
 			Noeud * np = e->premier->next;
-			
+
 			while(np != e->dernier){
 				if(MatVal2(heuristique,n->x,n->y) <= MatVal2(heuristique,np->x,np->y)){
 					n->next = np;
@@ -253,7 +253,7 @@ void EnsSuppr(Ens *e, int x, int y){
 
             NoeudSuppr(n);
             e->taille--;
-            break;
+            n = NULL;
         }
         else
             n = n->next;
@@ -270,7 +270,7 @@ Noeud * EnsDepilePremier(Ens *e){
 	}
 	else{
 		e->premier = NULL;
-		e->dernier = NULL;	
+		e->dernier = NULL;
 	}
 
 	e->taille--;

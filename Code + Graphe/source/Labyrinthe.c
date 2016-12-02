@@ -435,12 +435,12 @@ void lanceRecherche(Labyrinthe *lab){
 
 	if(AStar)
 		A_Star(lab);
-	
+
 	if(v_graph){
 		waitgraph();
 		closegraph();
 	}
-	
+
 
 }
 
@@ -476,7 +476,7 @@ void dijkstra(Labyrinthe * lab){
 
         int u = n->x*l+n->y;
         int min = MatVal(dist,u);
-		
+
 		NoeudSuppr(n);
 
         MatSet(isSet,u,1);
@@ -485,7 +485,7 @@ void dijkstra(Labyrinthe * lab){
                                     && MatVal(dist,u)+1 < MatVal(dist,u+1)){
             MatSet(dist ,u+1 ,MatVal(dist,u)+1);
             EnsAjoute(plusPetit, (int)(u+1)/l , (u+1)%l);
-			if(Dij_rech)	
+			if(Dij_rech)
 	            SetPointGraphe((int)(u+1)/l , (u+1)%l, "vert");
         }
 
@@ -493,7 +493,7 @@ void dijkstra(Labyrinthe * lab){
                                     && MatVal(dist,u)+1 < MatVal(dist,u-1)){
             MatSet(dist,u-1,MatVal(dist,u)+1);
             EnsAjoute(plusPetit, (int)(u-1)/l , (u-1)%l);
-			if(Dij_rech)        
+			if(Dij_rech)
 			    SetPointGraphe((int)(u-1)/l,(int)(u-1)%l, "vert");
         }
 
@@ -501,7 +501,7 @@ void dijkstra(Labyrinthe * lab){
                                     && MatVal(dist,u)+1 < MatVal(dist,u+l)){
             MatSet(dist,u+l,MatVal(dist,u)+1);
             EnsAjoute(plusPetit, (int)(u+l)/l , (u+l)%l);
-			if(Dij_rech)    
+			if(Dij_rech)
 	        	SetPointGraphe((int)(u+l)/l,(int)(u+l)%l, "vert");
         }
 
@@ -559,10 +559,10 @@ void dijkstra(Labyrinthe * lab){
 }
 
 void A_Star(Labyrinthe * lab){
-	
+
 	int l = lab->map->l;
     int h = lab->map->h;
-    
+
 	Ens * openList = EnsAlloc();
 	Matrice * heuristique = MatAlloc(l,h);
 	Matrice * cout = MatAlloc(l,h);
@@ -574,16 +574,10 @@ void A_Star(Labyrinthe * lab){
 	if(AStar_rech)
     	SetPointGraphe(1,1, "vertf");
 
-    while(!EnsEstVide(openList)){
+    while(!EnsEstVide(openList) && MatVal2(closedList,h-2,l-2) == 0){
 
         Noeud * u = EnsDepilePremier(openList);
-		MatSet2(closedList,u->x,u->y,MatVal2(cout,u->x,u->y));        
-
-		
-        if( u->x == h-2 && u->y == l-2){
-
-            break;
-        }
+		MatSet2(closedList,u->x,u->y,MatVal2(cout,u->x,u->y));
 
 		if (!MatVal2(lab->map,u->x,u->y-1)){
 
@@ -593,12 +587,12 @@ void A_Star(Labyrinthe * lab){
 					EnsAjouteTrie(openList,v,heuristique);
 					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
 					MatSet2(heuristique,v->x,v->y,
-							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) ); 
+							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) );
 					if(AStar_rech)
 	                	SetPointGraphe(v->x,v->y, "vertf");
 				}
 				else{
-					NoeudSuppr(v);			
+					NoeudSuppr(v);
 				}
 			}
 			else
@@ -618,7 +612,7 @@ void A_Star(Labyrinthe * lab){
                 		SetPointGraphe(v->x,v->y, "vertf");
 				}
 				else{
-					NoeudSuppr(v);			
+					NoeudSuppr(v);
 				}
 			}
 			else
@@ -634,12 +628,12 @@ void A_Star(Labyrinthe * lab){
 					EnsAjouteTrie(openList,v,heuristique);
 					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
 					MatSet2(heuristique,v->x,v->y,
-							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) ); 
+							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) );
 					if(AStar_rech)
 	                	SetPointGraphe(v->x,v->y, "vertf");
 				}
 				else{
-					NoeudSuppr(v);			
+					NoeudSuppr(v);
 				}
 			}
 			else
@@ -650,18 +644,18 @@ void A_Star(Labyrinthe * lab){
 		if (!MatVal2(lab->map,u->x+1,u->y)){
 
             Noeud *v = NoeudInit(u->x+1,u->y);
-			
+
 			if( MatVal2(cout,v->x,v->y) == 0){
 				if( MatVal2(heuristique,v->x,v->y) == 0){
 					EnsAjouteTrie(openList,v,heuristique);
 					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
 					MatSet2(heuristique,v->x,v->y,
-							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) ); 
+							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) );
 					if(AStar_rech)
 	                	SetPointGraphe(v->x,v->y, "vertf");
 				}
 				else{
-					NoeudSuppr(v);			
+					NoeudSuppr(v);
 				}
 			}
 			else

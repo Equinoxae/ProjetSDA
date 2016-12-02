@@ -1,5 +1,4 @@
 #include "Ensemble.h"
-//#include "Matrice.h"
 
 static int v_graph = 0;
 static int d_graph = 0;
