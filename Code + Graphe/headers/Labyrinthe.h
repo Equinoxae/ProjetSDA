@@ -32,6 +32,8 @@ void set_AStar_rech();
 
 void set_Auto();
 
+double time_diff(struct timeval x , struct timeval y);
+
 Labyrinthe *LabCreate(int w,int h,float r);
 
 void LabFree(Labyrinthe *lab);
