@@ -75,9 +75,9 @@ Labyrinthe *LabCreate(int w,int h,float r){
 
     // temps_fin
     gettimeofday(&temps_fin,NULL);
-    int elapsedTime = temps_fin.tv_sec * 1000 + temps_fin.tv_usec / 1000;
+    float elapsedTime = temps_fin.tv_sec * 1000 + temps_fin.tv_usec / 1000;
     elapsedTime -= (temps_debut.tv_sec * 1000 + temps_debut.tv_usec / 1000);
-    printf("temps d'execution: %.5f secondes\n", (float)(elapsedTime/1000) );
+    printf("temps d'execution: %.5f secondes\n", elapsedTime/1000 );
 
 
     EnsFree(v);
@@ -567,9 +567,9 @@ void dijkstra(Labyrinthe * lab){
 
     // temps_fin
     gettimeofday(&temps_fin,NULL);
-    int elapsedTime = temps_fin.tv_sec * 1000 + temps_fin.tv_usec / 1000;
+    float elapsedTime = temps_fin.tv_sec * 1000 + temps_fin.tv_usec / 1000;
     elapsedTime -= (temps_debut.tv_sec * 1000 + temps_debut.tv_usec / 1000);
-    printf("temps d'execution: %f secondes\n", (float)(elapsedTime/1000 ));
+    printf("temps d'execution: %f secondes\n", elapsedTime/1000);
 
 	MatFree(dist);
 	MatFree(isSet);
@@ -728,9 +728,9 @@ void A_Star(Labyrinthe * lab){
 
     // temps_fin
     gettimeofday(&temps_fin,NULL);
-    int elapsedTime = temps_fin.tv_sec * 1000 + temps_fin.tv_usec / 1000;
+    float elapsedTime = temps_fin.tv_sec * 1000 + temps_fin.tv_usec / 1000;
     elapsedTime -= (temps_debut.tv_sec * 1000 + temps_debut.tv_usec / 1000);
-    printf("temps d'execution: %f secondes\n", (float)(elapsedTime/1000) );
+    printf("temps d'execution: %f secondes\n", elapsedTime/1000 );
 
 	MatFree(cout);
 	MatFree(heuristique);
