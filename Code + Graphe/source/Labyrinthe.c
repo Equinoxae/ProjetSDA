@@ -88,7 +88,7 @@ Labyrinthe *LabCreate(int w,int h,float r){
 
     // temps_fin
     gettimeofday(&temps_fin,NULL);
-    printf("temps d'execution: %.5f secondes\n", time_diff(temps_debut,temps_fin));;
+    printf("Génération\n temps d'execution: %.5f secondes\n", time_diff(temps_debut,temps_fin));;
 
 
     EnsFree(v);
@@ -348,7 +348,7 @@ void Granularise(Labyrinthe *lab  , Ens *v, int nb){
     int count = 0;
     int res;
 
-    while( count < nb /*&& !EnsEstVide(v)*/){
+    while( count < nb){
 
         Noeud * tirage = NoeudInit(rand()%(h-2)+1,rand()%(l-2)+1);
 
@@ -366,8 +366,6 @@ void Granularise(Labyrinthe *lab  , Ens *v, int nb){
         else if(d_graph && !EstConstruit(lab,tirage->x,tirage->y)){
             SetPointGraphe(tirage->x,tirage->y,"blanc");
         }
-
-		//NoeudSuppr(tirage);
     }
 }
 
@@ -543,7 +541,7 @@ void dijkstra(Labyrinthe * lab){
 
     // print
     int d = MatVal2(dist,h-2,l-2);
-	printf("\nDijsktra\n loungueur du chemin : %i\n",d);
+	printf("\nDijsktra\n longueur du chemin : %i\n",d);
     int p = (h-2)*l+l-2;
 	if(v_graph)
 		while(d>=0){
@@ -578,7 +576,7 @@ void dijkstra(Labyrinthe * lab){
 
     // temps_fin
     gettimeofday(&temps_fin,NULL);
-    printf("temps d'execution: %.5f secondes\n", time_diff(temps_debut,temps_fin));
+    printf(" temps d'execution: %.5f secondes\n", time_diff(temps_debut,temps_fin));
 
 	MatFree(dist);
 	MatFree(isSet);
@@ -613,7 +611,8 @@ void A_Star(Labyrinthe * lab){
 		if (!MatVal2(lab->map,u->x,u->y-1)){
 
             if(!MatVal2(estMarque,u->x,u->y-1)){
-                Data * v = data_init(u->x,u->y-1,u->cout+1,u->heuristique-1);
+                Data * v = data_init(u->x,u->y-1,u->cout+1,u->heuristique+1);
+				MatSet2(estMarque,v->x,v->y,1);
                 heap_push(openList,v);
                 if(AStar_rech)
                     SetPointGraphe(v->x,v->y, "vertf");
@@ -624,7 +623,8 @@ void A_Star(Labyrinthe * lab){
 		if (!MatVal2(lab->map,u->x-1,u->y)){
 
             if(!MatVal2(estMarque,u->x-1,u->y)){
-                Data * v = data_init(u->x-1,u->y,u->cout+1,u->heuristique-1);
+                Data * v = data_init(u->x-1,u->y,u->cout+1,u->heuristique+1);
+				MatSet2(estMarque,v->x,v->y,1);
                 heap_push(openList,v);
                 if(AStar_rech)
                     SetPointGraphe(v->x,v->y, "vertf");
@@ -636,6 +636,7 @@ void A_Star(Labyrinthe * lab){
 
             if(!MatVal2(estMarque,u->x,u->y+1)){
                 Data * v = data_init(u->x,u->y+1,u->cout+1,u->heuristique-1);
+				MatSet2(estMarque,v->x,v->y,1);
                 heap_push(openList,v);
                 if(AStar_rech)
                     SetPointGraphe(v->x,v->y, "vertf");
@@ -646,6 +647,7 @@ void A_Star(Labyrinthe * lab){
 		if (!MatVal2(lab->map,u->x+1,u->y)){
             if(!MatVal2(estMarque,u->x+1,u->y)){
                 Data * v = data_init(u->x+1,u->y,u->cout+1,u->heuristique-1);
+				MatSet2(estMarque,v->x,v->y,1);
                 heap_push(openList,v);
                 if(AStar_rech)
                     SetPointGraphe(v->x,v->y, "vertf");
@@ -697,7 +699,7 @@ void A_Star(Labyrinthe * lab){
 
     // temps_fin
     gettimeofday(&temps_fin,NULL);
-    printf("temps d'execution: %.5f secondes\n", time_diff(temps_debut,temps_fin));
+    printf(" temps d'execution: %.5f secondes\n", time_diff(temps_debut,temps_fin));
 
 	MatFree(estMarque);
 	MatFree(closedList);

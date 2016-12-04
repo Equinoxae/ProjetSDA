@@ -16,7 +16,7 @@ typedef struct heap
 	Data ** data; // Array with the elements
 }Heap;
 
-Data * data_init(int x_ ,int y_,int h,int c);
+Data * data_init(int x_ ,int y_,int c,int h);
 
 Heap * heap_init(int size);
 void heap_push(Heap * h, Data * value);

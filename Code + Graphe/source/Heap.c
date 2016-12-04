@@ -1,8 +1,8 @@
-#include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "Heap.h"
 
-Data * data_init(int x_ ,int y_,int h,int c){
+Data * data_init(int x_ ,int y_,int c,int h){
     Data * d = malloc(sizeof(Data));
     d->x = x_;
     d->y = y_;
@@ -31,26 +31,25 @@ Heap * heap_init(int size)
 void heap_push(Heap * h, Data * value)
 {
 
-    unsigned int index = h->count;
+    int index = h->count;
     h->data[index] = value;
-
 
     int parentIndex = (index-1)/2;
 
-    while (1) {
+
+    while (parentIndex >= 0) {
         Data * parent = h->data[parentIndex];
         if (value->heuristique < parent->heuristique) {
             h->data[index] = parent;
             h->data[parentIndex] = value;
             index = parentIndex;
-        }
-        else {
-            break;
-        }
+    	}
+   		else {
+        	break;
+    	}
 
-        parentIndex = (index-1)/2;
-    }
-
+    	parentIndex = (index-1)/2;
+	}
     h->count++;
 
 }
@@ -105,7 +104,7 @@ int HeapEstVide(Heap * h){
 
 void HeapFree(Heap * h){
     int i = h->count;
-    for(;i>=0;){
+    for(;i>0;){
          free(h->data[--i]);
     }
     free(h);
