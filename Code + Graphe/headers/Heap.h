@@ -21,4 +21,5 @@ Data * data_init(int x_ ,int y_,int h,int c);
 Heap * heap_init(int size);
 void heap_push(Heap * h, Data * value);
 Data * heap_pop(Heap * h);
+int HeapEstVide(Heap * h);
 void HeapFree(Heap * h);

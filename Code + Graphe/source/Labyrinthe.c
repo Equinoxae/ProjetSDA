@@ -5,6 +5,7 @@
 #include <limits.h>
 #include "Labyrinthe.h"
 #include "graph.h"
+#include "Heap.h"
 #include <string.h>
 
 void set_v(){
@@ -593,106 +594,66 @@ void A_Star(Labyrinthe * lab){
 	int l = lab->map->l;
     int h = lab->map->h;
 
-	Ens * openList = EnsAlloc();
-	Matrice * heuristique = MatAlloc(l,h);
-	Matrice * cout = MatAlloc(l,h);
+    Heap * openList = heap_init(l*h);
+    Matrice * estMarque = MatAlloc(l,h);
 	Matrice * closedList = MatAlloc(l,h);
 
-	EnsAjouteTrie(openList,NoeudInit(1,1),heuristique);
-	MatSet2(cout,1,1,0);
-	MatSet2(heuristique,1,1,0);
+    heap_push(openList,data_init(1,1,0, (h-2-1)*(h-2-1) + (l-2-1)*(l-2-1)) );
+	MatSet2(estMarque,1,1,1);
+
 	if(AStar_rech)
     	SetPointGraphe(1,1, "vertf");
 
-    while(!EnsEstVide(openList) && MatVal2(closedList,h-2,l-2) == 0){
+    while(!HeapEstVide(openList) && MatVal2(closedList,h-2,l-2) == 0){
 
-        Noeud * u = EnsDepilePremier(openList);
-		MatSet2(closedList,u->x,u->y,MatVal2(cout,u->x,u->y));
+
+        Data * u = heap_pop(openList);
+		MatSet2(closedList,u->x,u->y,u->cout);
 
 		if (!MatVal2(lab->map,u->x,u->y-1)){
 
-            Noeud *v = NoeudInit(u->x,u->y-1);
-            if( MatVal2(cout,v->x,v->y) == 0){
-				if( MatVal2(heuristique,v->x,v->y) == 0){
-					EnsAjouteTrie(openList,v,heuristique);
-					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
-					MatSet2(heuristique,v->x,v->y,
-							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) );
-					if(AStar_rech)
-	                	SetPointGraphe(v->x,v->y, "vertf");
-				}
-				else{
-					NoeudSuppr(v);
-				}
-			}
-			else
-				NoeudSuppr(v);
+            if(!MatVal2(estMarque,u->x,u->y-1)){
+                Data * v = data_init(u->x,u->y-1,u->cout+1,u->heuristique-1);
+                heap_push(openList,v);
+                if(AStar_rech)
+                    SetPointGraphe(v->x,v->y, "vertf");
+            }
+
         }
 
 		if (!MatVal2(lab->map,u->x-1,u->y)){
 
-            Noeud *v = NoeudInit(u->x-1,u->y);
-
-            if( MatVal2(cout,v->x,v->y) == 0){
-				if( MatVal2(heuristique,v->x,v->y) == 0){
-					EnsAjouteTrie(openList,v,heuristique);
-					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
-					MatSet2(heuristique,v->x,v->y,
-							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) );  	if(AStar_rech)
-                		SetPointGraphe(v->x,v->y, "vertf");
-				}
-				else{
-					NoeudSuppr(v);
-				}
-			}
-			else
-				NoeudSuppr(v);
+            if(!MatVal2(estMarque,u->x-1,u->y)){
+                Data * v = data_init(u->x-1,u->y,u->cout+1,u->heuristique-1);
+                heap_push(openList,v);
+                if(AStar_rech)
+                    SetPointGraphe(v->x,v->y, "vertf");
+            }
 
         }
 
 		if (!MatVal2(lab->map,u->x,u->y+1)){
 
-            Noeud *v = NoeudInit(u->x,u->y+1);
-            if( MatVal2(cout,v->x,v->y) == 0){
-				if( MatVal2(heuristique,v->x,v->y) == 0){
-					EnsAjouteTrie(openList,v,heuristique);
-					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
-					MatSet2(heuristique,v->x,v->y,
-							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) );
-					if(AStar_rech)
-	                	SetPointGraphe(v->x,v->y, "vertf");
-				}
-				else{
-					NoeudSuppr(v);
-				}
-			}
-			else
-				NoeudSuppr(v);
+            if(!MatVal2(estMarque,u->x,u->y+1)){
+                Data * v = data_init(u->x,u->y+1,u->cout+1,u->heuristique-1);
+                heap_push(openList,v);
+                if(AStar_rech)
+                    SetPointGraphe(v->x,v->y, "vertf");
+            }
         }
 
 
 		if (!MatVal2(lab->map,u->x+1,u->y)){
+            if(!MatVal2(estMarque,u->x+1,u->y)){
+                Data * v = data_init(u->x+1,u->y,u->cout+1,u->heuristique-1);
+                heap_push(openList,v);
+                if(AStar_rech)
+                    SetPointGraphe(v->x,v->y, "vertf");
+            }
 
-            Noeud *v = NoeudInit(u->x+1,u->y);
-
-			if( MatVal2(cout,v->x,v->y) == 0){
-				if( MatVal2(heuristique,v->x,v->y) == 0){
-					EnsAjouteTrie(openList,v,heuristique);
-					MatSet2(cout,v->x,v->y,MatVal2(cout,u->x,u->y)+1);
-					MatSet2(heuristique,v->x,v->y,
-							MatVal2(cout,v->x,v->y)+(h-2- v->x) * (h-2- v->x) + (l-2 - v->y) * (l-2 - v->y) );
-					if(AStar_rech)
-	                	SetPointGraphe(v->x,v->y, "vertf");
-				}
-				else{
-					NoeudSuppr(v);
-				}
-			}
-			else
-				NoeudSuppr(v);
         }
 
-		NoeudSuppr(u);
+		free(u);
 
     }
 
@@ -738,9 +699,8 @@ void A_Star(Labyrinthe * lab){
     gettimeofday(&temps_fin,NULL);
     printf("temps d'execution: %.5f secondes\n", time_diff(temps_debut,temps_fin));
 
-	MatFree(cout);
-	MatFree(heuristique);
+	MatFree(estMarque);
 	MatFree(closedList);
-	EnsFree(openList);
+	HeapFree(openList);
 
 }

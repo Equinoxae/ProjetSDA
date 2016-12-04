@@ -99,6 +99,10 @@ Data * heap_pop(Heap * h)
     return firstItem;
 }
 
+int HeapEstVide(Heap * h){
+    return h->count == 0;
+}
+
 void HeapFree(Heap * h){
     int i = h->count;
     for(;i>=0;){
