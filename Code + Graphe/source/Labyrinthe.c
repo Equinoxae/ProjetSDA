@@ -206,11 +206,7 @@ void verifTour(Labyrinthe *lab  , Ens *v, Noeud * point,int init){
             if(d_graph)
                 SetPointGraphe(x,y-1,"rouge");
         }
-        else{
-            EnsSuppr(v,x,y-1);
-            if(d_graph)
-                SetPointGraphe(x,y-1,"blanc");
-        }
+        
 		NoeudSuppr(g);
     }
     // Case En-Haut
@@ -221,11 +217,7 @@ void verifTour(Labyrinthe *lab  , Ens *v, Noeud * point,int init){
             if(d_graph)
                 SetPointGraphe(x-1,y,"rouge");
         }
-        else{
-            EnsSuppr(v,x-1,y);
-            if(d_graph)
-                SetPointGraphe(x-1,y,"blanc");
-        }
+        
 		NoeudSuppr(h);
     }
     // Case Droite
@@ -236,11 +228,7 @@ void verifTour(Labyrinthe *lab  , Ens *v, Noeud * point,int init){
             if(d_graph)
                 SetPointGraphe(x,y+1,"rouge");
         }
-        else{
-            EnsSuppr(v,x,y+1);
-            if(d_graph)
-                SetPointGraphe(x,y+1,"blanc");
-        }
+        
 		NoeudSuppr(d);
     }
     // Case En-Bas
@@ -252,11 +240,7 @@ void verifTour(Labyrinthe *lab  , Ens *v, Noeud * point,int init){
             if(d_graph)
                 SetPointGraphe(x+1,y,"rouge");
         }
-        else{
-            EnsSuppr(v,x+1,y);
-            if(d_graph)
-                SetPointGraphe(x+1,y,"blanc");
-        }
+        
 		NoeudSuppr(b);
     }
 

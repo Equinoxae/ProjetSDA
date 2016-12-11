@@ -18,8 +18,18 @@ typedef struct heap
 
 Data * data_init(int x_ ,int y_,int c,int h);
 
+
+/* initialise le tas */
 Heap * heap_init(int size);
+
+/* ajoute un noeud dans le tas */
 void heap_push(Heap * h, Data * value);
+
+/* Supprime le sommet du tas */
 Data * heap_pop(Heap * h);
+
+/* verrifie si le tas est vide */
 int HeapEstVide(Heap * h);
+
+/* libère le tas */
 void HeapFree(Heap * h);

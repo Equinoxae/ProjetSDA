@@ -62,8 +62,9 @@ Data * heap_pop(Heap * h)
 	h->data[0] = h->data[h->count];
 
     int index = 0;
+    int fini = 0;
 
-    while(1) {
+    while(!fini) {
 		int childIndexLeft = index * 2 + 1;
 		int childIndexRight = index * 2 + 2;
 		int swapIndex = 0;
@@ -85,12 +86,12 @@ Data * heap_pop(Heap * h)
                 index = swapIndex;
 			}
 			else {
-				break;
+				fini = 1;
 			}
 
 		}
 		else {
-			break;
+			fini = 1;
 		}
 
     }

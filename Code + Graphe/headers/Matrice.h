@@ -23,6 +23,6 @@ void MatSauve(Matrice * m,char* file); // enregistre une Matrice dans un fichier
 
 Matrice * MatLit(char* file); // lit une Matrice dans un fichier
 
-int MatGetL(Matrice * m);
+int MatGetL(Matrice * m); // récupère la largeur
 
-int MatGetH(Matrice * m);
+int MatGetH(Matrice * m); // récupère la hauteur

@@ -1,0 +1,470 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name    		Complexité
+ 70.20      1.67     1.67    40072     0.00     0.00  EnsSuppr		O(n)
+ 23.96      2.24     0.57    34094     0.00     0.00  EnsFindSupprIndex	O(n/2)
+  2.10      2.29     0.05   957075     0.00     0.00  MatVal2		O(1)
+  1.68      2.33     0.04   355477     0.00     0.00  MatVal		O(1)
+  0.84      2.35     0.02    64974     0.00     0.00  refresh		?
+  0.42      2.36     0.01   124235     0.00     0.00  EstConstructible	O(1) ( 5 case au plus)
+  0.42      2.37     0.01    64974     0.00     0.00  newcolor		?
+  0.42      2.38     0.01        1     0.01     2.32  LabConstruit	O(X)?
+  0.00      2.38     0.00   920085     0.00     0.00  EstConstruit	O(1)
+  0.00      2.38     0.00   584766     0.00     0.00  putpixel		?
+  0.00      2.38     0.00   172164     0.00     0.00  NoeudInit		O(1)
+  0.00      2.38     0.00   172164     0.00     0.00  NoeudSuppr	O(1)
+  0.00      2.38     0.00   127495     0.00     0.00  MatSet		O(1)
+  0.00      2.38     0.00   124235     0.00     0.00  MatGetH		O(1)
+  0.00      2.38     0.00   124235     0.00     0.00  MatGetL		O(1)
+  0.00      2.38     0.00    85418     0.00     0.00  EnsTaille		O(1)
+  0.00      2.38     0.00    82019     0.00     0.00  EnsAjoute		O(1)
+  0.00      2.38     0.00    66076     0.00     0.00  EnsEstVide	O(1)
+  0.00      2.38     0.00    64974     0.00     0.00  SetPointGraphe	O(1) + ?
+  0.00      2.38     0.00    64974     0.00     0.00  setcolor		?
+  0.00      2.38     0.00    34094     0.00     0.00  EnsTirage		O(n/2)
+  0.00      2.38     0.00    32570     0.00     0.00  MatSet2		O(1)
+  0.00      2.38     0.00    31980     0.00     0.00  EnsDepilePremier	O(1)
+  0.00      2.38     0.00    30006     0.00     0.00  verifTour		O(1)
+  0.00      2.38     0.00      874     0.00     0.00  data_init		O(1)
+  0.00      2.38     0.00      874     0.00     0.00  heap_push		O(log n)
+  0.00      2.38     0.00      686     0.00     0.00  HeapEstVide	O(1)
+  0.00      2.38     0.00      685     0.00     0.00  heap_pop		O(log n)
+  0.00      2.38     0.00        5     0.00     0.00  MatAlloc		...
+  0.00      2.38     0.00        5     0.00     0.00  MatFree
+  0.00      2.38     0.00        3     0.00     0.00  time_diff
+  0.00      2.38     0.00        3     0.00     0.00  waitgraph
+  0.00      2.38     0.00        2     0.00     0.00  EnsAlloc
+  0.00      2.38     0.00        2     0.00     0.00  EnsFree
+  0.00      2.38     0.00        1     0.00     0.00  A_Star
+  0.00      2.38     0.00        1     0.00     0.00  Granularise
+  0.00      2.38     0.00        1     0.00     0.00  HeapFree
+  0.00      2.38     0.00        1     0.00     2.32  LabCreate
+  0.00      2.38     0.00        1     0.00     0.00  LabFree
+  0.00      2.38     0.00        1     0.00     0.00  LabInit
+  0.00      2.38     0.00        1     0.00     0.00  MatSauve
+  0.00      2.38     0.00        1     0.00     0.00  cleargraph
+  0.00      2.38     0.00        1     0.00     0.00  closegraph
+  0.00      2.38     0.00        1     0.00     0.06  dijkstra
+  0.00      2.38     0.00        1     0.00     0.00  flushgraph
+  0.00      2.38     0.00        1     0.00     0.00  heap_init
+  0.00      2.38     0.00        1     0.00     0.00  initgraph
+  0.00      2.38     0.00        1     0.00     0.06  lanceRecherche
+  0.00      2.38     0.00        1     0.00     0.00  set_AStar_rech
+  0.00      2.38     0.00        1     0.00     0.00  set_Dij_rech
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+Copyright (C) 2012-2015 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 2 byte(s) for 0.42% of 2.38 seconds
+
+index % time    self  children    called     name
+                                                 <spontaneous>
+[1]    100.0    0.00    2.38                 main [1]
+                0.00    2.32       1/1           LabCreate [2]
+                0.00    0.06       1/1           lanceRecherche [8]
+                0.00    0.00       1/1           set_AStar_rech [50]
+                0.00    0.00       1/1           set_Dij_rech [51]
+                0.00    0.00       1/1           LabFree [43]
+                0.00    0.00       1/1           MatSauve [44]
+-----------------------------------------------
+                0.00    2.32       1/1           main [1]
+[2]     97.6    0.00    2.32       1         LabCreate [2]
+                0.01    2.31       1/1           LabConstruit [3]
+                0.00    0.00       1/1           Granularise [17]
+                0.00    0.00       1/1           LabInit [19]
+                0.00    0.00       1/1           flushgraph [47]
+                0.00    0.00       1/1           initgraph [49]
+                0.00    0.00       1/5           MatAlloc [36]
+                0.00    0.00       1/2           EnsAlloc [40]
+                0.00    0.00       1/3           time_diff [38]
+                0.00    0.00       1/2           EnsFree [41]
+-----------------------------------------------
+                0.01    2.31       1/1           LabCreate [2]
+[3]     97.4    0.01    2.31       1         LabConstruit [3]
+                0.00    1.71   29940/30006       verifTour [4]
+                0.00    0.57   34094/34094       EnsTirage [7]
+                0.00    0.01   34094/124235      EstConstructible [10]
+                0.00    0.01   29940/64974       SetPointGraphe [14]
+                0.00    0.00   34095/66076       EnsEstVide [28]
+                0.00    0.00   29940/32570       MatSet2 [30]
+                0.00    0.00    4154/172164      NoeudSuppr [22]
+-----------------------------------------------
+                0.00    0.00      66/30006       Granularise [17]
+                0.00    1.71   29940/30006       LabConstruit [3]
+[4]     72.0    0.00    1.71   30006         verifTour [4]
+                1.67    0.00   40072/40072       EnsSuppr [5]
+                0.01    0.03   90079/124235      EstConstructible [10]
+                0.00    0.01  120024/920085      EstConstruit [12]
+                0.00    0.00  120085/172164      NoeudSuppr [22]
+                0.00    0.00   90079/172164      NoeudInit [21]
+                0.00    0.00   50007/82019       EnsAjoute [27]
+-----------------------------------------------
+                1.67    0.00   40072/40072       verifTour [4]
+[5]     70.2    1.67    0.00   40072         EnsSuppr [5]
+                0.00    0.00   15913/172164      NoeudSuppr [22]
+-----------------------------------------------
+                0.57    0.00   34094/34094       EnsTirage [7]
+[6]     23.9    0.57    0.00   34094         EnsFindSupprIndex [6]
+                0.00    0.00   51324/85418       EnsTaille [26]
+-----------------------------------------------
+                0.00    0.57   34094/34094       LabConstruit [3]
+[7]     23.9    0.00    0.57   34094         EnsTirage [7]
+                0.57    0.00   34094/34094       EnsFindSupprIndex [6]
+                0.00    0.00   34094/85418       EnsTaille [26]
+-----------------------------------------------
+                0.00    0.06       1/1           main [1]
+[8]      2.4    0.00    0.06       1         lanceRecherche [8]
+                0.00    0.06       1/1           dijkstra [9]
+                0.00    0.00       1/1           A_Star [18]
+                0.00    0.00       3/3           waitgraph [39]
+                0.00    0.00       1/1           closegraph [46]
+-----------------------------------------------
+                0.00    0.06       1/1           lanceRecherche [8]
+[9]      2.4    0.00    0.06       1         dijkstra [9]
+                0.04    0.00  354617/355477      MatVal [13]
+                0.00    0.02   32545/64974       SetPointGraphe [14]
+                0.00    0.00   31982/957075      MatVal2 [11]
+                0.00    0.00  127495/127495      MatSet [23]
+                0.00    0.00   32012/82019       EnsAjoute [27]
+                0.00    0.00   31981/66076       EnsEstVide [28]
+                0.00    0.00   31980/31980       EnsDepilePremier [31]
+                0.00    0.00   31980/172164      NoeudSuppr [22]
+                0.00    0.00       2/5           MatAlloc [36]
+                0.00    0.00       2/5           MatFree [37]
+                0.00    0.00       1/2           EnsAlloc [40]
+                0.00    0.00       1/32570       MatSet2 [30]
+                0.00    0.00       1/3           time_diff [38]
+                0.00    0.00       1/2           EnsFree [41]
+-----------------------------------------------
+                0.00    0.00      62/124235      Granularise [17]
+                0.00    0.01   34094/124235      LabConstruit [3]
+                0.01    0.03   90079/124235      verifTour [4]
+[10]     2.2    0.01    0.04  124235         EstConstructible [10]
+                0.00    0.04  800061/920085      EstConstruit [12]
+                0.00    0.00  124235/124235      MatGetL [25]
+                0.00    0.00  124235/124235      MatGetH [24]
+-----------------------------------------------
+                0.00    0.00    5008/957075      A_Star [18]
+                0.00    0.00   31982/957075      dijkstra [9]
+                0.05    0.00  920085/957075      EstConstruit [12]
+[11]     2.1    0.05    0.00  957075         MatVal2 [11]
+-----------------------------------------------
+                0.00    0.01  120024/920085      verifTour [4]
+                0.00    0.04  800061/920085      EstConstructible [10]
+[12]     2.0    0.00    0.05  920085         EstConstruit [12]
+                0.05    0.00  920085/957075      MatVal2 [11]
+-----------------------------------------------
+                0.00    0.00     860/355477      A_Star [18]
+                0.04    0.00  354617/355477      dijkstra [9]
+[13]     1.7    0.04    0.00  355477         MatVal [13]
+-----------------------------------------------
+                0.00    0.00      66/64974       Granularise [17]
+                0.00    0.00    1004/64974       LabInit [19]
+                0.00    0.00    1419/64974       A_Star [18]
+                0.00    0.01   29940/64974       LabConstruit [3]
+                0.00    0.02   32545/64974       dijkstra [9]
+[14]     1.3    0.00    0.03   64974         SetPointGraphe [14]
+                0.02    0.00   64974/64974       refresh [15]
+                0.01    0.00   64974/64974       newcolor [16]
+                0.00    0.00  584766/584766      putpixel [20]
+                0.00    0.00   64974/64974       setcolor [29]
+-----------------------------------------------
+                0.02    0.00   64974/64974       SetPointGraphe [14]
+[15]     0.8    0.02    0.00   64974         refresh [15]
+-----------------------------------------------
+                0.01    0.00   64974/64974       SetPointGraphe [14]
+[16]     0.4    0.01    0.00   64974         newcolor [16]
+-----------------------------------------------
+                0.00    0.00       1/1           LabCreate [2]
+[17]     0.2    0.00    0.00       1         Granularise [17]
+                0.00    0.00      66/30006       verifTour [4]
+                0.00    0.00      66/64974       SetPointGraphe [14]
+                0.00    0.00      62/124235      EstConstructible [10]
+                0.00    0.00      66/32570       MatSet2 [30]
+                0.00    0.00      66/172164      NoeudInit [21]
+-----------------------------------------------
+                0.00    0.00       1/1           lanceRecherche [8]
+[18]     0.0    0.00    0.00       1         A_Star [18]
+                0.00    0.00    1419/64974       SetPointGraphe [14]
+                0.00    0.00    5008/957075      MatVal2 [11]
+                0.00    0.00     860/355477      MatVal [13]
+                0.00    0.00    1559/32570       MatSet2 [30]
+                0.00    0.00     874/874         data_init [32]
+                0.00    0.00     874/874         heap_push [33]
+                0.00    0.00     686/686         HeapEstVide [34]
+                0.00    0.00     685/685         heap_pop [35]
+                0.00    0.00       2/5           MatAlloc [36]
+                0.00    0.00       2/5           MatFree [37]
+                0.00    0.00       1/1           heap_init [48]
+                0.00    0.00       1/3           time_diff [38]
+                0.00    0.00       1/1           HeapFree [42]
+-----------------------------------------------
+                0.00    0.00       1/1           LabCreate [2]
+[19]     0.0    0.00    0.00       1         LabInit [19]
+                0.00    0.00    1004/64974       SetPointGraphe [14]
+                0.00    0.00    1004/32570       MatSet2 [30]
+-----------------------------------------------
+                0.00    0.00  584766/584766      SetPointGraphe [14]
+[20]     0.0    0.00    0.00  584766         putpixel [20]
+-----------------------------------------------
+                0.00    0.00      66/172164      Granularise [17]
+                0.00    0.00   82019/172164      EnsAjoute [27]
+                0.00    0.00   90079/172164      verifTour [4]
+[21]     0.0    0.00    0.00  172164         NoeudInit [21]
+-----------------------------------------------
+                0.00    0.00      32/172164      EnsFree [41]
+                0.00    0.00    4154/172164      LabConstruit [3]
+                0.00    0.00   15913/172164      EnsSuppr [5]
+                0.00    0.00   31980/172164      dijkstra [9]
+                0.00    0.00  120085/172164      verifTour [4]
+[22]     0.0    0.00    0.00  172164         NoeudSuppr [22]
+-----------------------------------------------
+                0.00    0.00  127495/127495      dijkstra [9]
+[23]     0.0    0.00    0.00  127495         MatSet [23]
+-----------------------------------------------
+                0.00    0.00  124235/124235      EstConstructible [10]
+[24]     0.0    0.00    0.00  124235         MatGetH [24]
+-----------------------------------------------
+                0.00    0.00  124235/124235      EstConstructible [10]
+[25]     0.0    0.00    0.00  124235         MatGetL [25]
+-----------------------------------------------
+                0.00    0.00   34094/85418       EnsTirage [7]
+                0.00    0.00   51324/85418       EnsFindSupprIndex [6]
+[26]     0.0    0.00    0.00   85418         EnsTaille [26]
+-----------------------------------------------
+                0.00    0.00   32012/82019       dijkstra [9]
+                0.00    0.00   50007/82019       verifTour [4]
+[27]     0.0    0.00    0.00   82019         EnsAjoute [27]
+                0.00    0.00   82019/172164      NoeudInit [21]
+-----------------------------------------------
+                0.00    0.00   31981/66076       dijkstra [9]
+                0.00    0.00   34095/66076       LabConstruit [3]
+[28]     0.0    0.00    0.00   66076         EnsEstVide [28]
+-----------------------------------------------
+                0.00    0.00   64974/64974       SetPointGraphe [14]
+[29]     0.0    0.00    0.00   64974         setcolor [29]
+-----------------------------------------------
+                0.00    0.00       1/32570       dijkstra [9]
+                0.00    0.00      66/32570       Granularise [17]
+                0.00    0.00    1004/32570       LabInit [19]
+                0.00    0.00    1559/32570       A_Star [18]
+                0.00    0.00   29940/32570       LabConstruit [3]
+[30]     0.0    0.00    0.00   32570         MatSet2 [30]
+-----------------------------------------------
+                0.00    0.00   31980/31980       dijkstra [9]
+[31]     0.0    0.00    0.00   31980         EnsDepilePremier [31]
+-----------------------------------------------
+                0.00    0.00     874/874         A_Star [18]
+[32]     0.0    0.00    0.00     874         data_init [32]
+-----------------------------------------------
+                0.00    0.00     874/874         A_Star [18]
+[33]     0.0    0.00    0.00     874         heap_push [33]
+-----------------------------------------------
+                0.00    0.00     686/686         A_Star [18]
+[34]     0.0    0.00    0.00     686         HeapEstVide [34]
+-----------------------------------------------
+                0.00    0.00     685/685         A_Star [18]
+[35]     0.0    0.00    0.00     685         heap_pop [35]
+-----------------------------------------------
+                0.00    0.00       1/5           LabCreate [2]
+                0.00    0.00       2/5           dijkstra [9]
+                0.00    0.00       2/5           A_Star [18]
+[36]     0.0    0.00    0.00       5         MatAlloc [36]
+-----------------------------------------------
+                0.00    0.00       1/5           LabFree [43]
+                0.00    0.00       2/5           dijkstra [9]
+                0.00    0.00       2/5           A_Star [18]
+[37]     0.0    0.00    0.00       5         MatFree [37]
+-----------------------------------------------
+                0.00    0.00       1/3           LabCreate [2]
+                0.00    0.00       1/3           dijkstra [9]
+                0.00    0.00       1/3           A_Star [18]
+[38]     0.0    0.00    0.00       3         time_diff [38]
+-----------------------------------------------
+                0.00    0.00       3/3           lanceRecherche [8]
+[39]     0.0    0.00    0.00       3         waitgraph [39]
+-----------------------------------------------
+                0.00    0.00       1/2           LabCreate [2]
+                0.00    0.00       1/2           dijkstra [9]
+[40]     0.0    0.00    0.00       2         EnsAlloc [40]
+-----------------------------------------------
+                0.00    0.00       1/2           LabCreate [2]
+                0.00    0.00       1/2           dijkstra [9]
+[41]     0.0    0.00    0.00       2         EnsFree [41]
+                0.00    0.00      32/172164      NoeudSuppr [22]
+-----------------------------------------------
+                0.00    0.00       1/1           A_Star [18]
+[42]     0.0    0.00    0.00       1         HeapFree [42]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[43]     0.0    0.00    0.00       1         LabFree [43]
+                0.00    0.00       1/5           MatFree [37]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[44]     0.0    0.00    0.00       1         MatSauve [44]
+-----------------------------------------------
+                0.00    0.00       1/1           initgraph [49]
+[45]     0.0    0.00    0.00       1         cleargraph [45]
+-----------------------------------------------
+                0.00    0.00       1/1           lanceRecherche [8]
+[46]     0.0    0.00    0.00       1         closegraph [46]
+-----------------------------------------------
+                0.00    0.00       1/1           LabCreate [2]
+[47]     0.0    0.00    0.00       1         flushgraph [47]
+-----------------------------------------------
+                0.00    0.00       1/1           A_Star [18]
+[48]     0.0    0.00    0.00       1         heap_init [48]
+-----------------------------------------------
+                0.00    0.00       1/1           LabCreate [2]
+[49]     0.0    0.00    0.00       1         initgraph [49]
+                0.00    0.00       1/1           cleargraph [45]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[50]     0.0    0.00    0.00       1         set_AStar_rech [50]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[51]     0.0    0.00    0.00       1         set_Dij_rech [51]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function is in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+Copyright (C) 2012-2015 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+Index by function name
+
+  [18] A_Star                 [43] LabFree                 [9] dijkstra
+  [27] EnsAjoute              [19] LabInit                [47] flushgraph
+  [40] EnsAlloc               [36] MatAlloc               [48] heap_init
+  [31] EnsDepilePremier       [37] MatFree                [35] heap_pop
+  [28] EnsEstVide             [24] MatGetH                [33] heap_push
+   [6] EnsFindSupprIndex      [25] MatGetL                [49] initgraph
+  [41] EnsFree                [44] MatSauve                [8] lanceRecherche
+   [5] EnsSuppr               [23] MatSet                 [16] newcolor
+  [26] EnsTaille              [30] MatSet2                [20] putpixel
+   [7] EnsTirage              [13] MatVal                 [15] refresh
+  [10] EstConstructible       [11] MatVal2                [50] set_AStar_rech
+  [12] EstConstruit           [21] NoeudInit              [51] set_Dij_rech
+  [17] Granularise            [22] NoeudSuppr             [29] setcolor
+  [34] HeapEstVide            [14] SetPointGraphe         [38] time_diff
+  [42] HeapFree               [45] cleargraph              [4] verifTour
+   [3] LabConstruit           [46] closegraph             [39] waitgraph
+   [2] LabCreate              [32] data_init
