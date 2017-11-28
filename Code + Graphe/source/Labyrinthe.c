@@ -41,6 +41,15 @@ void set_Auto(){
 	Auto = 1;
 }
 
+void set_Start(int x,int y){
+	start_x = x;
+	start_y = y;
+}
+
+void set_LinearGen(){
+	linear = 1;
+}
+
 double time_diff(struct timeval x , struct timeval y)
 {
     double x_ms , y_ms , diff;
@@ -359,7 +368,7 @@ void LabConstruit(Labyrinthe *lab  , Ens * v){
     int res;
 
     while( !EnsEstVide(v) ){
-        Noeud * tirage = EnsTirage(v);
+        Noeud * tirage = EnsTirage(v,linear);
 
         if(EstConstructible(lab,v,tirage,0)){
             MatSet2(lab->map, tirage->x ,tirage->y , 1);
@@ -466,10 +475,10 @@ void dijkstra(Labyrinthe * lab){
     for (i = 0; i < V; i++)
         MatSet(dist,i,INT_MAX);
 
-    MatSet2(dist,1,1,0);
+    MatSet2(dist,start_x,start_y,0);
 	if(Dij_rech)
-	    SetPointGraphe(1,1, "vert");
-    EnsAjoute(plusPetit,1,1);
+	    SetPointGraphe(start_x,start_y, "vert");
+    EnsAjoute(plusPetit,start_x,start_y);
 
     int l = lab->map->l;
     int h = lab->map->h;
@@ -580,11 +589,11 @@ void A_Star(Labyrinthe * lab){
     Matrice * estMarque = MatAlloc(l,h);
 	Matrice * closedList = MatAlloc(l,h);
 
-    heap_push(openList,data_init(1,1,0, (h-2-1)*(h-2-1) + (l-2-1)*(l-2-1)) );
-	MatSet2(estMarque,1,1,1);
+    heap_push(openList,data_init(start_x,start_y,0, ((h-start_x)-2 -1)*((h-start_x)-2 -1) + ((l-start_y)-2 -1)*((l-start_y)-2 -1)) );
+	MatSet2(estMarque,start_x,start_y,1);
 
 	if(AStar_rech)
-    	SetPointGraphe(1,1, "vertf");
+    	SetPointGraphe(start_y,start_x, "vertf");
 
     while(!HeapEstVide(openList) && MatVal2(closedList,h-2,l-2) == 0){
 
@@ -655,7 +664,7 @@ void A_Star(Labyrinthe * lab){
 		    SetPointGraphe((int)(p-l)/l+1,(int)(p-l)%l, "bleu");
 
 			if(!(d-1)){
-				SetPointGraphe(1,1, "bleu");
+				SetPointGraphe(start_x,start_y, "bleu");
 		        // fin
 		    }
 		    else if(MatVal(closedList,p-1) == d-1){

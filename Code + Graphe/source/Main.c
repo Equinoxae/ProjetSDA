@@ -3,13 +3,15 @@
 #include <string.h>
 #include "Labyrinthe.h"
 
-// utilisation : ./program [-v] [-d] [-l <largeur>] [-h <hauteur>] [-g <%graine>] <fichier>
+// utilisation : ./program [-v] [-d] [-l <largeur>] [-h <hauteur>] [-g <%graine>] [-Auto] [<fichier>]
 int main(int argc, char *argv[]){
 
     Labyrinthe *lab;
-    int h = 250;
-    int l = 350;
+    int h = 200;
+    int l = 200;
     float g = 0.0001;
+    int s_x;
+    int s_y;
     char * fichier;
 
     int i;
@@ -25,6 +27,10 @@ int main(int argc, char *argv[]){
             h = atoi(argv[++i]);
         else if ( !strcmp(argv[i],"-g"))
             g = atof(argv[++i]);
+	else if ( !strcmp(argv[i],"-start"))
+            set_Start(atof(argv[++i]),atof(argv[++i]));
+	else if ( !strcmp(argv[i],"-linear"))
+		set_LinearGen();
         else if ( !strcmp(argv[i],"-A"))
         	set_AStar();
 	    else if ( !strcmp(argv[i],"-Ad"))
@@ -52,11 +58,11 @@ int main(int argc, char *argv[]){
 
     lab = LabCreate(l,h,g);
 
-	lanceRecherche(lab);
+    lanceRecherche(lab);
 
     MatSauve(lab->map,fichier);
 
-	LabFree(lab);
+    LabFree(lab);
 
     return 0;
 }

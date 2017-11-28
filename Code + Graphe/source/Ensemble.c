@@ -324,8 +324,13 @@ void EnsPrint(Ens *e){
 }
 
 // complexité O(n/2)
-Noeud * EnsTirage(Ens *e){
+Noeud * EnsTirage(Ens *e,int l){
     /* tirage */
-    int index = rand() % EnsTaille(e);
+    int index;    
+
+    if(l)
+	index = 0;
+    else
+    	index = rand() % EnsTaille(e);
     return EnsFindSupprIndex(e,index);
 }

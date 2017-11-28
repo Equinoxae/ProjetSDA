@@ -17,6 +17,13 @@ static int AStar_rech = 0;
 // Execution automatique
 static int Auto = 0;
 
+// Start
+static int start_x = 1;
+static int start_y = 1;
+
+// Linear
+static int linear = 0;
+
 typedef struct Lab{
     Matrice * map;
 }Labyrinthe;
@@ -35,6 +42,10 @@ void set_AStar();
 void set_AStar_rech();
 
 void set_Auto();
+
+void set_Start(int x,int y);
+
+void set_LinearGen();
 
 // difference en 2 moment
 double time_diff(struct timeval x , struct timeval y);
