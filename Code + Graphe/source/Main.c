@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "Labyrinthe.h"
+#include "LabyrintheHexa.h"
 #include "Matrice.h"
-#include "MatriceHexa.h"
 
 // utilisation : ./program [-v] [-d] [-l <largeur>] [-h <hauteur>] [-g <%graine>] [-Auto] [<fichier>]
 int main(int argc, char *argv[]){
@@ -26,7 +26,10 @@ int main(int argc, char *argv[]){
 		
 		}
 		else if (!strcmp(type,"-x")){
-
+			 if ( !strcmp(argv[i],"-v"))
+		        set_v();
+		    else if ( !strcmp(argv[i],"-d"))
+		        set_d();
 		}
 		else if (!strcmp(type,"-r")){
 
@@ -68,7 +71,7 @@ int main(int argc, char *argv[]){
 		
 	}
 	else if (!strcmp(type,"-x")){
-
+		printCase();
 	}
 	else if (!strcmp(type,"-r")){
 		if( h < 10 || l < 10 ){
