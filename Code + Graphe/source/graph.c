@@ -309,6 +309,18 @@ void line(int x1, int y1, int x2, int y2)
     XDrawLine(display, shadow, gc, x1, y1, x2, y2);
 }
 
+void circle(int x, int y, int r){
+	CHECKINIT(circle);
+
+	XDrawArc(display, shadow, gc, x, y, r*2 , r*2 , 0 ,360*64);
+}
+
+void arc(int x, int y, int r, int angle_start, int angle_end){
+	CHECKINIT(arc);
+	
+	XDrawArc(display,shadow, gc, x, y, r*2 , r*2, angle_start, angle_end);
+}
+
 void refresh()
 {
     XWindowAttributes wattr;
