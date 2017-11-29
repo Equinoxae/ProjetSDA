@@ -48,7 +48,7 @@ MurHexa * MatHexaVal(MatriceHexa * m, int p){
 }
 
 MurHexa * MatHexaVal2(MatriceHexa * m, int x, int y){
-  return m->points[x*m->l + y];
+  return m->points[y*m->l + x];
 }
 
 void MatHexaSet(MatriceHexa * m, int p, MurHexa * v){
@@ -56,7 +56,7 @@ void MatHexaSet(MatriceHexa * m, int p, MurHexa * v){
 }
 
 void MatHexaSet2(MatriceHexa * m, int x,int y, MurHexa * v){
-  m->points[x*m->l+y] = v;
+  m->points[y*m->l+x] = v;
 }
 
 int MatHexaGetL(MatriceHexa * m){
