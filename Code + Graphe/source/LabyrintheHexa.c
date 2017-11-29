@@ -5,8 +5,8 @@
 #include <limits.h>
 #include "LabyrintheHexa.h"
 #include "graph.h"
-#include "Heap.h"
 #include <string.h>
+
 // génération du labyrinthe
 LabyrintheHexa *LabHexaCreate(int w,int h,float r){}
 
@@ -17,19 +17,19 @@ void LabHexaFree(LabyrintheHexa *lab){}
 int EstHexaConstruit(LabyrintheHexa *lab , int x ,int y){}
 
 // Vérifie si une case est constructible
-int EstHexaConstructible(LabyrintheHexa *lab  , Ens *v, Noeud * point, int init){}
+int EstHexaConstructible(LabyrintheHexa *lab  , EnsHexa *v, NoeudHexa * point, int init){}
 
 // construit les bords
 void LabHexaInit(LabyrintheHexa *lab, int w ,int h){}
 
 // Verifie la constructibilité des case autour d'une case 
-void verifhexaTour(LabyrintheHexa *lab  , Ens *v, Noeud * point,int init){}
+void verifhexaTour(LabyrintheHexa *lab  , EnsHexa *v, NoeudHexa * point,int init){}
 
 // granularise le labyrinthe avec un nombre de graine
-void GranulariseHexa(LabyrintheHexa *lab ,Ens *v, int nb){}
+void GranulariseHexa(LabyrintheHexa *lab ,EnsHexa *v, int nb){}
 
 // Construit les murs du labyrinthe depuis les graines
-void LabHexaConstruit(LabyrintheHexa *lab ,Ens *v){}
+void LabHexaConstruit(LabyrintheHexa *lab ,EnsHexa *v){}
 
 // Affiche le labyrinthe dans la console
 void LabHexaPrint(LabyrintheHexa *lab){}
