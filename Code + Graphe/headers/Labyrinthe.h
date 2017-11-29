@@ -14,12 +14,16 @@ static int Dij_rech = 0;
 static int AStar = 0;
 static int AStar_rech = 0;
 
+// Manual Research 
+static int manual_search = 0;
+
 // Execution automatique
 static int Auto = 0;
 
 // Start
 static int start_x = 1;
 static int start_y = 1;
+static int manual_start = 0;
 
 // Linear
 static int linear = 0;
@@ -41,9 +45,13 @@ void set_AStar();
 
 void set_AStar_rech();
 
+void set_Manual_rech();
+
 void set_Auto();
 
 void set_Start(int x,int y);
+
+void set_Manual_Start();
 
 void set_LinearGen();
 
@@ -82,6 +90,9 @@ void SetPointGraphe(int x, int y, char * color);
 
 // gestionnaire des fonctions de recherche
 void lanceRecherche(Labyrinthe *lab);
+
+// lance la recherche manuelle
+void recherche_manuelle(Labyrinthe * lab);
 
 // lance la recherche
 void dijkstra(Labyrinthe * lab);

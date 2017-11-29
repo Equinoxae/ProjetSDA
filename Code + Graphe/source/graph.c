@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 /*
@@ -143,7 +144,7 @@ void initgraph(int larg, int haut)
 
     /* on cr�e la fen�tre */
     window = XCreateSimpleWindow(display, RootWindow(display, screen),
-                                 0, 0, larg, haut, BORDER_WIDTH,
+                                 200, 200, larg, haut, BORDER_WIDTH,
                                  black, white);
     wattrmask = CWEventMask;
     wattr.event_mask = ExposureMask;
@@ -319,6 +320,88 @@ void arc(int x, int y, int r, int angle_start, int angle_end){
 	CHECKINIT(arc);
 	
 	XDrawArc(display,shadow, gc, x, y, r*2 , r*2, angle_start, angle_end);
+}
+
+void getClic(int * x, int * y){
+	CHECKINIT(getClic);
+	int stop = 0;
+	XEvent report;
+	XAutoRepeatOff(display);
+	XSelectInput(display, window, ButtonPressMask);
+	while(!stop)
+	{
+		XNextEvent(display, &report); /* si un seule fenêtre */
+		switch (report.type)
+		{
+			case Expose:
+            /* Unless this is the last contiguous expose,
+               don't draw the window (sic.) */
+            if (report.xexpose.count != 0)
+                break;
+            /* On dessine la fen�tre */
+/*            XCopyArea(display, shadow, window, gc,
+                     0, 0, wattr.width, wattr.height, 0, 0);
+*/            /* fprintf(stderr, "%s: ne peut redessiner la fen�tre...\n", NAME); */
+            break;		    
+		    case ButtonPress:
+		        *x = report.xbutton.x;
+		        *y = report.xbutton.y;
+		        stop = 1;
+		        break;
+		    default: 
+		    break;
+		}
+	}
+
+}
+
+char * getKey(){
+	CHECKINIT(getKey);
+	XEvent report;
+	XAutoRepeatOff(display);
+	XSelectInput(display, window, KeyPressMask);
+	
+	char * c = "null";
+	
+	while(c == "null")
+	{
+		XNextEvent(display, &report); /* si un seule fenêtre */
+		
+		switch (report.type) {
+        case Expose:
+            /* Unless this is the last contiguous expose,
+               don't draw the window (sic.) */
+            if (report.xexpose.count != 0)
+                break;
+            /* On dessine la fen�tre */
+/*            XCopyArea(display, shadow, window, gc,
+                     0, 0, wattr.width, wattr.height, 0, 0);
+*/            /* fprintf(stderr, "%s: ne peut redessiner la fen�tre...\n", NAME); */
+            break;
+    	case KeyPress:
+			printf( "KeyPress: %x\n", report.xkey.keycode );
+		        
+	        if(report.xkey.keycode == 0x9)
+	        		return "esc";
+	       	else if(report.xkey.keycode == 0x24)
+	        		return "enter";
+	        else if(report.xkey.keycode == 0x41)
+	        		return "space";
+	        else if(report.xkey.keycode == 0x6f)
+	        		return "up";
+	        else if(report.xkey.keycode == 0x71)
+	        		return "left";
+	        else if(report.xkey.keycode == 0x72)
+	        		return "right";
+	        else if(report.xkey.keycode == 0x74)
+	        		return "down";
+		    
+		default :
+		break;
+		}
+	}
+	
+	return c;
 }
 
 void refresh()

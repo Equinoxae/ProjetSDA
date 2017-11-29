@@ -42,8 +42,12 @@ int main(int argc, char *argv[]){
 		        h = atoi(argv[++i]);
 		    else if ( !strcmp(argv[i],"-g"))
 		        g = atof(argv[++i]);
+			else if (!strcmp(argv[i],"-M"))
+				set_Manual_rech();
 			else if ( !strcmp(argv[i],"-start"))
 		        set_Start(atof(argv[++i]),atof(argv[++i]));
+			else if (!strcmp(argv[i],"-ms"))
+				set_Manual_Start();
 			else if ( !strcmp(argv[i],"-linear"))
 				set_LinearGen();
 		    else if ( !strcmp(argv[i],"-A"))
@@ -62,7 +66,6 @@ int main(int argc, char *argv[]){
 		else{
 		return 0;
 		}
-
 
     }
 

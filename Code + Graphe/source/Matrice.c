@@ -23,7 +23,7 @@ int MatVal(Matrice * m, int p){
 }
 
 int MatVal2(Matrice * m, int x, int y){
-  return m->points[x*m->l + y];
+  return m->points[y*m->l + x];
 }
 
 void MatSet(Matrice * m, int p, int v){
@@ -31,7 +31,7 @@ void MatSet(Matrice * m, int p, int v){
 }
 
 void MatSet2(Matrice * m, int x,int y, int v){
-  m->points[x*m->l+y] = v;
+  m->points[y*m->l+x] = v;
 }
 
 void MatSauve(Matrice * m,char* file){
