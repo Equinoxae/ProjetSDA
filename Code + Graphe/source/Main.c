@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "Labyrinthe.h"
+#include "Matrice.h"
+#include "MatriceHexa.h"
 
 // utilisation : ./program [-v] [-d] [-l <largeur>] [-h <hauteur>] [-g <%graine>] [-Auto] [<fichier>]
 int main(int argc, char *argv[]){
