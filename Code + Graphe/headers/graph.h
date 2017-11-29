@@ -23,6 +23,10 @@ void putpixel(int x, int y);
 /* trace un segment */
 void line(int x1, int y1, int x2, int y2);
 
+/* trace un cercle */
+void circle(int x, int y, int r);
+void arc(int x, int y, int r, int angle_start, int angle_end);
+
 /* rafraichit */
 void refresh(void);
 
