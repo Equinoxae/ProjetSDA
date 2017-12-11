@@ -9,18 +9,20 @@ MurHexa * MurHexaAlloc(){
 	m->c1 = 1;
 	m->c2 = 1;
 	m->c3 = 1;
+	m->v = 0;
 
 	return m;
 
 }
 
-MurHexa * MurHexaAlloc2(int c1, int c2, int c3){
+MurHexa * MurHexaAlloc2(int c1, int c2, int c3,int v){
 
 	MurHexa * m = malloc(sizeof(MurHexa));
 
 	m->c1 = c1;
 	m->c2 = c2;
 	m->c3 = c3;
+	m->v = v;
 
 	return m;
 

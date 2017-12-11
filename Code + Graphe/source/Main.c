@@ -3,13 +3,15 @@
 #include <string.h>
 #include "Labyrinthe.h"
 #include "LabyrintheHexa.h"
+#include "graph.h"
 
-// utilisation : ./program [-v] [-d] [-l <largeur>] [-h <hauteur>] [-g <%graine>] [-Auto] [<fichier>]
+// utilisation : ./program {-c/-C/-X/-r}  [-v] [-d] [-l <largeur>] [-h <hauteur>] [-g <%graine>] [-Auto] [<fichier>]
 int main(int argc, char *argv[]){
 
     Labyrinthe *lab;
-    int h = 200;
-    int l = 200;
+	LabyrintheHexa *labx;
+    int h = -1;
+    int l = -1;
     float g = 0.0001;
     int s_x;
     int s_y;
@@ -24,11 +26,24 @@ int main(int argc, char *argv[]){
 		if(!strcmp(type,"-c")){
 		
 		}
+		else if(!strcmp(type,"-C")){
+		
+		}
 		else if (!strcmp(type,"-x")){
-			 if ( !strcmp(argv[i],"-v"))
-		        set_v();
+			if ( !strcmp(argv[i],"-v"))
+		        set_v_hexa();
 		    else if ( !strcmp(argv[i],"-d"))
-		        set_d();
+		        set_d_hexa();
+			else if ( !strcmp(argv[i],"-l"))
+		        l = atoi(argv[++i]);
+		    else if ( !strcmp(argv[i],"-h"))
+		        h = atoi(argv[++i]);
+			else if (!strcmp(argv[i],"-M"))
+				set_Manual_rech_hexa();
+			else if ( !strcmp(argv[i],"-start"))
+		        set_Start_hexa(atof(argv[++i]),atof(argv[++i]));
+			else if (!strcmp(argv[i],"-ms"))
+				set_Manual_Start_hexa();
 		}
 		else if (!strcmp(type,"-r")){
 
@@ -60,8 +75,8 @@ int main(int argc, char *argv[]){
 		        set_Dij_rech();
 			else if ( !strcmp(argv[i],"-Auto"))
 		        set_Auto();
-		    else
-		        sprintf(fichier,"%s.pgm",argv[i]);
+		    else if ( !strcmp(argv[i],"-file"))
+		        sprintf(fichier,"%s.pgm",argv[++i]);
 		}
 		else{
 		return 0;
@@ -69,13 +84,44 @@ int main(int argc, char *argv[]){
 
     }
 
+	// cercle
 	if(!strcmp(type,"-c")){
 		
 	}
-	else if (!strcmp(type,"-x")){
-		printCase();
+	// carré avec bordure
+	else if (!strcmp(type,"-C")){
+
 	}
+	// hexagone
+	else if (!strcmp(type,"-x")){
+		if(h == -1)
+			h = 10;
+
+		if(l == -1)
+			l = 10;
+
+		if( h < 5 || l < 5 || h > 40 || l > 40){
+		    printf("Taille invalide ! La largeur et la hauteur doivent être >= 5 et <= 40\n");
+		    exit(2);
+		}
+
+		labx = LabHexaCreate(l,h);
+		
+		waitgraph();
+		closegraph();
+
+		LabHexaFree(labx);
+
+	}
+	// rectangle
 	else if (!strcmp(type,"-r")){
+		if(h == -1)
+			h = 200;
+
+		if(l == -1)
+			l = 200;
+
+
 		if( h < 10 || l < 10 ){
 		    printf("Taille invalide ! La largeur et la hauteur doivent être > 10\n");
 		    exit(2);

@@ -1,23 +1,25 @@
 
 typedef struct MurHexa{
 
-  int c1; // coté |
-  int c2; // coté / 
-  int c3; // coté \
+  	int c1; // coté |
+  	int c2; // coté / 
+  	int c3; // coté \
+	
+	int v;
 
 } MurHexa;
 
 typedef struct MatriceHexa{
 
-  int h;
-  int l;
-  MurHexa* * points; //on a un tab de MurHexa. **-> tab de pointeurs 
+  	int h;
+  	int l;
+  	MurHexa* * points; //on a un tab de MurHexa. **-> tab de pointeurs 
 
 } MatriceHexa;
 
 MurHexa * MurHexaAlloc(); //constructeur
 
-MurHexa * MurHexaAlloc2(int c1, int c2, int c3); //constructeur
+MurHexa * MurHexaAlloc2(int c1, int c2, int c3, int v); //constructeur
 
 MatriceHexa * MatHexaAlloc(int h1,int l1); // création d’une nouvelle Matrice h * l initialisée à 0
 

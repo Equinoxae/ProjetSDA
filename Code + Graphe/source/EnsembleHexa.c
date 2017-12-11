@@ -13,17 +13,19 @@ NoeudHexa *NoeudHexaAlloc(){
 
     n->x = -1;
     n->y = -1;
+    n->cote = 0;
     n->next = NULL;
     n->previous = NULL;
 
     return n;
 }
 
-NoeudHexa *NoeudHexaInit(int x,int y){
+NoeudHexa *NoeudHexaInit(int x,int y, int c){
     NoeudHexa *n = malloc(sizeof(NoeudHexa));
 
     n->x = x;
     n->y = y;
+    n->cote = c;
     n->next = NULL;
     n->previous = NULL;
 
@@ -66,14 +68,14 @@ int EnsHexaEstVide(EnsHexa *e){
 }
 
 // complexté O(1)
-void EnsHexaAjoute(EnsHexa *e, int x, int y){
+void EnsHexaAjoute(EnsHexa *e, int x, int y, int c){
 
     if(e->dernier == NULL){
-        e->premier = NoeudHexaInit(x,y);
+        e->premier = NoeudHexaInit(x,y,c);
         e->dernier = e->premier;
     }
     else{
-        NoeudHexa * n = NoeudHexaInit(x,y);
+        NoeudHexa * n = NoeudHexaInit(x,y,c);
         n->previous = e->dernier;
         e->dernier->next = n;
         e->dernier = n;
@@ -324,7 +326,7 @@ void EnsHexaPrint(EnsHexa *e){
 }
 
 // complexité O(n/2)
-NoeudHexa * EnsHeTirage(EnsHexa *e,int l){
+NoeudHexa * EnsHexaTirage(EnsHexa *e,int l){
     /* tirage */
     int index;    
 

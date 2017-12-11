@@ -24,7 +24,7 @@ typedef struct EnsHexa{
 // Noeud fonction //
 
 NoeudHexa *NoeudHexaAlloc();
-NoeudHexa *NoeudHexaInit(int x,int y);
+NoeudHexa *NoeudHexaInit(int x,int y,int c);
 void NoeudHexaSuppr(NoeudHexa *n);
 
 // Ensemble fonction //
@@ -35,7 +35,7 @@ void EnsHexaFree(EnsHexa *e); // libération éventuelle de la mémoire utilisé
 
 int EnsHexaEstVide(EnsHexa *e); // teste si un ensemble est vide
 
-void EnsHexaAjoute(EnsHexa *e, int x, int y); // ajoute un couple à un ensemble
+void EnsHexaAjoute(EnsHexa *e, int x, int y, int c); // ajoute un couple à un ensemble
 
 void EnsHexaAjouteNoeudHexa(EnsHexa *e,NoeudHexa * n); // ajoute un noeud
 
