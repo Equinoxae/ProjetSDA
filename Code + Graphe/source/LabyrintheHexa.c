@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <time.h>
 #include <sys/time.h>
@@ -71,11 +72,13 @@ LabyrintheHexa *LabHexaCreate(int w,int h){
 
 	LabHexaInit(l,W,H);
 	
-	waitgraph();
+	printf("fin init\n");
 	
-	//LabHexaConstruit(l,v);
-
 	//waitgraph();
+	
+	LabHexaConstruit(l,v);
+
+	waitgraph();
 
 	return l;
 }
@@ -114,10 +117,8 @@ void verifHexaTour(LabyrintheHexa *lab  , EnsHexa *v, int x, int y){
 	
 	
 	if( y% 2 == 0){
-		
 		// gauche
 		if( x-1 >= 0){
-		
 			MurHexa * m = MatHexaVal2(lab->map,x-1, y);
 		
 			if(m->v == 0){
@@ -126,10 +127,8 @@ void verifHexaTour(LabyrintheHexa *lab  , EnsHexa *v, int x, int y){
 					printCoteHexa(x,y,1,"rouge");
 			}
 		}
-		
 		// haut gauche
-		if(y-1 > 0){
-		
+		if(y-1 >= 0 && x-1 >= 0){
 			MurHexa * m = MatHexaVal2(lab->map,x-1, y-1);
 		
 			if(m->v == 0){
@@ -138,10 +137,8 @@ void verifHexaTour(LabyrintheHexa *lab  , EnsHexa *v, int x, int y){
 					printCoteHexa(x,y,2,"rouge");
 			}
 		}
-		
 		// haut droit		
-		if(y-1 > 0){
-		
+		if(y-1 >= 0){
 			MurHexa * m = MatHexaVal2(lab->map,x, y-1);
 		
 			if(m->v == 0){
@@ -150,10 +147,8 @@ void verifHexaTour(LabyrintheHexa *lab  , EnsHexa *v, int x, int y){
 					printCoteHexa(x,y,3,"rouge");
 			}
 		}
-		
 		// droite
 		if( x+1 < w){
-		
 			MurHexa * m = MatHexaVal2(lab->map,x+1, y);
 		
 			if(m->v == 0){
@@ -162,21 +157,18 @@ void verifHexaTour(LabyrintheHexa *lab  , EnsHexa *v, int x, int y){
 					printCoteHexa(x,y,4,"rouge");
 			}
 		}
-		
 		// bas droit
 		if(y+1 < h){
-		
 			MurHexa * m = MatHexaVal2(lab->map,x, y+1);
-		
+
 			if(m->v == 0){
 				EnsHexaAjoute(v,x,y,5);
 				if(d_graph_hexa)
 					printCoteHexa(x,y,5,"rouge");
 			}
 		}
-		
 		// bas gauche
-		if(y+1 < h){
+		if(y+1 < h && x-1 >= 0){
 		
 			MurHexa * m = MatHexaVal2(lab->map,x-1, y+1);
 		
@@ -203,7 +195,7 @@ void verifHexaTour(LabyrintheHexa *lab  , EnsHexa *v, int x, int y){
 		}
 		
 		// haut gauche
-		if(y-1 > 0){
+		if(y-1 >= 0){
 		
 			MurHexa * m = MatHexaVal2(lab->map,x, y-1);
 		
@@ -215,7 +207,7 @@ void verifHexaTour(LabyrintheHexa *lab  , EnsHexa *v, int x, int y){
 		}
 		
 		// haut droit		
-		if(y-1 > 0){
+		if(y-1 >= 0 && x+1 < w ){
 		
 			MurHexa * m = MatHexaVal2(lab->map,x+1, y-1);
 		
@@ -239,7 +231,7 @@ void verifHexaTour(LabyrintheHexa *lab  , EnsHexa *v, int x, int y){
 		}
 		
 		// bas droit
-		if(y+1 < h){
+		if(y+1 < h && x+1 < w){
 		
 			MurHexa * m = MatHexaVal2(lab->map,x+1, y+1);
 		
@@ -265,7 +257,6 @@ void verifHexaTour(LabyrintheHexa *lab  , EnsHexa *v, int x, int y){
 	}
 
 
-
 }
 
 // granularise le labyrinthe avec un nombre de graine
@@ -276,29 +267,45 @@ void GranulariseHexa(LabyrintheHexa *lab ,EnsHexa *v, int nb){ // nada
 void LabHexaConstruit(LabyrintheHexa *lab ,EnsHexa *v){
 	
 	// trouve le premier mur et ajoute ses coté en liste
-	EnsHexaAjoute(v,lab->map->l/2,lab->map->h/2,0);
+	EnsHexaAjoute(v,lab->map->l/2 - 1,lab->map->h/2 - 1,0);
 	
 	/*for(int i = 1; i <= 6; i++){
-		EnsHexaAjoute(lab->l/2,lab->h/2,i);
-		if(v_graph_hexa)
-			printCote(lab->l/2,lab->h/2,i,"rouge");
+		EnsHexaAjoute(v,lab->map->l/2,lab->map->h/2,i);
+		if(d_graph_hexa)
+			printCoteHexa(lab->map->l/2,lab->map->h/2,i,"rouge");
 	}*/
+	
+	printf("start %i\n",v->taille);
 	
 	while(!EnsHexaEstVide(v)){
 		NoeudHexa * n = EnsHexaTirage(v,0);
 		
+		printf("tirage %i\n",v->taille);
+		printf("%i %i %i\n",n->x,n->y,n->cote);
+
+		
 		MurHexa * m, * voisin, * first;
+		int x_v,y_v;
+
+
+		m = MatHexaVal2(lab->map,n->x,n->y);
+		m->v = 1;
+
 		switch(n->cote)
 		{
-			case 1:
-				m = MatHexaVal2(lab->map,n->x,n->y);
-				m->v = 1;
-			
+			case 1:		
+				// trouve le voisin
 				voisin = MatHexaVal2(lab->map,n->x-1,n->y);
 				if(voisin->v == 0){
+					// casse le mur					
 					m->c1 =0;
+					// visite le voisin
+					voisin->v = 1; 
+					
 					if(v_graph_hexa)
 						printCoteHexa(n->x,n->y,1,"blanc");
+					
+					// je verifie le tour
 					verifHexaTour(lab,v,n->x-1,n->y);
 				} 
 				else{
@@ -308,19 +315,23 @@ void LabHexaConstruit(LabyrintheHexa *lab ,EnsHexa *v){
 				
 				break;
 			case 2:
-				m = MatHexaVal2(lab->map,n->x,n->y);
-				m->v = 1;
 				
+				// trouve le voisin
 				if(n->y%2 == 0)
 					voisin = MatHexaVal2(lab->map,n->x-1,n->y-1);
 				else
 					voisin = MatHexaVal2(lab->map,n->x,n->y-1);
 				
 				if(voisin->v == 0){
+					// visite le voisin
+					voisin->v = 1;
+					// casse le mur
 					m->c2 =0;
+					
 					if(v_graph_hexa)
 						printCoteHexa(n->x,n->y,2,"blanc");
 					
+					// vérifi le tour
 					if(n->y%2 == 0)
 						verifHexaTour(lab,v,n->x-1,n->y-1);
 					else
@@ -332,20 +343,24 @@ void LabHexaConstruit(LabyrintheHexa *lab ,EnsHexa *v){
 				}
 				
 				break;
-			case 3:
-				m = MatHexaVal2(lab->map,n->x,n->y);
-				m->v = 1;
 				
+			case 3:
+				
+				// trouve le voisin
 				if(n->y%2 == 0)
 					voisin = MatHexaVal2(lab->map,n->x,n->y-1);
 				else
 					voisin = MatHexaVal2(lab->map,n->x+1,n->y-1);
 				
 				if(voisin->v == 0){
+					//casse le mur
 					m->c3 =0;
+					// visite le voisin 
+					voisin->v = 1;
 					if(v_graph_hexa)
 						printCoteHexa(n->x,n->y,3,"blanc");
-						
+					
+					// verifi le tour
 					if(n->y%2 == 0)
 						verifHexaTour(lab,v,n->x,n->y-1);
 					else
@@ -358,14 +373,21 @@ void LabHexaConstruit(LabyrintheHexa *lab ,EnsHexa *v){
 				
 				break;
 			case 4:
-				m = MatHexaVal2(lab->map,n->x,n->y);
-				m->v = 1;
 			
+				// trouve le voisin			
 				voisin = MatHexaVal2(lab->map,n->x+1,n->y);
+				
 				if(voisin->v == 0){
-					voisin->c1 =0;
+					// casse le mur
+					voisin->c1 = 0;
+					
+					// visite le voisin
+					voisin->v = 1;
+					
 					if(v_graph_hexa)
 						printCoteHexa(n->x,n->y,4,"blanc");
+					
+					// verifie le  tour
 					verifHexaTour(lab,v,n->x+1,n->y);
 				} 
 				else{
@@ -374,19 +396,24 @@ void LabHexaConstruit(LabyrintheHexa *lab ,EnsHexa *v){
 				}
 				break;
 			case 5:
-				m = MatHexaVal2(lab->map,n->x,n->y);
-				m->v = 1;
 				
+				// trouve le voisin
 				if(n->y%2 == 0)
 					voisin = MatHexaVal2(lab->map,n->x,n->y+1);
 				else
 					voisin = MatHexaVal2(lab->map,n->x+1,n->y+1);
 				
 				if(voisin->v == 0){
+				
+					// casse le mur
 					voisin->c2 =0;
+					
+					// visite le voisin
+					voisin->v = 1;
 					if(v_graph_hexa)
 						printCoteHexa(n->x,n->y,5,"blanc");
 					
+					// verifie le tour
 					if(n->y%2 == 0)
 						verifHexaTour(lab,v,n->x,n->y+1);
 					else
@@ -398,19 +425,24 @@ void LabHexaConstruit(LabyrintheHexa *lab ,EnsHexa *v){
 				}
 				break;
 			case 6:
-				m = MatHexaVal2(lab->map,n->x,n->y);
-				m->v = 1;
 				
+				// trouve le voisin
 				if(n->y%2 == 0)
 					voisin = MatHexaVal2(lab->map,n->x-1,n->y+1);
 				else
 					voisin = MatHexaVal2(lab->map,n->x,n->y+1);
 				
 				if(voisin->v == 0){
+					// casse le mur
 					voisin->c3 = 0;
+					
+					// visite le voisin
+					voisin->v = 1;
+					
 					if(v_graph_hexa)
-						printCoteHexa(n->x,n->y,3,"blanc");
-						
+						printCoteHexa(n->x,n->y,6,"blanc");
+					
+					// verifi le tour
 					if(n->y%2 == 0)
 						verifHexaTour(lab,v,n->x-1,n->y+1);
 					else
@@ -418,19 +450,20 @@ void LabHexaConstruit(LabyrintheHexa *lab ,EnsHexa *v){
 				} 
 				else{
 					if(d_graph_hexa)
-						printCoteHexa(n->x,n->y,3,"noir");
+						printCoteHexa(n->x,n->y,6,"noir");
 				}
 				break;
 			case 0:
-				first = MatHexaVal2(lab->map,n->x,n->y);
-				first->v = 1;
 				verifHexaTour(lab,v,n->x,n->y);
 				break;
 		
 		}
+		printf("next %i\n",v->taille);
 	
-		//waitgraph();
-	
+		free(n);
+		if(d_graph_hexa)
+			usleep(10 * 1000);
+
 	}
 	
 
@@ -520,26 +553,41 @@ void printCoteHexa(int x, int y, int cot, char * color){
 	int l = y * 20;
 	int c = x * 20;
 
+	//printf("%i %i\n",x,y);
+
 	int col = (y%2 == 0)? 0 : 10;
+	
 	
 	switch(cot){
 		case 1:
 			line(0 + c + col, 11 + l, 0 + c + col, 19 + l); 	// '|'
+			//line(0 + c + col, 10 + l, 0 + c + col, 20 + l); 	// '|'
 			break;
 		case 2:
+			//line(0 + c + col, 10 + l, 10 + c + col, 0 + l); 	// '/'
 			line(1 + c + col, 9 + l, 9 + c + col, 1 + l); 	// '/'
 			break;
 		case 3:
+			//line(10 + c + col, 0 + l, 20 + c + col, 10 + l); 	// '\'
 			line(11 + c + col, 1 + l, 19 + c + col, 9 + l); 	// '\'
 			break;
 		case 4:
+			//line(20 + c + col, 10 + l, 20 + c + col,  20 + l); 	// '|'
 			line(20 + c + col, 11 + l, 20 + c + col,  19 + l); 	// '|'
 			break;
 		case 5:
+			//line(10 + c + col, 30 + l , 20 + c + col, 20 + l); 	// '/'
 			line(11 + c + col, 29 + l , 19 + c + col, 21 + l); 	// '/'
 			break;
 		case 6:
+			//line(0 + c + col, 20 + l , 10 + c + col, 30 + l); 	// '\'
 			line(1 + c + col, 21 + l , 9 + c + col, 29 + l); 	// '\'
+			break;
+		default:
+			printf("error");
+			break;
 	}
+	
+	refresh();
 }
 
