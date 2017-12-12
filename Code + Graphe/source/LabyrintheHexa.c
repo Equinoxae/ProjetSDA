@@ -500,17 +500,17 @@ void recherche_manuelle_hexa(LabyrintheHexa * lab){
 			
 		}
 		else if(!strcmp(k,"right")){
-			if( x + 1 < l -1){
-				MurHexa* m = MatHexaVal2(lab->map,x+1,y);
 			
-				if(m->c1 == 0){
-					prev_x = x;
-					prev_y = y;
-			
-					x++;
-					printf("dir : %s\n",k);
-				}
+			MurHexa* m = MatHexaVal2(lab->map,x+1,y);
+		
+			if(m->c1 == 0){
+				prev_x = x;
+				prev_y = y;
+		
+				x++;
+				printf("dir : %s\n",k);
 			}
+			
 		}
 		else if(!strcmp(k,"up")){
 			k = getKey();
@@ -544,7 +544,7 @@ void recherche_manuelle_hexa(LabyrintheHexa * lab){
 				
 					MurHexa *m = MatHexaVal2(lab->map,x,y);
 			
-					if(m->c2 == 0){
+					if(m->c3 == 0){
 						prev_x = x;
 						prev_y = y;
 		
@@ -601,7 +601,7 @@ void recherche_manuelle_hexa(LabyrintheHexa * lab){
 						prev_x = x;
 						prev_y = y;
 		
-						if(m->c2 == 0){
+						if(y%2 == 0){
 							x--;
 							y++;
 						}
@@ -621,14 +621,14 @@ void recherche_manuelle_hexa(LabyrintheHexa * lab){
 		
 		}
 		
-		printPointHexa(prev_x,prev_y,"gris");
-		printPointHexa(x,y,"rouge");
+		printPointHexa(prev_x,prev_y,"grisf");
+		printPointHexa(x,y,"vert");
 				
 		printf("pos : %i %i\n",x,y);
 		
 	}
 	
-	waitgraph();
+
 	
 	if (x == end_x && y == end_y)
 		printf("Vous avez gagné !\n");
@@ -655,7 +655,8 @@ void printHexa(int w, int h, int x, int y, char * color){
             setcolor(newcolor(0,0.5,1));
     else if (!strcmp(color,"gris"))
     		setcolor(newcolor(0.9,0.9,0.9));
-
+	else if (!strcmp(color,"grisf"))
+    		setcolor(newcolor(0.6,0.6,0.6));
 	int l = y * 20;
 	int c = x * 20;
 
@@ -701,6 +702,8 @@ void printCoteHexa(int x, int y, int cot, char * color){
             setcolor(newcolor(0,0.5,1));
     else if (!strcmp(color,"gris"))
     		setcolor(newcolor(0.9,0.9,0.9));
+	else if (!strcmp(color,"grisf"))
+    		setcolor(newcolor(0.6,0.6,0.6));
 	
 	int l = y * 20;
 	int c = x * 20;
@@ -760,6 +763,8 @@ void printPointHexa(int x, int y, char* color){
             setcolor(newcolor(0,0.5,1));
     else if (!strcmp(color,"gris"))
     		setcolor(newcolor(0.9,0.9,0.9));
+	else if (!strcmp(color,"grisf"))
+    		setcolor(newcolor(0.6,0.6,0.6));
 	
 	int l = y * 20;
 	int c = x * 20;
