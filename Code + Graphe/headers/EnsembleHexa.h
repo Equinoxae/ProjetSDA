@@ -5,7 +5,7 @@ typedef struct NoeudHexa{
     /* data*/
     int x; // [x,y]
     int y;
-	int cote;//
+    int cote;//
 
     /* list suite */
     struct NoeudHexa * next ;
