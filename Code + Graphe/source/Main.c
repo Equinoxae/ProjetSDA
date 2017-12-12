@@ -54,6 +54,8 @@ int main(int argc, char *argv[]){
 		        h = atoi(argv[++i]);
 			else if (!strcmp(argv[i],"-M"))
 				set_Manual_rech_hexa();
+			else if ( !strcmp(argv[i],"-linear"))
+				set_LinearGenHexa();
 			else if ( !strcmp(argv[i],"-start"))
 		        set_Start_hexa(atof(argv[++i]),atof(argv[++i]));
 			else if (!strcmp(argv[i],"-ms"))
@@ -121,8 +123,8 @@ int main(int argc, char *argv[]){
 
 		labx = LabHexaCreate(l,h);
 		
-		waitgraph();
-		closegraph();
+		lanceRechercheHexa(labx);
+
 
 		LabHexaFree(labx);
 

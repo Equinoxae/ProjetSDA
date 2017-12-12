@@ -33,6 +33,10 @@ void set_Manual_Start_hexa(){
 	manual_start_hexa = 1;
 }
 
+void set_LinearGenHexa(){
+	linear_hexa = 1;
+}
+
 double time_diff_hexa(struct timeval x , struct timeval y)
 {
     double x_ms , y_ms , diff;
@@ -72,8 +76,6 @@ LabyrintheHexa *LabHexaCreate(int w,int h){
 
 	LabHexaInit(l,W,H);
 	
-	printf("fin init\n");
-	
 	//waitgraph();
 	
 	LabHexaConstruit(l,v);
@@ -89,12 +91,6 @@ void LabHexaFree(LabyrintheHexa *lab){
     free(lab);
 
 }
-
-// verifie si une case est un mur
-int EstHexaConstruit(LabyrintheHexa *lab , int x ,int y){}
-
-// Vérifie si une case est constructible
-int EstHexaConstructible(LabyrintheHexa *lab  , EnsHexa *v, NoeudHexa * point){}
 
 // construit les bords
 void LabHexaInit(LabyrintheHexa *lab, int w ,int h){
@@ -259,34 +255,17 @@ void verifHexaTour(LabyrintheHexa *lab  , EnsHexa *v, int x, int y){
 
 }
 
-// granularise le labyrinthe avec un nombre de graine
-void GranulariseHexa(LabyrintheHexa *lab ,EnsHexa *v, int nb){ // nada 
-}
-
 // Construit les murs du labyrinthe depuis les graines
 void LabHexaConstruit(LabyrintheHexa *lab ,EnsHexa *v){
 	
 	// trouve le premier mur et ajoute ses coté en liste
 	EnsHexaAjoute(v,lab->map->l/2 - 1,lab->map->h/2 - 1,0);
 	
-	/*for(int i = 1; i <= 6; i++){
-		EnsHexaAjoute(v,lab->map->l/2,lab->map->h/2,i);
-		if(d_graph_hexa)
-			printCoteHexa(lab->map->l/2,lab->map->h/2,i,"rouge");
-	}*/
-	
-	printf("start %i\n",v->taille);
-	
 	while(!EnsHexaEstVide(v)){
-		NoeudHexa * n = EnsHexaTirage(v,0);
-		
-		printf("tirage %i\n",v->taille);
-		printf("%i %i %i\n",n->x,n->y,n->cote);
-
+		NoeudHexa * n = EnsHexaTirage(v,linear_hexa);
 		
 		MurHexa * m, * voisin, * first;
 		int x_v,y_v;
-
 
 		m = MatHexaVal2(lab->map,n->x,n->y);
 		m->v = 1;
@@ -458,33 +437,114 @@ void LabHexaConstruit(LabyrintheHexa *lab ,EnsHexa *v){
 				break;
 		
 		}
-		printf("next %i\n",v->taille);
 	
 		free(n);
 		if(d_graph_hexa)
-			usleep(10 * 1000);
+			usleep(5 * 1000);
 
 	}
 	
 
 }
+// gestionnaire des fonctions de recherche
+void lanceRechercheHexa(LabyrintheHexa *lab){
 
-// Affiche le labyrinthe dans la console
-void LabHexaPrint(LabyrintheHexa *lab){}
+
+	if(manual_search_hexa){
+
+		recherche_manuelle_hexa(lab);
+		
+	}
+	
+	if(v_graph_hexa){
+			waitgraph();
+			closegraph();
+		}
+
+}
+void recherche_manuelle_hexa(LabyrintheHexa * lab){
+	
+	int x = start_x_hexa;
+	int y = start_y_hexa;
+	int prev_x;
+	int prev_y;
+
+	int end_x = lab->map->l-1;
+	int end_y = lab->map->h-1;
+	char * k ="";
+	
+	printPointHexa(x,y,"vert");
+	printPointHexa(end_x,end_y,"rouge");
+	flushgraph();
+	refresh();
+
+	/*while ( !(x == end_x && y == end_y) && k != "esc"){
+		printf("Appuiez sur une touche\n");
+		k = getKey();
+		//printf("dir : %s\n",k);
+				
+		if(!strcmp(k,"left")){
+			if(!EstConstruit(lab,x-1,y)){
+				
+				prev_x = x;
+				prev_y = y;
+				
+				x--;
+				printf("dir : %s\n",k);
+			}
+		}
+		else if(!strcmp(k,"right")){
+			if(!EstConstruit(lab,x+1,y)){
+				
+				prev_x = x;
+				prev_y = y;
+				
+				x++;
+				printf("dir : %s\n",k);
+			}
+		}
+		else if(!strcmp(k,"up")){
+			if(!EstConstruit(lab,x,y-1)){
+				
+				prev_x = x;
+				prev_y = y;
+				
+				y--;
+				printf("dir : %s\n",k);
+			}
+		}
+		else if(!strcmp(k,"down")){
+			if(!EstConstruit(lab,x,y+1)){				
+				prev_x = x;
+				prev_y = y;
+				
+				y++;
+				printf("dir : %s\n",k);
+			}
+		}
+		else{
+		
+		}
+		
+		SetPointGraphe(prev_x,prev_y,"gris");
+		SetPointGraphe(x,y,"rouge");
+		
+		//flushgraph();
+		//refresh();
+		
+		printf("pos : %i %i\n",x,y);
+		
+	}*/
+	
+	waitgraph();
+	
+	if (x == end_x && y == end_y)
+		printf("Vous avez gagné !\n");
+	else
+		printf("Vous avez abandonné...\n");
+}
 
 // Affiche un point sur le graphe
-void SetHexaPointGraphe(int x, int y, char * color){}
-
-// gestionnaire des fonctions de recherche
-void lanceHexaRecherche(LabyrintheHexa *lab){}
-
-// lance la recherche
-void dijkstraHexa(LabyrintheHexa * lab){}
-
-// lance la recherche
-void A_StarHexa(LabyrintheHexa * lab){}
-
-
 void printHexa(int w, int h, int x, int y, char * color){
 
 	if (!strcmp(color,"blanc"))
@@ -591,3 +651,29 @@ void printCoteHexa(int x, int y, int cot, char * color){
 	refresh();
 }
 
+void printPointHexa(int x, int y, char* color){
+	if (!strcmp(color,"blanc"))
+            setcolor(newcolor(1,1,1));
+    else if (!strcmp(color,"noir"))
+            setcolor(newcolor(0,0,0));
+    else if (!strcmp(color,"rouge"))
+            setcolor(newcolor(1,0,0));
+    else if (!strcmp(color,"vert") ){
+		setcolor(newcolor(0,1,0));
+	}
+	else if (!strcmp(color,"vertf") ){
+		setcolor(newcolor(0,0.4,0));
+	}
+    else if (!strcmp(color,"bleu"))
+            setcolor(newcolor(0,0.5,1));
+    else if (!strcmp(color,"gris"))
+    		setcolor(newcolor(0.9,0.9,0.9));
+	
+	int l = y * 20;
+	int c = x * 20;
+	int col = (y%2 == 0)? 0 : 10;
+	
+	point(10 + c + col, 15 + l ,4);
+
+	refresh();
+}

@@ -310,6 +310,12 @@ void line(int x1, int y1, int x2, int y2)
     XDrawLine(display, shadow, gc, x1, y1, x2, y2);
 }
 
+void point(int x, int y, int r){
+	CHECKINIT(point);
+
+	XFillArc(display, shadow, gc, x-r, y-r, r*2 , r*2 , 0 ,360*64);
+}
+
 void circle(int x, int y, int r){
 	CHECKINIT(circle);
 
