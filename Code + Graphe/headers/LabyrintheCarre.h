@@ -8,9 +8,15 @@ typedef struct LabCarre{
 
 static struct timeval temps_debut_carre,temps_fin_carre;
 
-/* affichage du graph */
+//Construction
+static int contruction_value = 1;
+
+//affichage du graph
 static int v_graph_carre = 0;
 static int d_graph_carre = 0;
+
+//Construction
+static int contruction_value = 1;
 
 // Manual Research 
 static int manual_search_carre = 0;
@@ -30,6 +36,8 @@ void set_Manual_rech_carre();
 void set_Start_carre(int x,int y);
 
 void set_Manual_Start_carre();
+
+void set_Construction_Carre(int val);
 
 // difference en 2 moment
 double time_diff(struct timeval x , struct timeval y);

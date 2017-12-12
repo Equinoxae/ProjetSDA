@@ -27,6 +27,9 @@ void set_Start_carre(int x,int y){
 	start_y_carre = y;
 }
 
+void set_Construction_Carre(int val){
+	contruction_value = val;
+}
 
 void set_Manual_Start_carre(){
 	manual_start_carre = 1;
@@ -310,26 +313,18 @@ void printCarre(int w, int h, int x, int y, char * color){
 
 	int l = y * 20;
 	int c = x * 20;
-
-	int col = (y%2 == 0)? 0 : 10;
 	
 	//afficher case : 3 lignes à dessiner
-	line(0 + c + col, 10 + l, 0 + c + col, 20 + l); //x1, y1, x2, y2 coté 1
-	line(0 + c + col, 10 + l, 10 + c + col, 0 + l); //x1, y1, x2, y2 coté 2
-	line(10 + c + col, 0 + l, 20 + c + col, 10 + l); //x1, y1, x2, y2 coté 3
+	line(0 + c, 0 + l, 0 + c, 10 + l); //x1, y1, x2, y2 coté 1
+	line(10 + c, 0 + l, 0 + c, 0 + l); //x1, y1, x2, y2 coté 2
 
-	// coté gauche '\'
-	if( x = 0 && y%2 == 1)
-		line(0, 20 + l , 10 , 30 + l);
+	// ligne du bas
+	if( y = h-1)
+		line(0 + c,  10+ l , 10 + c, 10 + l);
 
-	// ligne du bas '\/'
-	if( y = h-1){
-		line(0 + c + col, 20 + l , 10 + c + col, 30 + l);
-		line(10 + c + col, 30 + l , 20 + c + col, 20 + l);
-	}
-
+	//ligne de droite
 	if( x = w-1)
-		line(20 + c + col, 10 + l, 20 + c + col,  20 + l);
+		line(10 + c, 10 + l, 10 + c,  0 + l);
 
 	refresh();
 
@@ -356,21 +351,19 @@ void printCoteCarre(int x, int y, int cot, char * color){
 	
 	int l = y * 20;
 	int c = x * 20;
-
-	int col = (y%2 == 0)? 0 : 10;
 	
 	switch(cot){
 		case 1:
-			line(0 + c + col, 11 + l, 0 + c + col, 19 + l); 	// '|'
+			line(0 + c, 1 + l, 0 + c, 9 + l); 	// '|' côté de 
 			break;
 		case 2:
-			line(1 + c + col, 9 + l, 9 + c + col, 1 + l); 	// '/'
+			line(1+ c, 0 + l , 9 + c, 0 + l); 	// '-' côté du haut
 			break;
 		case 3:
-			line(20 + c + col, 11 + l, 20 + c + col,  19 + l); 	// '|'
+			line(10 + c, 9 + l, 1 + c,  0 + l); 	// '|' côté de droite
 			break;
 		case 4:
-			line(11 + c + col, 29 + l , 19 + c + col, 21 + l); 	// '/'
+			line(1 + c, 10 + l, 9 + c, 10 + l); 	// '_' côté du bas
 			break;
 	}
 	

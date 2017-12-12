@@ -6,7 +6,7 @@
 #include "LabyrintheCarre.h"
 #include "graph.h"
 
-// utilisation : ./program {-c/-C/-X/-r}  [-v] [-d] [-l <largeur>] [-h <hauteur>] [-g <%graine>] [-Auto] [<fichier>]
+// utilisation : ./program {-c/-C/-X/-r}  [-v] [-d] [-l <largeur>] [ -h <hauteur>] [-g <%graine>] [-Auto] [<fichier>]
 int main(int argc, char *argv[]){
 
     Labyrinthe *lab;
@@ -27,18 +27,27 @@ int main(int argc, char *argv[]){
 		if(!strcmp(type,"-c")){
 			if ( !strcmp(argv[i],"-v"))
 		        set_v_carre();
-		    else if ( !strcmp(argv[i],"-d"))
+		        
+		    else if (!strcmp(argv[i],"-d"))
 		        set_d_carre();
-			else if ( !strcmp(argv[i],"-l"))
+		        
+			else if (!strcmp(argv[i],"-l"))
 		        l = atoi(argv[++i]);
-		    else if ( !strcmp(argv[i],"-h"))
+		        
+		    else if (!strcmp(argv[i],"-h"))
 		        h = atoi(argv[++i]);
+		        
 			else if (!strcmp(argv[i],"-M"))
 				set_Manual_rech_carre();
-			else if ( !strcmp(argv[i],"-start"))
+				
+			else if (!strcmp(argv[i],"-start"))
 		        set_Start_carre(atof(argv[++i]),atof(argv[++i]));
+		        
 			else if (!strcmp(argv[i],"-ms"))
 				set_Manual_Start_carre();
+				
+			else if (!strcmp(argv[i], "-construction1"))
+				set_Construction_Carre(atoi(argv[++i]);
 		}
 		else if(!strcmp(type,"-C")){
 		
@@ -48,52 +57,52 @@ int main(int argc, char *argv[]){
 		        set_v_hexa();
 		    else if ( !strcmp(argv[i],"-d"))
 		        set_d_hexa();
-			else if ( !strcmp(argv[i],"-l"))
+			else if (!strcmp(argv[i],"-l"))
 		        l = atoi(argv[++i]);
-		    else if ( !strcmp(argv[i],"-h"))
+		    else if (!strcmp(argv[i],"-h"))
 		        h = atoi(argv[++i]);
 			else if (!strcmp(argv[i],"-M"))
 				set_Manual_rech_hexa();
-			else if ( !strcmp(argv[i],"-start"))
+			else if (!strcmp(argv[i],"-start"))
 		        set_Start_hexa(atof(argv[++i]),atof(argv[++i]));
 			else if (!strcmp(argv[i],"-ms"))
 				set_Manual_Start_hexa();
 		}
 		else if (!strcmp(type,"-r")){
 
-		    if ( !strcmp(argv[i],"-v"))
+		    if (!strcmp(argv[i],"-v"))
 		        set_v();
 		    else if ( !strcmp(argv[i],"-d"))
 		        set_d();
-		    else if ( !strcmp(argv[i],"-l"))
+		    else if (!strcmp(argv[i],"-l"))
 		        l = atoi(argv[++i]);
-		    else if ( !strcmp(argv[i],"-h"))
+		    else if (!strcmp(argv[i],"-h"))
 		        h = atoi(argv[++i]);
-		    else if ( !strcmp(argv[i],"-g"))
+		    else if (!strcmp(argv[i],"-g"))
 		        g = atof(argv[++i]);
 			else if (!strcmp(argv[i],"-M"))
 				set_Manual_rech();
-			else if ( !strcmp(argv[i],"-start"))
+			else if (!strcmp(argv[i],"-start"))
 		        set_Start(atof(argv[++i]),atof(argv[++i]));
 			else if (!strcmp(argv[i],"-ms"))
 				set_Manual_Start();
-			else if ( !strcmp(argv[i],"-linear"))
+			else if (!strcmp(argv[i],"-linear"))
 				set_LinearGen();
-		    else if ( !strcmp(argv[i],"-A"))
+		    else if (!strcmp(argv[i],"-A"))
 		    	set_AStar();
-			else if ( !strcmp(argv[i],"-Ad"))
+			else if (!strcmp(argv[i],"-Ad"))
 		        set_AStar_rech();
-			else if ( !strcmp(argv[i],"-D"))
+			else if (!strcmp(argv[i],"-D"))
 		        set_Dij();
-			else if ( !strcmp(argv[i],"-Dd"))
+			else if (!strcmp(argv[i],"-Dd"))
 		        set_Dij_rech();
-			else if ( !strcmp(argv[i],"-Auto"))
+			else if (!strcmp(argv[i],"-Auto"))
 		        set_Auto();
-		    else if ( !strcmp(argv[i],"-file"))
+		    else if (!strcmp(argv[i],"-file"))
 		        sprintf(fichier,"%s.pgm",argv[++i]);
 		}
 		else{
-		return 0;
+			return 0;
 		}
 
     }
@@ -114,7 +123,7 @@ int main(int argc, char *argv[]){
 		if(l == -1)
 			l = 10;
 
-		if( h < 5 || l < 5 || h > 40 || l > 40){
+		if (h < 5 || l < 5 || h > 40 || l > 40){
 		    printf("Taille invalide ! La largeur et la hauteur doivent être >= 5 et <= 40\n");
 		    exit(2);
 		}
@@ -129,14 +138,14 @@ int main(int argc, char *argv[]){
 	}
 	// rectangle
 	else if (!strcmp(type,"-r")){
-		if(h == -1)
+		if (h == -1)
 			h = 200;
 
-		if(l == -1)
+		if (l == -1)
 			l = 200;
 
 
-		if( h < 10 || l < 10 ){
+		if ( h < 10 || l < 10 ){
 		    printf("Taille invalide ! La largeur et la hauteur doivent être > 10\n");
 		    exit(2);
 		}
