@@ -3,6 +3,7 @@
 #include <string.h>
 #include "Labyrinthe.h"
 #include "LabyrintheHexa.h"
+#include "LabyrintheCarre.h"
 #include "graph.h"
 
 // utilisation : ./program {-c/-C/-X/-r}  [-v] [-d] [-l <largeur>] [-h <hauteur>] [-g <%graine>] [-Auto] [<fichier>]
@@ -24,7 +25,20 @@ int main(int argc, char *argv[]){
     for(i = 2;i<argc;i++){
 	
 		if(!strcmp(type,"-c")){
-		
+			if ( !strcmp(argv[i],"-v"))
+		        set_v_carre();
+		    else if ( !strcmp(argv[i],"-d"))
+		        set_d_carre();
+			else if ( !strcmp(argv[i],"-l"))
+		        l = atoi(argv[++i]);
+		    else if ( !strcmp(argv[i],"-h"))
+		        h = atoi(argv[++i]);
+			else if (!strcmp(argv[i],"-M"))
+				set_Manual_rech_carre();
+			else if ( !strcmp(argv[i],"-start"))
+		        set_Start_carre(atof(argv[++i]),atof(argv[++i]));
+			else if (!strcmp(argv[i],"-ms"))
+				set_Manual_Start_carre();
 		}
 		else if(!strcmp(type,"-C")){
 		
@@ -85,11 +99,11 @@ int main(int argc, char *argv[]){
     }
 
 	// cercle
-	if(!strcmp(type,"-c")){
+	if(!strcmp(type,"-C")){
 		
 	}
 	// carré avec bordure
-	else if (!strcmp(type,"-C")){
+	else if (!strcmp(type,"-c")){
 
 	}
 	// hexagone

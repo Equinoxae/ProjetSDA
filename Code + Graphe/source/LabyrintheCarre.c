@@ -3,36 +3,36 @@
 #include <time.h>
 #include <sys/time.h>
 #include <limits.h>
-#include "LabyrintheHexa.h"
+#include "LabyrintheCarre.h"
 #include "graph.h"
 #include <string.h>
 
-void set_v_hexa(){
-    v_graph_hexa = 1;
+void set_v_carre(){
+    v_graph_carre = 1;
 }
 
-void set_d_hexa(){
-    v_graph_hexa = 1;
-    d_graph_hexa = 1;
+void set_d_carre(){
+    v_graph_carre = 1;
+    d_graph_carre = 1;
 }
 
-void set_Manual_rech_hexa(){
-	set_Manual_Start_hexa();
-	set_v_hexa();
-	manual_search_hexa = 1;
+void set_Manual_rech_carre(){
+	set_Manual_Start_carre();
+	set_v_carre();
+	manual_search_carre = 1;
 }
 
-void set_Start_hexa(int x,int y){
-	start_x_hexa = x;
-	start_y_hexa = y;
+void set_Start_carre(int x,int y){
+	start_x_carre = x;
+	start_y_carre = y;
 }
 
 
-void set_Manual_Start_hexa(){
-	manual_start_hexa = 1;
+void set_Manual_Start_carre(){
+	manual_start_carre = 1;
 }
 
-double time_diff_hexa(struct timeval x , struct timeval y)
+double time_diff_carre(struct timeval x , struct timeval y)
 {
     double x_ms , y_ms , diff;
 
@@ -45,386 +45,223 @@ double time_diff_hexa(struct timeval x , struct timeval y)
 }
 
 // génération du labyrinthe
-LabyrintheHexa *LabHexaCreate(int w,int h){
+LabyrintheCarre *LabCarreCreate(int w,int h){
 	// init random
     srand(time(NULL));
 
     // temps_debut
-    gettimeofday(&temps_debut_hexa,NULL);
+    gettimeofday(&temps_debut_carre,NULL);
 
     //var
-    LabyrintheHexa * l = malloc(sizeof(LabyrintheHexa));
-    EnsHexa * v; // mur destructible
+    LabyrintheCarre * l = malloc(sizeof(LabyrintheCarre));
+    EnsCarre * v; // mur destructible
 
     // taille bordure
     int W = w ;
     int H = h ;
 
-	if(v_graph_hexa){
+	if(v_graph_carre){
         initgraph(W*20+10 +1 , H*20 + 10 + 1);
         flushgraph();
     }
 
-	l->map = MatHexaAlloc(W,H);
+	l->map = MatCarreAlloc(W,H);
 
-	v = EnsHexaAlloc();
+	v = EnsCarreAlloc();
 
-	LabHexaInit(l,W,H);
+	LabCarreInit(l,W,H);
 	
 	waitgraph();
-	
-	//LabHexaConstruit(l,v);
-
-	//waitgraph();
 
 	return l;
 }
 
 // Libère le labyrinthe 
-void LabHexaFree(LabyrintheHexa *lab){
-	MatHexaFree(lab->map);
+void LabCarreFree(LabyrintheCarre *lab){
+	MatCarreFree(lab->map);
     free(lab);
 
 }
 
 // verifie si une case est un mur
-int EstHexaConstruit(LabyrintheHexa *lab , int x ,int y){}
+int EstCarreConstruit(LabyrintheCarre *lab , int x ,int y){}
 
 // Vérifie si une case est constructible
-int EstHexaConstructible(LabyrintheHexa *lab  , EnsHexa *v, NoeudHexa * point){}
+int EstCarreConstructible(LabyrintheCarre *lab  , EnsCarre *v, NoeudCarre * point){}
 
 // construit les bords
-void LabHexaInit(LabyrintheHexa *lab, int w ,int h){
+void LabCarreInit(LabyrintheCarre *lab, int w ,int h){
 int i,j;
 	for(j = 0; j < h;j++){
 		for(i = 0; i < w ; i++){
-			MatHexaSet2(lab->map,i ,j , MurHexaAlloc() );
+			MatCarreSet2(lab->map,i ,j , MurCarreAlloc() );
 
-			if(v_graph_hexa)
-		       	printHexa(w, h, i, j , "noir");
+			if(v_graph_carre)
+		       	printCarre(w, h, i, j , "noir");
 		}
 	}
 }
 
 // Verifie la constructibilité des case autour d'une case 
-void verifHexaTour(LabyrintheHexa *lab  , EnsHexa *v, int x, int y){
+void verifCarreTour(LabyrintheCarre *lab  , EnsCarre *v, int x, int y){
 	// ligne paire
 	int w = lab->map->l;
 	int h = lab->map->h;
+		
+	// gauche
+	if( x-1 >= 0){
 	
+		MurCarre * m = MatCarreVal2(lab->map,x-1, y);
 	
-	if( y% 2 == 0){
-		
-		// gauche
-		if( x-1 >= 0){
-		
-			MurHexa * m = MatHexaVal2(lab->map,x-1, y);
-		
-			if(m->v == 0){
-				EnsHexaAjoute(v,x,y,1);
-				if(d_graph_hexa)
-					printCoteHexa(x,y,1,"rouge");
-			}
+		if(m->v == 0){
+			EnsCarreAjoute(v,x,y,1);
+			if(d_graph_carre)
+				printCoteCarre(x,y,1,"rouge");
 		}
-		
-		// haut gauche
-		if(y-1 > 0){
-		
-			MurHexa * m = MatHexaVal2(lab->map,x-1, y-1);
-		
-			if(m->v == 0){
-				EnsHexaAjoute(v,x,y,2);
-				if(d_graph_hexa)
-					printCoteHexa(x,y,2,"rouge");
-			}
-		}
-		
-		// haut droit		
-		if(y-1 > 0){
-		
-			MurHexa * m = MatHexaVal2(lab->map,x, y-1);
-		
-			if(m->v == 0){
-				EnsHexaAjoute(v,x,y,3);
-				if(d_graph_hexa)
-					printCoteHexa(x,y,3,"rouge");
-			}
-		}
-		
-		// droite
-		if( x+1 < w){
-		
-			MurHexa * m = MatHexaVal2(lab->map,x+1, y);
-		
-			if(m->v == 0){
-				EnsHexaAjoute(v,x,y,4);
-				if(d_graph_hexa)
-					printCoteHexa(x,y,4,"rouge");
-			}
-		}
-		
-		// bas droit
-		if(y+1 < h){
-		
-			MurHexa * m = MatHexaVal2(lab->map,x, y+1);
-		
-			if(m->v == 0){
-				EnsHexaAjoute(v,x,y,5);
-				if(d_graph_hexa)
-					printCoteHexa(x,y,5,"rouge");
-			}
-		}
-		
-		// bas gauche
-		if(y+1 < h){
-		
-			MurHexa * m = MatHexaVal2(lab->map,x-1, y+1);
-		
-			if(m->v == 0){
-				EnsHexaAjoute(v,x,y,6);
-				if(d_graph_hexa)
-					printCoteHexa(x,y,6,"rouge");
-			}
-		}
-		
 	}
-	// Ligne impaire
-	else{
-		// gauche
-		if( x-1 >= 0){
-		
-			MurHexa * m = MatHexaVal2(lab->map,x-1, y);
-		
-			if(m->v == 0){
-				EnsHexaAjoute(v,x,y,1);
-				if(d_graph_hexa)
-					printCoteHexa(x,y,1,"rouge");
-			}
-		}
-		
-		// haut gauche
-		if(y-1 > 0){
-		
-			MurHexa * m = MatHexaVal2(lab->map,x, y-1);
-		
-			if(m->v == 0){
-				EnsHexaAjoute(v,x,y,2);
-				if(d_graph_hexa)
-					printCoteHexa(x,y,2,"rouge");
-			}
-		}
-		
-		// haut droit		
-		if(y-1 > 0){
-		
-			MurHexa * m = MatHexaVal2(lab->map,x+1, y-1);
-		
-			if(m->v == 0){
-				EnsHexaAjoute(v,x,y,3);
-				if(d_graph_hexa)
-					printCoteHexa(x,y,3,"rouge");
-			}
-		}
-		
-		// droite
-		if( x+1 < w){
-		
-			MurHexa * m = MatHexaVal2(lab->map,x+1, y);
-		
-			if(m->v == 0){
-				EnsHexaAjoute(v,x,y,4);
-				if(d_graph_hexa)
-					printCoteHexa(x,y,4,"rouge");
-			}
-		}
-		
-		// bas droit
-		if(y+1 < h){
-		
-			MurHexa * m = MatHexaVal2(lab->map,x+1, y+1);
-		
-			if(m->v == 0){
-				EnsHexaAjoute(v,x,y,5);
-				if(d_graph_hexa)
-					printCoteHexa(x,y,5,"rouge");
-			}
-		}
-		
-		// bas gauche
-		if(y+1 < h){
-		
-			MurHexa * m = MatHexaVal2(lab->map,x, y+1);
-		
-			if(m->v == 0){
-				EnsHexaAjoute(v,x,y,6);
-				if(d_graph_hexa)
-					printCoteHexa(x,y,6,"rouge");
-			}
-		}
 	
+	// haut droit		
+	if(y-1 > 0){
+	
+		MurCarre * m = MatCarreVal2(lab->map,x, y-1);
+	
+		if(m->v == 0){
+			EnsCarreAjoute(v,x,y,3);
+			if(d_graph_carre)
+				printCoteCarre(x,y,3,"rouge");
+		}
 	}
-
-
-
+	
+	// droite
+	if( x+1 < w){
+	
+		MurCarre * m = MatCarreVal2(lab->map,x+1, y);
+	
+		if(m->v == 0){
+			EnsCarreAjoute(v,x,y,4);
+			if(d_graph_carre)
+				printCoteCarre(x,y,4,"rouge");
+		}
+	}
+	
+	// bas droit
+	if(y+1 < h){
+	
+		MurCarre * m = MatCarreVal2(lab->map,x, y+1);
+	
+		if(m->v == 0){
+			EnsCarreAjoute(v,x,y,5);
+			if(d_graph_carre)
+				printCoteCarre(x,y,5,"rouge");
+		}
+	}
 }
 
 // granularise le labyrinthe avec un nombre de graine
-void GranulariseHexa(LabyrintheHexa *lab ,EnsHexa *v, int nb){ // nada 
+void GranulariseCarre(LabyrintheCarre *lab ,EnsCarre *v, int nb){ // nada 
 }
 
 // Construit les murs du labyrinthe depuis les graines
-void LabHexaConstruit(LabyrintheHexa *lab ,EnsHexa *v){
+void LabCarreConstruit(LabyrintheCarre *lab ,EnsCarre *v){
 	
 	// trouve le premier mur et ajoute ses coté en liste
-	EnsHexaAjoute(v,lab->map->l/2,lab->map->h/2,0);
+	EnsCarreAjoute(v,lab->map->l/2,lab->map->h/2,0);
+
 	
-	/*for(int i = 1; i <= 6; i++){
-		EnsHexaAjoute(lab->l/2,lab->h/2,i);
-		if(v_graph_hexa)
-			printCote(lab->l/2,lab->h/2,i,"rouge");
-	}*/
-	
-	while(!EnsHexaEstVide(v)){
-		NoeudHexa * n = EnsHexaTirage(v,0);
+	while(!EnsCarreEstVide(v)){
+		NoeudCarre * n = EnsCarreTirage(v,0);
 		
-		MurHexa * m, * voisin, * first;
+		MurCarre * m, * voisin, * first;
 		switch(n->cote)
 		{
 			case 1:
-				m = MatHexaVal2(lab->map,n->x,n->y);
+				m = MatCarreVal2(lab->map,n->x,n->y);
 				m->v = 1;
 			
-				voisin = MatHexaVal2(lab->map,n->x-1,n->y);
+				voisin = MatCarreVal2(lab->map,n->x-1,n->y);
 				if(voisin->v == 0){
 					m->c1 =0;
-					if(v_graph_hexa)
-						printCoteHexa(n->x,n->y,1,"blanc");
-					verifHexaTour(lab,v,n->x-1,n->y);
+					if(v_graph_carre)
+						printCoteCarre(n->x,n->y,1,"blanc");
+					verifCarreTour(lab,v,n->x-1,n->y);
 				} 
 				else{
-					if(d_graph_hexa)
-						printCoteHexa(n->x,n->y,1,"noir");
+					if(d_graph_carre)
+						printCoteCarre(n->x,n->y,1,"noir");
 				}
 				
 				break;
 			case 2:
-				m = MatHexaVal2(lab->map,n->x,n->y);
+				m = MatCarreVal2(lab->map,n->x,n->y);
 				m->v = 1;
 				
 				if(n->y%2 == 0)
-					voisin = MatHexaVal2(lab->map,n->x-1,n->y-1);
+					voisin = MatCarreVal2(lab->map,n->x-1,n->y-1);
 				else
-					voisin = MatHexaVal2(lab->map,n->x,n->y-1);
+					voisin = MatCarreVal2(lab->map,n->x,n->y-1);
 				
 				if(voisin->v == 0){
 					m->c2 =0;
-					if(v_graph_hexa)
-						printCoteHexa(n->x,n->y,2,"blanc");
+					if(v_graph_carre)
+						printCoteCarre(n->x,n->y,2,"blanc");
 					
 					if(n->y%2 == 0)
-						verifHexaTour(lab,v,n->x-1,n->y-1);
+						verifCarreTour(lab,v,n->x-1,n->y-1);
 					else
-						verifHexaTour(lab,v,n->x,n->y-1);
+						verifCarreTour(lab,v,n->x,n->y-1);
 				} 
 				else{
-					if(d_graph_hexa)
-						printCoteHexa(n->x,n->y,2,"noir");
+					if(d_graph_carre)
+						printCoteCarre(n->x,n->y,2,"noir");
 				}
 				
 				break;
+
 			case 3:
-				m = MatHexaVal2(lab->map,n->x,n->y);
-				m->v = 1;
-				
-				if(n->y%2 == 0)
-					voisin = MatHexaVal2(lab->map,n->x,n->y-1);
-				else
-					voisin = MatHexaVal2(lab->map,n->x+1,n->y-1);
-				
-				if(voisin->v == 0){
-					m->c3 =0;
-					if(v_graph_hexa)
-						printCoteHexa(n->x,n->y,3,"blanc");
-						
-					if(n->y%2 == 0)
-						verifHexaTour(lab,v,n->x,n->y-1);
-					else
-						verifHexaTour(lab,v,n->x+1,n->y-1);
-				} 
-				else{
-					if(d_graph_hexa)
-						printCoteHexa(n->x,n->y,3,"noir");
-				}
-				
-				break;
-			case 4:
-				m = MatHexaVal2(lab->map,n->x,n->y);
+				m = MatCarreVal2(lab->map,n->x,n->y);
 				m->v = 1;
 			
-				voisin = MatHexaVal2(lab->map,n->x+1,n->y);
+				voisin = MatCarreVal2(lab->map,n->x+1,n->y);
 				if(voisin->v == 0){
 					voisin->c1 =0;
-					if(v_graph_hexa)
-						printCoteHexa(n->x,n->y,4,"blanc");
-					verifHexaTour(lab,v,n->x+1,n->y);
+					if(v_graph_carre)
+						printCoteCarre(n->x,n->y,4,"blanc");
+					verifCarreTour(lab,v,n->x+1,n->y);
 				} 
 				else{
-					if(d_graph_hexa)
-						printCoteHexa(n->x,n->y,4,"noir");
+					if(d_graph_carre)
+						printCoteCarre(n->x,n->y,4,"noir");
 				}
 				break;
-			case 5:
-				m = MatHexaVal2(lab->map,n->x,n->y);
+			case 4:
+				m = MatCarreVal2(lab->map,n->x,n->y);
 				m->v = 1;
 				
 				if(n->y%2 == 0)
-					voisin = MatHexaVal2(lab->map,n->x,n->y+1);
+					voisin = MatCarreVal2(lab->map,n->x,n->y+1);
 				else
-					voisin = MatHexaVal2(lab->map,n->x+1,n->y+1);
+					voisin = MatCarreVal2(lab->map,n->x+1,n->y+1);
 				
 				if(voisin->v == 0){
 					voisin->c2 =0;
-					if(v_graph_hexa)
-						printCoteHexa(n->x,n->y,5,"blanc");
+					if(v_graph_carre)
+						printCoteCarre(n->x,n->y,5,"blanc");
 					
 					if(n->y%2 == 0)
-						verifHexaTour(lab,v,n->x,n->y+1);
+						verifCarreTour(lab,v,n->x,n->y+1);
 					else
-						verifHexaTour(lab,v,n->x+1,n->y+1);
+						verifCarreTour(lab,v,n->x+1,n->y+1);
 				} 
 				else{
-					if(d_graph_hexa)
-						printCoteHexa(n->x,n->y,5,"noir");
+					if(d_graph_carre)
+						printCoteCarre(n->x,n->y,5,"noir");
 				}
 				break;
-			case 6:
-				m = MatHexaVal2(lab->map,n->x,n->y);
-				m->v = 1;
-				
-				if(n->y%2 == 0)
-					voisin = MatHexaVal2(lab->map,n->x-1,n->y+1);
-				else
-					voisin = MatHexaVal2(lab->map,n->x,n->y+1);
-				
-				if(voisin->v == 0){
-					voisin->c3 = 0;
-					if(v_graph_hexa)
-						printCoteHexa(n->x,n->y,3,"blanc");
-						
-					if(n->y%2 == 0)
-						verifHexaTour(lab,v,n->x-1,n->y+1);
-					else
-						verifHexaTour(lab,v,n->x,n->y+1);
-				} 
-				else{
-					if(d_graph_hexa)
-						printCoteHexa(n->x,n->y,3,"noir");
-				}
-				break;
+
 			case 0:
-				first = MatHexaVal2(lab->map,n->x,n->y);
+				first = MatCarreVal2(lab->map,n->x,n->y);
 				first->v = 1;
-				verifHexaTour(lab,v,n->x,n->y);
+				verifCarreTour(lab,v,n->x,n->y);
 				break;
 		
 		}
@@ -437,22 +274,22 @@ void LabHexaConstruit(LabyrintheHexa *lab ,EnsHexa *v){
 }
 
 // Affiche le labyrinthe dans la console
-void LabHexaPrint(LabyrintheHexa *lab){}
+void LabCarrePrint(LabyrintheCarre *lab){}
 
 // Affiche un point sur le graphe
-void SetHexaPointGraphe(int x, int y, char * color){}
+void SetCarrePointGraphe(int x, int y, char * color){}
 
 // gestionnaire des fonctions de recherche
-void lanceHexaRecherche(LabyrintheHexa *lab){}
+void lanceCarreRecherche(LabyrintheCarre *lab){}
 
 // lance la recherche
-void dijkstraHexa(LabyrintheHexa * lab){}
+void dijkstraCarre(LabyrintheCarre * lab){}
 
 // lance la recherche
-void A_StarHexa(LabyrintheHexa * lab){}
+void A_StarCarre(LabyrintheCarre * lab){}
 
 
-void printHexa(int w, int h, int x, int y, char * color){
+void printCarre(int w, int h, int x, int y, char * color){
 
 	if (!strcmp(color,"blanc"))
             setcolor(newcolor(1,1,1));
@@ -498,7 +335,7 @@ void printHexa(int w, int h, int x, int y, char * color){
 
 }
 
-void printCoteHexa(int x, int y, int cot, char * color){
+void printCoteCarre(int x, int y, int cot, char * color){
 
 	if (!strcmp(color,"blanc"))
             setcolor(newcolor(1,1,1));
@@ -530,16 +367,13 @@ void printCoteHexa(int x, int y, int cot, char * color){
 			line(1 + c + col, 9 + l, 9 + c + col, 1 + l); 	// '/'
 			break;
 		case 3:
-			line(11 + c + col, 1 + l, 19 + c + col, 9 + l); 	// '\'
-			break;
-		case 4:
 			line(20 + c + col, 11 + l, 20 + c + col,  19 + l); 	// '|'
 			break;
-		case 5:
+		case 4:
 			line(11 + c + col, 29 + l , 19 + c + col, 21 + l); 	// '/'
 			break;
-		case 6:
-			line(1 + c + col, 21 + l , 9 + c + col, 29 + l); 	// '\'
 	}
+	
+	refresh();
 }
 

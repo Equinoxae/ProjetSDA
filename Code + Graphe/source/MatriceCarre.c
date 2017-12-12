@@ -1,10 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "MatriceHexa.h"
+#include "MatriceCarre.h"
 
-MurHexa * MurHexaAlloc(){
+MurCarre * MurCarreAlloc(){
 	
-	MurHexa * m = malloc(sizeof(MurHexa));
+	MurCarre * m = malloc(sizeof(MurCarre));
 
 	m->c1 = 1;
 	m->c2 = 1;
@@ -15,9 +15,9 @@ MurHexa * MurHexaAlloc(){
 
 }
 
-MurHexa * MurHexaAlloc2(int c1, int c2, int c3,int v){
+MurCarre * MurCarreAlloc2(int c1, int c2, int c3,int v){
 
-	MurHexa * m = malloc(sizeof(MurHexa));
+	MurCarre * m = malloc(sizeof(MurCarre));
 
 	m->c1 = c1;
 	m->c2 = c2;
@@ -28,43 +28,43 @@ MurHexa * MurHexaAlloc2(int c1, int c2, int c3,int v){
 
 }
 
-MatriceHexa * MatHexaAlloc(int l1,int h1){
+MatriceCarre * MatCarreAlloc(int l1,int h1){
 
-  MatriceHexa * m = malloc(sizeof(MatriceHexa));
+  MatriceCarre * m = malloc(sizeof(MatriceCarre));
 
   m->l = l1;
   m->h = h1;
-  m->points = calloc(l1*h1,sizeof(MurHexa));
+  m->points = calloc(l1*h1,sizeof(MurCarre));
 
   return m;
 
 }
 
-void MatHexaFree(MatriceHexa * m){
+void MatCarreFree(MatriceCarre * m){
   free(m->points);
   free(m);
 }
 
-MurHexa * MatHexaVal(MatriceHexa * m, int p){
+MurCarre * MatCarreVal(MatriceCarre * m, int p){
   return m->points[p];
 }
 
-MurHexa * MatHexaVal2(MatriceHexa * m, int x, int y){
+MurCarre * MatCarreVal2(MatriceCarre * m, int x, int y){
   return m->points[y*m->l + x];
 }
 
-void MatHexaSet(MatriceHexa * m, int p, MurHexa * v){
+void MatCarreSet(MatriceCarre * m, int p, MurCarre * v){
   m->points[p] = v;
 }
 
-void MatHexaSet2(MatriceHexa * m, int x,int y, MurHexa * v){
+void MatCarreSet2(MatriceCarre * m, int x,int y, MurCarre * v){
   m->points[y*m->l+x] = v;
 }
 
-int MatHexaGetL(MatriceHexa * m){
+int MatCarreGetL(MatriceCarre * m){
     return m->l;
 }
 
-int MatHexaGetH(MatriceHexa * m){
+int MatCarreGetH(MatriceCarre * m){
     return m->h;
 }

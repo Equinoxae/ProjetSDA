@@ -1,64 +1,64 @@
-#include "MatriceHexa.h"
+#include "MatriceCarre.h"
 
 /* Noeud de l'ensemble */
-typedef struct NoeudHexa{
+typedef struct NoeudCarre{
     /* data*/
     int x; // [x,y]
     int y;
 	int cote;//
 
     /* list suite */
-    struct NoeudHexa * next ;
-    struct NoeudHexa * previous;
-}NoeudHexa;
+    struct NoeudCarre * next ;
+    struct NoeudCarre * previous;
+}NoeudCarre;
 
 
 /* Ensemble */
 
-typedef struct EnsHexa{
+typedef struct EnsCarre{
     int taille;
-    struct NoeudHexa * premier;
-    struct NoeudHexa * dernier;
-}EnsHexa;
+    struct NoeudCarre * premier;
+    struct NoeudCarre * dernier;
+}EnsCarre;
 
 // Noeud fonction //
 
-NoeudHexa *NoeudHexaAlloc();
-NoeudHexa *NoeudHexaInit(int x,int y,int c);
-void NoeudHexaSuppr(NoeudHexa *n);
+NoeudCarre *NoeudCarreAlloc();
+NoeudCarre *NoeudCarreInit(int x,int y,int c);
+void NoeudCarreSuppr(NoeudCarre *n);
 
 // Ensemble fonction //
 
-EnsHexa * EnsHexaAlloc(); // création d’un nouvel ensemble
+EnsCarre * EnsCarreAlloc(); // création d’un nouvel ensemble
 
-void EnsHexaFree(EnsHexa *e); // libération éventuelle de la mémoire utilisée
+void EnsCarreFree(EnsCarre *e); // libération éventuelle de la mémoire utilisée
 
-int EnsHexaEstVide(EnsHexa *e); // teste si un ensemble est vide
+int EnsCarreEstVide(EnsCarre *e); // teste si un ensemble est vide
 
-void EnsHexaAjoute(EnsHexa *e, int x, int y, int c); // ajoute un couple à un ensemble
+void EnsCarreAjoute(EnsCarre *e, int x, int y, int c); // ajoute un couple à un ensemble
 
-void EnsHexaAjouteNoeudHexa(EnsHexa *e,NoeudHexa * n); // ajoute un noeud
+void EnsCarreAjouteNoeudCarre(EnsCarre *e,NoeudCarre * n); // ajoute un noeud
 
-void EnsHexaAjouteTrie(EnsHexa *e, NoeudHexa *n,MatriceHexa *heuristique); // ajoute un noeud ordonnée (n < n+1)
+void EnsCarreAjouteTrie(EnsCarre *e, NoeudCarre *n,MatriceCarre *heuristique); // ajoute un noeud ordonnée (n < n+1)
 
-int EnsHexaFind(EnsHexa *e, int x, int y); // trouve si un couple est dans l'ensemble
+int EnsCarreFind(EnsCarre *e, int x, int y); // trouve si un couple est dans l'ensemble
 
-NoeudHexa *EnsHexaFindIndex(EnsHexa *e, int index); // trouve un noeud dans l'ensemble et le retourne
+NoeudCarre *EnsCarreFindIndex(EnsCarre *e, int index); // trouve un noeud dans l'ensemble et le retourne
 
-NoeudHexa *EnsHexaFindSupprIndex(EnsHexa *e, int index); // trouve une noeud dans l'ensemble, le retire de l'ensemble et le retourne
+NoeudCarre *EnsCarreFindSupprIndex(EnsCarre *e, int index); // trouve une noeud dans l'ensemble, le retire de l'ensemble et le retourne
 
-void EnsHexaSuppr(EnsHexa *e, int x, int y); // retire un couple à un ensemble
+void EnsCarreSuppr(EnsCarre *e, int x, int y); // retire un couple à un ensemble
 
-NoeudHexa * EnsHexaDepilePremier(EnsHexa *e); // retire le premier noeud de l'ensemble
+NoeudCarre * EnsCarreDepilePremier(EnsCarre *e); // retire le premier noeud de l'ensemble
 
-void EnsHexaSupprPremier(EnsHexa *e); // supprime le premier noeud
+void EnsCarreSupprPremier(EnsCarre *e); // supprime le premier noeud
 
-void EnsHexaSupprDernier(EnsHexa *e); // supprime le dernier noeud
+void EnsCarreSupprDernier(EnsCarre *e); // supprime le dernier noeud
 
-int EnsHexaEstDans(EnsHexa *e, int x,int y); // teste si un couple appartient à un ensemble
+int EnsCarreEstDans(EnsCarre *e, int x,int y); // teste si un couple appartient à un ensemble
 
-int EnsHexaTaille(EnsHexa *e); // nombre d’éléments dans l’ensemble
+int EnsCarreTaille(EnsCarre *e); // nombre d’éléments dans l’ensemble
 
-void EnsHexaPrint(EnsHexa *e); // affiche l'ensemble dans la console
+void EnsCarrePrint(EnsCarre *e); // affiche l'ensemble dans la console
 
-NoeudHexa * EnsHexaTirage(EnsHexa *e,int l); // tire un couple aléatoirement dans un ensemble, et le retire de l’ensemble
+NoeudCarre * EnsCarreTirage(EnsCarre *e,int l); // tire un couple aléatoirement dans un ensemble, et le retire de l’ensemble

@@ -4,12 +4,12 @@
 #include <unistd.h>
 #include <string.h>
 #include <limits.h>
-#include "EnsembleHexa.h"
+#include "EnsembleCarre.h"
 
 /* Noeud Hexa */
 
-NoeudHexa *NoeudHexaAlloc(){
-    NoeudHexa *n = malloc(sizeof(NoeudHexa));
+NoeudCarre *NoeudCarreAlloc(){
+    NoeudCarre *n = malloc(sizeof(NoeudCarre));
 
     n->x = -1;
     n->y = -1;
@@ -20,8 +20,8 @@ NoeudHexa *NoeudHexaAlloc(){
     return n;
 }
 
-NoeudHexa *NoeudHexaInit(int x,int y, int c){
-    NoeudHexa *n = malloc(sizeof(NoeudHexa));
+NoeudCarre *NoeudCarreInit(int x,int y, int c){
+    NoeudCarre *n = malloc(sizeof(NoeudCarre));
 
     n->x = x;
     n->y = y;
@@ -32,15 +32,15 @@ NoeudHexa *NoeudHexaInit(int x,int y, int c){
     return n;
 }
 
-void NoeudHexaSuppr(NoeudHexa *n){
+void NoeudCarreSuppr(NoeudCarre *n){
     free(n);
 }
 
 /* Ensemble Hexa */
 
 // complexité O(1)
-EnsHexa * EnsHexaAlloc(){
-    EnsHexa *e = malloc(sizeof(EnsHexa));
+EnsCarre * EnsCarreAlloc(){
+    EnsCarre *e = malloc(sizeof(EnsCarre));
     //assert(e != NULL);
 
     e->taille = 0;
@@ -51,31 +51,31 @@ EnsHexa * EnsHexaAlloc(){
 }
 
 // complexité O(n)
-void EnsHexaFree(EnsHexa *e){
-    NoeudHexa * n = e->premier;
+void EnsCarreFree(EnsCarre *e){
+    NoeudCarre * n = e->premier;
     while (n != NULL) {
-        NoeudHexa * tmp = n;
+        NoeudCarre * tmp = n;
 		n=n->next;
-        NoeudHexaSuppr(tmp);
+        NoeudCarreSuppr(tmp);
 	//e->taille--;
     }
     free(e);
 }
 
 // complexité o(1)
-int EnsHexaEstVide(EnsHexa *e){
+int EnsCarreEstVide(EnsCarre *e){
     return (e->premier == NULL);
 }
 
 // complexté O(1)
-void EnsHexaAjoute(EnsHexa *e, int x, int y, int c){
+void EnsCarreAjoute(EnsCarre *e, int x, int y, int c){
 
     if(e->dernier == NULL){
-        e->premier = NoeudHexaInit(x,y,c);
+        e->premier = NoeudCarreInit(x,y,c);
         e->dernier = e->premier;
     }
     else{
-        NoeudHexa * n = NoeudHexaInit(x,y,c);
+        NoeudCarre * n = NoeudCarreInit(x,y,c);
         n->previous = e->dernier;
         e->dernier->next = n;
         e->dernier = n;
@@ -85,14 +85,14 @@ void EnsHexaAjoute(EnsHexa *e, int x, int y, int c){
 
 }
 
-void EnsHexaAjouteNoeudHexa(EnsHexa *e,NoeudHexa * n){
+void EnsCarreAjouteNoeudCarre(EnsCarre *e,NoeudCarre * n){
 
     if(e->dernier == NULL){
         e->premier = n;
         e->dernier = e->premier;
     }
     else{
-        NoeudHexa * n = n;
+        NoeudCarre * n = n;
         n->previous = e->dernier;
         e->dernier->next = n;
         e->dernier = n;
@@ -102,7 +102,7 @@ void EnsHexaAjouteNoeudHexa(EnsHexa *e,NoeudHexa * n){
 }
 
 
-void EnsHexaAjouteTrie(EnsHexa *e, NoeudHexa *n,MatriceHexa *heuristique){
+void EnsCarreAjouteTrie(EnsCarre *e, NoeudCarre *n,MatriceCarre *heuristique){
 
 	if( e->premier == NULL && e->dernier == NULL){
 		e->premier = n;
@@ -110,23 +110,23 @@ void EnsHexaAjouteTrie(EnsHexa *e, NoeudHexa *n,MatriceHexa *heuristique){
 		e->taille++;
 	}
 	else{
-		if(MatHexaVal2(heuristique,e->premier->x,e->premier->y) >= MatHexaVal2(heuristique,n->x,n->y)){
+		if(MatCarreVal2(heuristique,e->premier->x,e->premier->y) >= MatCarreVal2(heuristique,n->x,n->y)){
 			e->premier->previous = n;
 			n->next = e->premier;
 			e->premier = n;
 			e->taille++;
 		}
-		else if(MatHexaVal2(heuristique,e->dernier->x,e->dernier->y) <= MatHexaVal2(heuristique,n->x,n->y)){
+		else if(MatCarreVal2(heuristique,e->dernier->x,e->dernier->y) <= MatCarreVal2(heuristique,n->x,n->y)){
 			e->dernier->next = n;
 			n->previous = e->dernier;
 			e->dernier = n;
 			e->taille++;
 		}
 		else{
-			NoeudHexa * np = e->premier->next;
+			NoeudCarre * np = e->premier->next;
 
 			while(np != e->dernier){
-				if(MatHexaVal2(heuristique,n->x,n->y) <= MatHexaVal2(heuristique,np->x,np->y)){
+				if(MatCarreVal2(heuristique,n->x,n->y) <= MatCarreVal2(heuristique,np->x,np->y)){
 					n->next = np;
 					n->previous = np->previous;
 					np->previous->next = n;
@@ -146,11 +146,11 @@ void EnsHexaAjouteTrie(EnsHexa *e, NoeudHexa *n,MatriceHexa *heuristique){
 }
 
 // complexité O(n)
-int EnsHexaFind(EnsHexa *e, int x, int y){
+int EnsCarreFind(EnsCarre *e, int x, int y){
 
     int index = 0;
 
-    NoeudHexa * n = e->premier;
+    NoeudCarre * n = e->premier;
     while (n->next != NULL) {
         if (n->x == x && n->y == y) {
             return index;
@@ -163,10 +163,10 @@ int EnsHexaFind(EnsHexa *e, int x, int y){
 
 
 // complexité O(n/2)
-NoeudHexa *EnsHexaFindIndex(EnsHexa *e, int index){
+NoeudCarre *EnsCarreFindIndex(EnsCarre *e, int index){
 
-    if(index <= EnsHexaTaille(e)/2) {
-        NoeudHexa *n = e->premier;
+    if(index <= EnsCarreTaille(e)/2) {
+        NoeudCarre *n = e->premier;
         int i;
         for( i = 0; i<index && n->next != NULL  ;i++){
             n=n->next;
@@ -175,9 +175,9 @@ NoeudHexa *EnsHexaFindIndex(EnsHexa *e, int index){
         return n;
     }
     else{
-        NoeudHexa *n = e->dernier;
+        NoeudCarre *n = e->dernier;
         int i;
-        for(i = EnsHexaTaille(e); i>index && n->previous != NULL;i--){
+        for(i = EnsCarreTaille(e); i>index && n->previous != NULL;i--){
             n=n->previous;
         }
 
@@ -185,10 +185,10 @@ NoeudHexa *EnsHexaFindIndex(EnsHexa *e, int index){
     }
 }
 
-NoeudHexa *EnsHexaFindSupprIndex(EnsHexa *e, int index){
-    NoeudHexa *n;
+NoeudCarre*EnsCarreFindSupprIndex(EnsCarre *e, int index){
+    NoeudCarre *n;
 
-    if(index <= EnsHexaTaille(e)/2) {
+    if(index <= EnsCarreTaille(e)/2) {
         n = e->premier;
         int i;
         for( i = 0; i<index && n->next != NULL  ;i++)
@@ -198,9 +198,8 @@ NoeudHexa *EnsHexaFindSupprIndex(EnsHexa *e, int index){
     else{
         n = e->dernier;
         int i;
-        for(i = EnsHexaTaille(e); i>index && n->previous != NULL;i--)
+        for(i = EnsCarreTaille(e); i>index && n->previous != NULL;i--)
             n=n->previous;
-
     }
 
     if(n->next == NULL && n->previous == NULL){
@@ -229,9 +228,9 @@ NoeudHexa *EnsHexaFindSupprIndex(EnsHexa *e, int index){
 }
 
 // complexité O(n)
-void EnsHexaSuppr(EnsHexa *e, int x, int y){
+void EnsCarreSuppr(EnsCarre *e, int x, int y){
 
-    NoeudHexa *n = e->premier;
+    NoeudCarre *n = e->premier;
     while (n != NULL) {
         if (n->x == x && n->y == y) {
 
@@ -253,7 +252,7 @@ void EnsHexaSuppr(EnsHexa *e, int x, int y){
                 n->next->previous = n->previous;
             }
 
-            NoeudHexaSuppr(n);
+            NoeudCarreSuppr(n);
             e->taille--;
             n = NULL;
         }
@@ -263,8 +262,8 @@ void EnsHexaSuppr(EnsHexa *e, int x, int y){
 
 }
 
-NoeudHexa * EnsHexaDepilePremier(EnsHexa *e){
-	NoeudHexa *n = e->premier;
+NoeudCarre * EnsCarreDepilePremier(EnsCarre *e){
+	NoeudCarre *n = e->premier;
 
 	if(n->next!=NULL){
 	n->next->previous = NULL;
@@ -279,8 +278,8 @@ NoeudHexa * EnsHexaDepilePremier(EnsHexa *e){
 	return n;
 }
 
-void EnsHexaSupprPremier(EnsHexa *e){
-    NoeudHexa *n = e->premier;
+void EnsCarreSupprPremier(EnsCarre *e){
+    NoeudCarre *n = e->premier;
 
 	if(n->next!=NULL)
     	n->next->previous = NULL;
@@ -288,35 +287,35 @@ void EnsHexaSupprPremier(EnsHexa *e){
 		e->dernier = NULL;
 
 	e->premier = n->next;
-    NoeudHexaSuppr(n);
+    NoeudCarreSuppr(n);
     e->taille--;
 }
 
-void EnsHexaSupprDernier(EnsHexa *e){
-    NoeudHexa *n = e->dernier;
+void EnsCarreSupprDernier(EnsCarre *e){
+    NoeudCarre *n = e->dernier;
 
 	if(n->previous!=NULL)
     	n->previous->next = NULL;
 
 	e->dernier = n->previous;
-    NoeudHexaSuppr(n);
+    NoeudCarreSuppr(n);
     e->taille--;
 }
 
 // complexité O(n)
-int EnsHexaEstDans(EnsHexa *e, int x,int y){
-    return (EnsHexaFind(e,x,y) != -1);
+int EnsCarreEstDans(EnsCarre*e, int x,int y){
+    return (EnsCarreFind(e,x,y) != -1);
 }
 
 // complextité O(1)
-int EnsHexaTaille(EnsHexa *e){
+int EnsCarreTaille(EnsCarre *e){
     return e->taille;
 }
 
 // complexité O(n)
-void EnsHexaPrint(EnsHexa *e){
+void EnsCarrePrint(EnsCarre *e){
 
-    NoeudHexa * n = e->premier;
+    NoeudCarre * n = e->premier;
     printf("{\n");
     while (n != NULL) {
         printf("(%i,%i)",n->x,n->y);
@@ -326,13 +325,13 @@ void EnsHexaPrint(EnsHexa *e){
 }
 
 // complexité O(n/2)
-NoeudHexa * EnsHexaTirage(EnsHexa *e,int l){
+NoeudCarre * EnsCarreTirage(EnsCarre *e,int l){
     /* tirage */
     int index;    
 
     if(l)
 	index = 0;
     else
-    	index = rand() % EnsHexaTaille(e);
-    return EnsHexaFindSupprIndex(e,index);
+    	index = rand() % EnsCarreTaille(e);
+    return EnsCarreFindSupprIndex(e,index);
 }

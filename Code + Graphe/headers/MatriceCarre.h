@@ -1,5 +1,5 @@
 
-typedef struct MurHexa{
+typedef struct MurCarre{
 
   	int c1; // coté |
   	int c2; // coté / 
@@ -7,33 +7,33 @@ typedef struct MurHexa{
 	
 	int v;
 
-} MurHexa;
+} MurCarre;
 
-typedef struct MatriceHexa{
+typedef struct MatriceCarre{
 
   	int h;
   	int l;
-  	MurHexa* * points; //on a un tab de MurHexa. **-> tab de pointeurs 
+  	MurCarre* * points; //on a un tab de MurHexa. **-> tab de pointeurs 
 
-} MatriceHexa;
+} MatriceCarre;
 
-MurHexa * MurHexaAlloc(); //constructeur
+MurCarre * MurCarreAlloc(); //constructeur
 
-MurHexa * MurHexaAlloc2(int c1, int c2, int c3, int v); //constructeur
+MurCarre * MurCarreAlloc2(int c1, int c2, int c3, int v); //constructeur
 
-MatriceHexa * MatHexaAlloc(int h1,int l1); // création d’une nouvelle Matrice h * l initialisée à 0
+MatriceCarre * MatCarreAlloc(int h1,int l1); // création d’une nouvelle Matrice h * l initialisée à 0
 
-void MatHexaFree(MatriceHexa * m); // libération éventuelle de la mémoire utilisée
+void MatCarreFree(MatriceCarre * m); // libération éventuelle de la mémoire utilisée
 
-MurHexa * MatHexaVal(MatriceHexa * m,int p); // renvoie la valeur entière à la position p d'une Matrice[x,y]
+MurCarre * MatCarreVal(MatriceCarre * m,int p); // renvoie la valeur entière à la position p d'une Matrice[x,y]
 
-MurHexa * MatHexaVal2(MatriceHexa * m,int x,int y); // renvoie la valeur entière Matrice[x,y]
+MurCarre * MatCarreVal2(MatriceCarre * m,int x,int y); // renvoie la valeur entière Matrice[x,y]
 
-void MatHexaSet(MatriceHexa * m,int p,MurHexa * v); // stocke une valeur entière dans Matrice[x,y] a la potion p
+void MatCarreSet(MatriceCarre * m,int p,MurCarre * v); // stocke une valeur entière dans Matrice[x,y] a la potion p
 
-void MatHexaSet2(MatriceHexa * m,int x,int y,MurHexa * v); // stocke une valeur entière dans Matrice[x,y]
+void MatCarreSet2(MatriceCarre * m,int x,int y,MurCarre* v); // stocke une valeur entière dans Matrice[x,y]
 
 
-int MatHexaGetL(MatriceHexa * m); // récupère la largeur
+int MatCarreGetL(MatriceCarre * m); // récupère la largeur
 
-int MatHexaGetH(MatriceHexa * m); // récupère la hauteur
+int MatCarreGetH(MatriceCarre * m); // récupère la hauteur
