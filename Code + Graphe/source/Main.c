@@ -47,7 +47,7 @@ int main(int argc, char *argv[]){
 				set_Manual_Start_carre();
 				
 			else if (!strcmp(argv[i], "-construction1"))
-				set_Construction_Carre(atoi(argv[++i]);
+				set_Construction_Carre(atoi(argv[++i]));
 		}
 		else if(!strcmp(type,"-C")){
 		

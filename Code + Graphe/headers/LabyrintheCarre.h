@@ -15,9 +15,6 @@ static int contruction_value = 1;
 static int v_graph_carre = 0;
 static int d_graph_carre = 0;
 
-//Construction
-static int contruction_value = 1;
-
 // Manual Research 
 static int manual_search_carre = 0;
 

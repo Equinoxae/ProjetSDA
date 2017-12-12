@@ -473,68 +473,160 @@ void recherche_manuelle_hexa(LabyrintheHexa * lab){
 	int end_y = lab->map->h-1;
 	char * k ="";
 	
+	int l = lab->map->l;
+	int h = lab->map->h;
+	
 	printPointHexa(x,y,"vert");
 	printPointHexa(end_x,end_y,"rouge");
 	flushgraph();
 	refresh();
 
-	/*while ( !(x == end_x && y == end_y) && k != "esc"){
+	while ( !(x == end_x && y == end_y) && k != "esc"){
 		printf("Appuiez sur une touche\n");
 		k = getKey();
 		//printf("dir : %s\n",k);
 				
 		if(!strcmp(k,"left")){
-			if(!EstConstruit(lab,x-1,y)){
-				
+			
+			MurHexa *m = MatHexaVal2(lab->map,x,y);
+			
+			if(m->c1 == 0){
 				prev_x = x;
 				prev_y = y;
-				
+			
 				x--;
 				printf("dir : %s\n",k);
 			}
+			
 		}
 		else if(!strcmp(k,"right")){
-			if(!EstConstruit(lab,x+1,y)){
-				
-				prev_x = x;
-				prev_y = y;
-				
-				x++;
-				printf("dir : %s\n",k);
+			if( x + 1 < l -1){
+				MurHexa* m = MatHexaVal2(lab->map,x+1,y);
+			
+				if(m->c1 == 0){
+					prev_x = x;
+					prev_y = y;
+			
+					x++;
+					printf("dir : %s\n",k);
+				}
 			}
 		}
 		else if(!strcmp(k,"up")){
-			if(!EstConstruit(lab,x,y-1)){
+			k = getKey();
+			
+			if(!strcmp(k,"left")){
+			
+				if( (y%2 == 1 || x > 0 )&& y > 0 ){
 				
-				prev_x = x;
-				prev_y = y;
+					MurHexa *m = MatHexaVal2(lab->map,x,y);
+			
+					if(m->c2 == 0){
+						prev_x = x;
+						prev_y = y;
+		
+						if(y%2 == 0){
+							x--;
+							y--;
+						}
+						else{
+							x;
+							y--;
+						}
+					}
+					printf("dir : up + %s\n",k);
 				
-				y--;
-				printf("dir : %s\n",k);
+				}
 			}
+			else if(!strcmp(k,"right")){
+			
+				if((y%2 == 0 || x < l-1 ) && y > 0 ){
+				
+					MurHexa *m = MatHexaVal2(lab->map,x,y);
+			
+					if(m->c2 == 0){
+						prev_x = x;
+						prev_y = y;
+		
+						if(y%2 == 0){
+							x;
+							y--;
+						}
+						else{
+							x++;
+							y--;
+						}
+					}
+					printf("dir : up + %s\n",k);
+				
+				}
+			
+			
+			}
+						
 		}
 		else if(!strcmp(k,"down")){
-			if(!EstConstruit(lab,x,y+1)){				
-				prev_x = x;
-				prev_y = y;
+			k = getKey();
+			
+			if(!strcmp(k,"right")){
+			
+				if((y%2 == 0 || x < l-1 ) && y < h-1 ){
 				
-				y++;
-				printf("dir : %s\n",k);
+					MurHexa* m = MatHexaVal2(lab->map,y%2 == 0? x : x+1,y+1); 
+			
+					if(m->c2 == 0){
+						prev_x = x;
+						prev_y = y;
+		
+						if(y%2 == 0){
+							x;
+							y++;
+						}
+						else{
+							x++;
+							y++;
+						}
+					}
+					printf("dir : down + %s\n",k);
+				
+				}
+			}
+			else if(!strcmp(k,"left")){
+			
+				if((y%2 == 1 || x > 0 ) && y < h-1 ){
+				
+					MurHexa* m = MatHexaVal2(lab->map,y%2 == 0 ? x -1 : x,y+1); 
+			
+					if(m->c3 == 0){ 
+						prev_x = x;
+						prev_y = y;
+		
+						if(m->c2 == 0){
+							x--;
+							y++;
+						}
+						else{
+							x;
+							y++;
+						}
+					}
+					printf("dir : down + %s\n",k);
+				
+				}
+			
+			
 			}
 		}
 		else{
 		
 		}
 		
-		SetPointGraphe(prev_x,prev_y,"gris");
-		SetPointGraphe(x,y,"rouge");
-		
-		//flushgraph();
-		//refresh();
-		
+		printPointHexa(prev_x,prev_y,"gris");
+		printPointHexa(x,y,"rouge");
+				
 		printf("pos : %i %i\n",x,y);
 		
-	}*/
+	}
 	
 	waitgraph();
 	
