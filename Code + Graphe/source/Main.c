@@ -67,6 +67,10 @@ int main(int argc, char *argv[]){
 		        l = atoi(argv[++i]);
 		    else if (!strcmp(argv[i],"-h"))
 		        h = atoi(argv[++i]);
+			else if (!strcmp(argv[i],"-D"))
+		        set_Dij_hexa();
+			else if (!strcmp(argv[i],"-Dd"))
+		        set_Dij_rech_hexa();
 			else if (!strcmp(argv[i],"-M"))
 				set_Manual_rech_hexa();
 			else if ( !strcmp(argv[i],"-linear"))

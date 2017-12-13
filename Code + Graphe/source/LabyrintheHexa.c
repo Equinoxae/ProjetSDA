@@ -37,6 +37,16 @@ void set_LinearGenHexa(){
 	linear_hexa = 1;
 }
 
+void set_Dij_hexa(){
+	Dij_hexa = 1;
+}
+
+void set_Dij_rech_hexa(){
+	Dij_hexa = 1;
+	Dij_rech_hexa = 1;
+}
+
+
 double time_diff_hexa(struct timeval x , struct timeval y)
 {
     double x_ms , y_ms , diff;
@@ -455,6 +465,8 @@ void lanceRechercheHexa(LabyrintheHexa *lab){
 		recherche_manuelle_hexa(lab);
 		
 	}
+	else if(Dij_hexa)
+		dijkstra_hexa(lab);
 	
 	if(v_graph_hexa){
 			waitgraph();
@@ -648,20 +660,23 @@ void dijkstra_hexa(LabyrintheHexa * lab){
     // Ensemble donnant le sommet avec la distance la plus petite en premiere position
     EnsHexa *plusPetit = EnsHexaAlloc();
 
-    int V = lab->map->l*lab->map->h;
-
-    int i;
-    for (i = 0; i < V; i++)
-        MatHexaSet(dist,i,MurHexaAlloc2(0,0,0,INT_MAX));
-
-    MatHexaSet2(dist,start_x_hexa,start_y_hexa,0);
-	if(Dij_rech_hexa)
-	    printPointHexa(start_x_hexa,start_y_hexa, "vert");
-    EnsHexaAjoute(plusPetit,start_x_hexa,start_y_hexa,0);
-
     int l = lab->map->l;
     int h = lab->map->h;
 
+    int V = h*l;
+
+    int i;
+    for (i = 0; i < V; i++){    	
+        MatHexaSet(dist,i,MurHexaAlloc2(0,0,0,INT_MAX));
+    	MatHexaSet(isSet,i,MurHexaAlloc());
+    }
+
+    MatHexaSetValue2(dist,start_x_hexa,start_y_hexa,0);
+    
+	if(Dij_rech_hexa)
+	    printPointHexa(start_x_hexa,start_y_hexa, "vert");
+    
+    EnsHexaAjoute(plusPetit,start_x_hexa,start_y_hexa,0);
 
 
     while(!EnsHexaEstVide(plusPetit) && MatHexaVal2(dist,h-1,l-1)->v == INT_MAX){
@@ -672,37 +687,38 @@ void dijkstra_hexa(LabyrintheHexa * lab){
 
 		int ug = u - 1;
 		int ud = u + 1;
-		int uhg = (n->y%2 == 0) ?  u - l -1 : u - l;
-		int uhd = (n->y%2 == 0) ? u - l : u - l + 1  ;
-		int ubd = (n->y%2 == 0) ? u + l : u + l + 1 ;
-		int ubg = (n->y%2 == 0) ? u + l - 1 : u + l ;
+		int uhg = (u/l%2 == 0) ?  u - l -1 : u - l;
+		int uhd = (u/l%2 == 0) ? u - l : u - l + 1  ;
+		int ubd = (u/l%2 == 0) ? u + l : u + l + 1 ;
+		int ubg = (u/l%2 == 0) ? u + l - 1 : u + l ;
+		//printf("%i %i\n",n->x ,n->y);
+     	int min = MatHexaVal(dist,u)->v;
 
-        int min = MatHexaVal(dist,u)->v;
-
-		NoeudHexaSuppr(n);
-
-        MatHexaSet(isSet,u,MatHexaAlloc2(0,0,0,1));
-
+        MatHexaSetValue(isSet,u,1);
 		// gauche 
-		if (!MatHexaVal(isSet,ug)->v && !MatHexaVal(lab->map,u)->c1
-                                    && MatHexaVal(dist,u)->v+1 < MatHexaVal(dist,ug)->v){
+		if (!MatHexaVal(lab->map,u)->c1 &&!MatHexaVal(isSet,ug)->v
+									&& MatHexaVal(dist,u)->v+1 < MatHexaVal(dist,ug)->v){
+            
+            //printf("gauche\n");
             
 			// remplace l'ancienne valeur
-			free(MatHexaVal(dist,ug));
-			MatHexaSet(dist ,ug , MatHexaAlloc2(0,0,0,MatHexaVal(dist,u)+1) );
+			MatHexaSetValue(dist ,ug ,min + 1 );
 
 			// Ajoute le noeud
             EnsHexaAjoute(plusPetit, (ug)%l, (int)(ug)/l, 0);
 			if(Dij_rech_hexa)
 	            printPointHexa((ug)%l, (int)(ug)/l , "vert");
         }
+        
 		// haut gauche
-		if (!MatHexaVal(isSet,uhg)->v && !MatHexaVal(lab->map,u)->c2
-                                    && MatHexaVal(dist,u)->v+1 < MatHexaVal(dist,uhg)->v){
+		if (!MatHexaVal(lab->map,u)->c2 && !MatHexaVal(isSet,uhg)->v
+									&& MatHexaVal(dist,u)->v+1 < MatHexaVal(dist,uhg)->v){
+            
+            
+            //printf("h gauche\n");
             
 			// remplace l'ancienne valeur
-			free(MatHexaVal(dist,uhg));
-			MatHexaSet(dist ,uhg ,MatHexaAlloc2(0,0,0,MatHexaVal(dist,u)+1));
+			MatHexaSetValue(dist ,uhg ,min + 1);
 
 			// Ajoute le noeud
             EnsHexaAjoute(plusPetit, (uhg)%l, (int)(uhg)/l, 0);
@@ -710,12 +726,13 @@ void dijkstra_hexa(LabyrintheHexa * lab){
 	            printPointHexa((uhg)%l, (int)(uhg)/l , "vert");
         }
 		// haut droite
-		if (!MatHexaVal(isSet,uhd)->v && !MatHexaVal(lab->map,u)->c3
-                                    && MatHexaVal(dist,u)->v+1 < MatHexaVal(dist,uhd)->v){
+		if (!MatHexaVal(lab->map,u)->c3 && !MatHexaVal(isSet,uhd)->v
+									&& MatHexaVal(dist,u)->v+1 < MatHexaVal(dist,uhd)->v){ // OK
             
+            //printf("h droite\n");
+                        
 			// remplace l'ancienne valeur
-			free(MatHexaVal(dist,uhd));
-			MatHexaSet(dist ,uhd ,MatHexaAlloc2(0,0,0,MatHexaVal(dist,u)+1));
+			MatHexaSetValue(dist ,uhd ,min +1);
 
 			// Ajoute le noeud
             EnsHexaAjoute(plusPetit, (uhd)%l, (int)(uhd)/l, 0);
@@ -724,11 +741,12 @@ void dijkstra_hexa(LabyrintheHexa * lab){
         }
 		// droite
 		if (!MatHexaVal(isSet,ud)->v && !MatHexaVal(lab->map,ud)->c1
-                                    && MatHexaVal(dist,u)->v+1 < MatHexaVal(dist,ud)->v){
+									&& MatHexaVal(dist,u)->v+1 < MatHexaVal(dist,ud)->v){
+            
+            //printf("droite\n");
             
 			// remplace l'ancienne valeur
-			free(MatHexaVal(dist,ud));
-			MatHexaSet(dist ,ud ,MatHexaAlloc2(0,0,0,MatHexaVal(dist,u)+1));
+			MatHexaSetValue(dist ,ud ,min + 1);
 
 			// Ajoute le noeud
             EnsHexaAjoute(plusPetit, (ud)%l, (int)(ud)/l, 0);
@@ -736,12 +754,13 @@ void dijkstra_hexa(LabyrintheHexa * lab){
 	            printPointHexa((ud)%l, (int)(ud)/l , "vert");
         }
 		// bas droite
-		if (!MatHexaVal(isSet,ubd)->v && !MatHexaVal(lab->map,ubd)->c2
-                                    && MatHexaVal(dist,u)->v+1 < MatHexaVal(dist,ubd)->v){
+		if ((n->y%2 == 0 || n->x < l-1 ) && n->y < h-1 && !MatHexaVal(lab->map,ubd)->c2 
+					&& !MatHexaVal(isSet,ubd)->v && MatHexaVal(dist,u)->v+1 < MatHexaVal(dist,ubd)->v){
             
+            //printf("b droite\n");
+                        
 			// remplace l'ancienne valeur
-			free(MatHexaVal(dist,ubd));
-			MatHexaSet(dist ,ubd ,MatHexaAlloc2(0,0,0,MatHexaVal(dist,u)+1));
+			MatHexaSetValue(dist ,ubd ,min + 1);
 
 			// Ajoute le noeud
             EnsHexaAjoute(plusPetit, (ubd)%l, (int)(ubd)/l, 0);
@@ -749,34 +768,42 @@ void dijkstra_hexa(LabyrintheHexa * lab){
 	            printPointHexa((ubd)%l, (int)(ubd)/l , "vert");
         }
 		// bas gauche
-		if (!MatHexaVal(isSet,ubg)->v && !MatHexaVal(lab->map,ubg)->c3
-                                    && MatHexaVal(dist,u)->v+1 < MatHexaVal(dist,ubg)->v){
+		if ((n->y%2 == 1 || n->x > 0 ) && n->y < h-1 && !MatHexaVal(lab->map,ubg)->c3 
+					&& !MatHexaVal(isSet,ubg)->v && MatHexaVal(dist,u)->v+1 < MatHexaVal(dist,ubg)->v){
+                        
+            //printf("b gauche\n");
             
 			// remplace l'ancienne valeur
-			free(MatHexaVal(dist,ubg));
-			MatHexaSet(dist ,ubg ,MatHexaAlloc2(0,0,0,MatHexaVal(dist,u)+1));
+			MatHexaSetValue(dist ,ubg ,min + 1);
 
 			// Ajoute le noeud
             EnsHexaAjoute(plusPetit, (ubg)%l, (int)(ubg)/l, 0);
 			if(Dij_rech_hexa)
 	            printPointHexa((ubg)%l, (int)(ubg)/l , "vert");
+	            
         }
+
+		NoeudHexaSuppr(n);
+		if(Dij_rech_hexa)
+			usleep(10*1000);
+
 
     }
 
     // print
     int d = MatHexaVal2(dist,h-1,l-1)->v;
 	printf("\nDijsktra\n longueur du chemin : %i\n",d);
-    int p = (h-2)*l+l-1;
+    int p = (h-1)*l+l-1;
+    
 	if(v_graph_hexa)
 		while(d>=0){
 
-		    printPointHexa((int)(p-l)%l,(int)(p-l)/l+1, "rouge");
+		    printPointHexa((int)p%l,(int)p/l, "rouge");
 		    
-		    if( d_graph_hexa)
-		    	usleep(5 * 1000);
+		    if( Dij_hexa)
+		    	usleep(500 * 1000);
 		    
-		    printPointHexa((int)(p-l)%l,(int)(p-l)/l+1, "gris");
+		    printPointHexa((int)p%l,(int)p/l, "grisf");
 		    
 		    int u = p;
 			int ug = u - 1;
@@ -786,27 +813,26 @@ void dijkstra_hexa(LabyrintheHexa * lab){
 			int ubd = (u/l%2 == 0) ? u + l : u + l + 1 ;
 			int ubg = (u/l%2 == 0) ? u + l - 1 : u + l ;
 
-
 			if(!d){
 		        // fin
 		    }// gauche
-		    else if(MatHexaVal(dist,ug)->v == d-1){
+		    else if(!MatHexaVal(lab->map,u)->c1 && MatHexaVal(dist,ug)->v == d-1){
 		        p = ug;
 		    }// haut gauche
-			else if(MatHexaVal(dist,uhg)->v == d-1){
+			else if(!MatHexaVal(lab->map,u)->c2 && MatHexaVal(dist,uhg)->v == d-1){
 		        p = uhg;
 		    }// haut droit	    
-		    else if(MatHexaVal(dist,uhd)->v == d-1){
+		    else if(!MatHexaVal(lab->map,u)->c3 && MatHexaVal(dist,uhd)->v == d-1){
 		        p = uhd;
 		    }// droite
-			else if(MatHexaVal(dist,ug)->v == d-1){
+			else if(!MatHexaVal(lab->map,ud)->c1 && MatHexaVal(dist,ud)->v == d-1){
 		        p = ud;
 		    }// bas droite	    
-		    else if(MatHexaVal(dist,ubd)->v == d-1){
+		    else if(!MatHexaVal(lab->map,ubd)->c2 && MatHexaVal(dist,ubd)->v == d-1){
 		        p = ubd;
 		    }// bas gauche
-			else if(MatHexaVal(dist,ubg)->v == d-1){
-		        p = p+1;
+			else if(!MatHexaVal(lab->map,ubg)->c3 && MatHexaVal(dist,ubg)->v == d-1){
+		        p = ubg;
 		    }
 		    else if(MatHexaVal(dist,p)->v == INT_MAX){
 		        printf("Il n'y a pas de chemin vers la sortie\n");
@@ -1085,7 +1111,7 @@ void printPointHexa(int x, int y, char* color){
 	int l = y * 20;
 	int c = x * 20;
 	int col = (y%2 == 0)? 0 : 10;
-	
+		
 	point(10 + c + col, 15 + l ,4);
 
 	refresh();

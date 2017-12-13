@@ -40,6 +40,10 @@ void set_Manual_Start_hexa();
 
 void set_LinearGenHexa();
 
+void set_Dij_hexa();
+
+void set_Dij_rech_hexa();
+
 // difference en 2 moment
 double time_diff(struct timeval x , struct timeval y);
 

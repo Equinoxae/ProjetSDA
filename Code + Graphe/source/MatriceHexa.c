@@ -54,12 +54,27 @@ MurHexa * MatHexaVal2(MatriceHexa * m, int x, int y){
 }
 
 void MatHexaSet(MatriceHexa * m, int p, MurHexa * v){
+  if(m->points[p]!=NULL)
+	free(m->points[p]);
+
   m->points[p] = v;
 }
 
 void MatHexaSet2(MatriceHexa * m, int x,int y, MurHexa * v){
-  m->points[y*m->l+x] = v;
+  	if(m->points[y*m->l+x]!=NULL)
+		free(m->points[y*m->l+x]);
+
+	m->points[y*m->l + x] = v;
 }
+
+void MatHexaSetValue(MatriceHexa * m, int p, int v){
+  m->points[p]->v = v;
+}
+
+void MatHexaSetValue2(MatriceHexa * m, int x,int y, int v){
+	m->points[y*m->l + x]->v = v;
+}
+
 
 int MatHexaGetL(MatriceHexa * m){
     return m->l;
