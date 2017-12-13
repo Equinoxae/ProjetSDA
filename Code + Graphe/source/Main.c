@@ -43,6 +43,9 @@ int main(int argc, char *argv[]){
 			else if (!strcmp(argv[i],"-M"))
 				set_Manual_rech_carre();
 				
+			else if ( !strcmp(argv[i],"-linear"))
+				set_LinearGenCarre();
+				
 			else if (!strcmp(argv[i],"-start"))
 		        set_Start_carre(atof(argv[++i]),atof(argv[++i]));
 		        
