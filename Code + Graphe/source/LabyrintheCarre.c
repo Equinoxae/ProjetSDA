@@ -63,8 +63,9 @@ LabyrintheCarre *LabCarreCreate(int w,int h){
     int W = w ;
     int H = h ;
 
+	//initialisation fenêtre de la bonne taille
 	if(v_graph_carre){
-        initgraph(W*20+10 +1 , H*20 + 10 + 1);
+        initgraph(W*20+1 , H*20+1);
         flushgraph();
     }
 
@@ -167,7 +168,7 @@ void GranulariseCarre(LabyrintheCarre *lab ,EnsCarre *v, int nb){ // nada
 // Construit les murs du labyrinthe depuis les graines
 void LabCarreConstruit(LabyrintheCarre *lab ,EnsCarre *v){
 	
-	// trouve le premier mur et ajoute ses coté en liste
+	// trouve le premier mur et ajoute ses cotés en liste
 	EnsCarreAjoute(v,lab->map->l/2,lab->map->h/2,0);
 
 	
@@ -315,16 +316,16 @@ void printCarre(int w, int h, int x, int y, char * color){
 	int c = x * 20;
 	
 	//afficher case : 3 lignes à dessiner
-	line(0 + c, 0 + l, 0 + c, 10 + l); //x1, y1, x2, y2 coté 1
-	line(10 + c, 0 + l, 0 + c, 0 + l); //x1, y1, x2, y2 coté 2
+	line(0 + c, 0 + l, 0 + c, 20 + l); //x1, y1, x2, y2 coté 1
+	line(20 + c, 0 + l, 0 + c, 0 + l); //x1, y1, x2, y2 coté 2
 
 	// ligne du bas
 	if( y = h-1)
-		line(0 + c,  10+ l , 10 + c, 10 + l);
+		line(0 + c,  20 + l , 20 + c, 20 + l);
 
 	//ligne de droite
 	if( x = w-1)
-		line(10 + c, 10 + l, 10 + c,  0 + l);
+		line(20 + c, 20 + l, 20 + c,  0 + l);
 
 	refresh();
 
@@ -354,16 +355,16 @@ void printCoteCarre(int x, int y, int cot, char * color){
 	
 	switch(cot){
 		case 1:
-			line(0 + c, 1 + l, 0 + c, 9 + l); 	// '|' côté de 
+			line(0 + c, 1 + l, 0 + c, 19 + l); 	// '|' côté de 
 			break;
 		case 2:
-			line(1+ c, 0 + l , 9 + c, 0 + l); 	// '-' côté du haut
+			line(1 + c, 0 + l , 19 + c, 0 + l); 	// '-' côté du haut
 			break;
 		case 3:
-			line(10 + c, 9 + l, 1 + c,  0 + l); 	// '|' côté de droite
+			line(20 + c, 19 + l, 1 + c,  0 + l); 	// '|' côté de droite
 			break;
 		case 4:
-			line(1 + c, 10 + l, 9 + c, 10 + l); 	// '_' côté du bas
+			line(1 + c, 20 + l, 19 + c, 20 + l); 	// '_' côté du bas
 			break;
 	}
 	

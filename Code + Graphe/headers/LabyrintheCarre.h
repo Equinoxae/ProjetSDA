@@ -36,7 +36,7 @@ void set_Manual_Start_carre();
 
 void set_Construction_Carre(int val);
 
-// difference en 2 moment
+// difference en 2 moments
 double time_diff(struct timeval x , struct timeval y);
 
 // génération du labyrinthe

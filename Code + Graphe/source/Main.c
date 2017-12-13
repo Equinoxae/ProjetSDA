@@ -10,7 +10,10 @@
 int main(int argc, char *argv[]){
 
     Labyrinthe *lab;
+    LabyrintheCarre *labc;
 	LabyrintheHexa *labx;
+	
+	//LabyrintheCarre *labc;
     int h = -1;
     int l = -1;
     float g = 0.0001;
@@ -115,8 +118,24 @@ int main(int argc, char *argv[]){
 	}
 	// carré avec bordure
 	else if (!strcmp(type,"-c")){
+		if(h == -1)
+			h = 10;
 
+		if(l == -1)
+			l = 10;
+			
+		if( h < 10 || l < 10 || h > 60 || l > 60){
+				printf("Taille invalide ! La largeur et la hauteur doivent être comprises entre 10 et 60 \n");
+				exit(8);
+		}
+		
+		labc = LabCarreCreate(l, h);
+		
+		//lanceCarreRecherche(labc);
+		
+		LabCarreFree(labc);
 	}
+	
 	// hexagone
 	else if (!strcmp(type,"-x")){
 		if(h == -1)
@@ -133,7 +152,6 @@ int main(int argc, char *argv[]){
 		labx = LabHexaCreate(l,h);
 		
 		lanceRechercheHexa(labx);
-
 
 		LabHexaFree(labx);
 
