@@ -6,6 +6,7 @@
 #include "LabyrintheCarre.h"
 #include "graph.h"
 #include <string.h>
+#include <unistd.h>
 
 void set_v_carre(){
     v_graph_carre = 1;
@@ -75,6 +76,8 @@ LabyrintheCarre *LabCarreCreate(int w,int h){
 
 	LabCarreInit(l,W,H);
 	
+	LabCarreConstruit(l, v); //construire
+	
 	waitgraph();
 
 	return l;
@@ -108,31 +111,31 @@ int i,j;
 
 // Verifie la constructibilité des case autour d'une case 
 void verifCarreTour(LabyrintheCarre *lab  , EnsCarre *v, int x, int y){
-	// ligne paire
+	
 	int w = lab->map->l;
 	int h = lab->map->h;
 		
 	// gauche
-	if( x-1 >= 0){
+	if( x-1 >= 0){ //>= 0 car sinn on est dehors
 	
 		MurCarre * m = MatCarreVal2(lab->map,x-1, y);
 	
-		if(m->v == 0){
-			EnsCarreAjoute(v,x,y,1);
+		if(m->v == 0){ //vérif si on peut construire
+			EnsCarreAjoute(v,x,y,1); //noter pos actuelle
 			if(d_graph_carre)
-				printCoteCarre(x,y,1,"rouge");
+				printCoteCarre(x,y,1,"rouge"); //afficher coté en rouge
 		}
 	}
 	
-	// haut droit		
-	if(y-1 > 0){
+	// haut 		
+	if(y-1 >= 0){
 	
 		MurCarre * m = MatCarreVal2(lab->map,x, y-1);
 	
 		if(m->v == 0){
-			EnsCarreAjoute(v,x,y,3);
+			EnsCarreAjoute(v,x,y,2);
 			if(d_graph_carre)
-				printCoteCarre(x,y,3,"rouge");
+				printCoteCarre(x,y,2,"rouge");
 		}
 	}
 	
@@ -142,21 +145,21 @@ void verifCarreTour(LabyrintheCarre *lab  , EnsCarre *v, int x, int y){
 		MurCarre * m = MatCarreVal2(lab->map,x+1, y);
 	
 		if(m->v == 0){
-			EnsCarreAjoute(v,x,y,4);
+			EnsCarreAjoute(v,x,y,3);
 			if(d_graph_carre)
-				printCoteCarre(x,y,4,"rouge");
+				printCoteCarre(x,y,3,"rouge");
 		}
 	}
 	
-	// bas droit
+	// bas 
 	if(y+1 < h){
 	
 		MurCarre * m = MatCarreVal2(lab->map,x, y+1);
 	
 		if(m->v == 0){
-			EnsCarreAjoute(v,x,y,5);
+			EnsCarreAjoute(v,x,y,4);
 			if(d_graph_carre)
-				printCoteCarre(x,y,5,"rouge");
+				printCoteCarre(x,y,4,"rouge");
 		}
 	}
 }
@@ -173,21 +176,22 @@ void LabCarreConstruit(LabyrintheCarre *lab ,EnsCarre *v){
 
 	
 	while(!EnsCarreEstVide(v)){
-		NoeudCarre * n = EnsCarreTirage(v,0);
+		NoeudCarre * n = EnsCarreTirage(v,0);  //n = case que j'ai tirée
 		
 		MurCarre * m, * voisin, * first;
 		switch(n->cote)
 		{
-			case 1:
+			case 1: //suppression case de gauche
 				m = MatCarreVal2(lab->map,n->x,n->y);
 				m->v = 1;
-			
+
 				voisin = MatCarreVal2(lab->map,n->x-1,n->y);
-				if(voisin->v == 0){
-					m->c1 =0;
+				if(voisin->v == 0){ //si == 0, il n'est pas marqué 
+					m->c1 =0; //péter le mur à gauche: vérif sur le bloc actuel
+					voisin->v = 1; 
 					if(v_graph_carre)
-						printCoteCarre(n->x,n->y,1,"blanc");
-					verifCarreTour(lab,v,n->x-1,n->y);
+						printCoteCarre(n->x,n->y,1,"blanc"); //màj affichage
+					verifCarreTour(lab,v,n->x-1,n->y); //vérifier tour
 				} 
 				else{
 					if(d_graph_carre)
@@ -195,24 +199,17 @@ void LabCarreConstruit(LabyrintheCarre *lab ,EnsCarre *v){
 				}
 				
 				break;
-			case 2:
+			case 2: //suppression case du haut
 				m = MatCarreVal2(lab->map,n->x,n->y);
 				m->v = 1;
-				
-				if(n->y%2 == 0)
-					voisin = MatCarreVal2(lab->map,n->x-1,n->y-1);
-				else
-					voisin = MatCarreVal2(lab->map,n->x,n->y-1);
-				
-				if(voisin->v == 0){
-					m->c2 =0;
+			
+				voisin = MatCarreVal2(lab->map,n->x,n->y-1);
+				if(voisin->v == 0){ //si == 0, il n'est pas marqué 
+					m->c2 =0; //péter le mur à gauche
+					voisin->v = 1; 
 					if(v_graph_carre)
-						printCoteCarre(n->x,n->y,2,"blanc");
-					
-					if(n->y%2 == 0)
-						verifCarreTour(lab,v,n->x-1,n->y-1);
-					else
-						verifCarreTour(lab,v,n->x,n->y-1);
+						printCoteCarre(n->x,n->y,2,"blanc"); //màj affichage
+					verifCarreTour(lab,v,n->x,n->y-1); //vérifier tour
 				} 
 				else{
 					if(d_graph_carre)
@@ -221,44 +218,39 @@ void LabCarreConstruit(LabyrintheCarre *lab ,EnsCarre *v){
 				
 				break;
 
-			case 3:
+			case 3: //suppression case de droite
 				m = MatCarreVal2(lab->map,n->x,n->y);
 				m->v = 1;
 			
 				voisin = MatCarreVal2(lab->map,n->x+1,n->y);
 				if(voisin->v == 0){
 					voisin->c1 =0;
+					voisin->v = 1; 
 					if(v_graph_carre)
-						printCoteCarre(n->x,n->y,4,"blanc");
+						printCoteCarre(n->x,n->y,3,"blanc");
 					verifCarreTour(lab,v,n->x+1,n->y);
 				} 
 				else{
 					if(d_graph_carre)
-						printCoteCarre(n->x,n->y,4,"noir");
+						printCoteCarre(n->x,n->y,3,"noir");
 				}
 				break;
-			case 4:
+				
+			case 4: //suppression case du bas
 				m = MatCarreVal2(lab->map,n->x,n->y);
 				m->v = 1;
-				
-				if(n->y%2 == 0)
-					voisin = MatCarreVal2(lab->map,n->x,n->y+1);
-				else
-					voisin = MatCarreVal2(lab->map,n->x+1,n->y+1);
-				
-				if(voisin->v == 0){
-					voisin->c2 =0;
+			
+				voisin = MatCarreVal2(lab->map,n->x,n->y+1); //+1 car on va ver sle bas: -1 c'est qd on vers le haut 
+				if(voisin->v == 0){ //si == 0, il n'est pas marqué 
+					voisin->c2 =0; //péter le mur à gauche
+					voisin->v = 1; //passer la valeur du voisin à 1
 					if(v_graph_carre)
-						printCoteCarre(n->x,n->y,5,"blanc");
-					
-					if(n->y%2 == 0)
-						verifCarreTour(lab,v,n->x,n->y+1);
-					else
-						verifCarreTour(lab,v,n->x+1,n->y+1);
+						printCoteCarre(n->x,n->y,4,"blanc"); //màj affichage
+					verifCarreTour(lab,v,n->x,n->y+1); //vérifier tour
 				} 
 				else{
 					if(d_graph_carre)
-						printCoteCarre(n->x,n->y,5,"noir");
+						printCoteCarre(n->x,n->y,4,"noir");
 				}
 				break;
 
@@ -266,15 +258,14 @@ void LabCarreConstruit(LabyrintheCarre *lab ,EnsCarre *v){
 				first = MatCarreVal2(lab->map,n->x,n->y);
 				first->v = 1;
 				verifCarreTour(lab,v,n->x,n->y);
-				break;
-		
+				break;		
 		}
 	
 		//waitgraph();
+		if(d_graph_carre)
+			usleep(5*1000);
 	
 	}
-	
-
 }
 
 // Affiche le labyrinthe dans la console
@@ -361,7 +352,7 @@ void printCoteCarre(int x, int y, int cot, char * color){
 			line(1 + c, 0 + l , 19 + c, 0 + l); 	// '-' côté du haut
 			break;
 		case 3:
-			line(20 + c, 19 + l, 1 + c,  0 + l); 	// '|' côté de droite
+			line(20 + c, 19 + l, 20 + c,  1 + l); 	// '|' côté de droite
 			break;
 		case 4:
 			line(1 + c, 20 + l, 19 + c, 20 + l); 	// '_' côté du bas
