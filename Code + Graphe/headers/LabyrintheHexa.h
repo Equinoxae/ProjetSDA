@@ -23,6 +23,10 @@ static int manual_start_hexa = 0;
 // lineaire
 static int linear_hexa = 0;
 
+// Dijkstra 
+static int Dij_hexa = 0;
+static int Dij_rech_hexa = 0;
+
 // accesseur
 void set_v_hexa();
 
@@ -59,6 +63,12 @@ void lanceRechercheHexa(LabyrintheHexa *lab);
 
 // lance la recherche manuelle
 void recherche_manuelle_hexa(LabyrintheHexa * lab);
+
+// lance la recherche
+void dijkstra_hexa(LabyrintheHexa * lab);
+
+// lance la recherche
+void A_Star_hexa(LabyrintheHexa * lab);
 
 void printHexa(int w, int h, int x, int y, char* color);
 
