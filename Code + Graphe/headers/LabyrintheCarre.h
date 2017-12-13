@@ -23,6 +23,9 @@ static int start_x_carre= 0;
 static int start_y_carre = 0;
 static int manual_start_carre = 0;
 
+// lineaire
+static int linear_carre = 0;
+
 // accesseur
 void set_v_carre();
 
@@ -35,6 +38,8 @@ void set_Start_carre(int x,int y);
 void set_Manual_Start_carre();
 
 void set_Construction_Carre(int val);
+
+void set_LinearGenCarre();
 
 // difference en 2 moments
 double time_diff(struct timeval x , struct timeval y);

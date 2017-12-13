@@ -36,6 +36,10 @@ void set_Manual_Start_carre(){
 	manual_start_carre = 1;
 }
 
+void set_LinearGenCarre(){
+	linear_carre = 1;
+}
+
 double time_diff_carre(struct timeval x , struct timeval y)
 {
     double x_ms , y_ms , diff;
@@ -87,7 +91,6 @@ LabyrintheCarre *LabCarreCreate(int w,int h){
 void LabCarreFree(LabyrintheCarre *lab){
 	MatCarreFree(lab->map);
     free(lab);
-
 }
 
 // verifie si une case est un mur
@@ -176,7 +179,9 @@ void LabCarreConstruit(LabyrintheCarre *lab ,EnsCarre *v){
 
 	
 	while(!EnsCarreEstVide(v)){
-		NoeudCarre * n = EnsCarreTirage(v,0);  //n = case que j'ai tirée
+		NoeudCarre * n = EnsCarreTirage(v,linear_carre);
+		
+		//NoeudCarre * n = EnsCarreTirage(v,0);  //n = case que j'ai tirée
 		
 		MurCarre * m, * voisin, * first;
 		switch(n->cote)
@@ -264,6 +269,7 @@ void LabCarreConstruit(LabyrintheCarre *lab ,EnsCarre *v){
 		//waitgraph();
 		if(d_graph_carre)
 			usleep(5*1000);
+			//waitgraph();
 	
 	}
 }
