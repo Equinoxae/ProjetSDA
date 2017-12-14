@@ -40,6 +40,16 @@ void set_LinearGenCarre(){
 	linear_carre = 1;
 }
 
+void set_Dij_carre(){
+	Dij_carre = 1;
+}
+
+void set_Dij_rech_carre(){
+	Dij_carre = 1;
+	Dij_rech_carre = 1;
+	v_graph_carre = 1;
+}
+
 double time_diff_carre(struct timeval x , struct timeval y)
 {
     double x_ms , y_ms , diff;
@@ -80,7 +90,15 @@ LabyrintheCarre *LabCarreCreate(int w,int h){
 
 	LabCarreInit(l,W,H);
 	
-	LabCarreConstruit(l, v); //construire
+	if(contruction_value == 1){ //construire
+		
+		LabCarreConstruit(l, v); 
+		
+	}else{
+		
+		LabCarreConstruit2(l, v); 
+	
+	}
 	
 	waitgraph();
 
@@ -274,6 +292,113 @@ void LabCarreConstruit(LabyrintheCarre *lab ,EnsCarre *v){
 	}
 }
 
+
+// Construit les murs du labyrinthe depuis les graines
+void LabCarreConstruit2(LabyrintheCarre *lab ,EnsCarre *v){
+	
+	// trouve le premier mur et ajoute ses cotés en liste
+
+
+	for (int i=0; i<lab->map->l*lab->map->h; i++){
+		
+		MatCarreSetValue(lab->map, i, i); //i = position dans tableau
+		verifCarreTour(lab,v,i%lab->map->l,i/lab->map->h); //vérifier tour
+	
+	}
+	
+	while(!EnsCarreEstVide(v)){
+		NoeudCarre * n = EnsCarreTirage(v,0);
+		
+		MurCarre * m, * voisin;
+		int old; //ancienne valeur
+		int new; //new val
+		
+		switch(n->cote)
+		{
+			case 1: //suppression case de gauche
+				m = MatCarreVal2(lab->map,n->x,n->y);
+
+				voisin = MatCarreVal2(lab->map,n->x-1,n->y);
+				if(voisin->v != m->v){ //si == 0, il n'est pas marqué 
+					m->c1 =0; //péter le mur à gauche: vérif sur le bloc actuel
+					old = voisin->v;
+					new = m->v;
+					if(v_graph_carre)
+						printCoteCarre(n->x,n->y,1,"blanc"); //màj affichage
+				} 
+				else{
+					if(d_graph_carre)
+						printCoteCarre(n->x,n->y,1,"noir");
+				}
+				
+				break;
+			case 2: //suppression case du haut
+				m = MatCarreVal2(lab->map,n->x,n->y);
+			
+				voisin = MatCarreVal2(lab->map,n->x,n->y-1);
+				if(voisin->v != m->v){ //si == 0, il n'est pas marqué 
+					m->c2 =0; //péter le mur à gauche
+					old = voisin->v;
+					new = m->v;
+					if(v_graph_carre)
+						printCoteCarre(n->x,n->y,2,"blanc"); //màj affichage
+				} 
+				else{
+					if(d_graph_carre)
+						printCoteCarre(n->x,n->y,2,"noir");
+				}
+				
+				break;
+
+			case 3: //suppression case de droite
+				m = MatCarreVal2(lab->map,n->x,n->y);
+			
+				voisin = MatCarreVal2(lab->map,n->x+1,n->y);
+				if(voisin->v != m->v){
+					voisin->c1 =0;
+					old = voisin->v;
+					new = m->v;
+					if(v_graph_carre)
+						printCoteCarre(n->x,n->y,3,"blanc");
+				} 
+				else{
+					if(d_graph_carre)
+						printCoteCarre(n->x,n->y,3,"noir");
+				}
+				break;
+				
+			case 4: //suppression case du bas
+				m = MatCarreVal2(lab->map,n->x,n->y);
+			
+				voisin = MatCarreVal2(lab->map,n->x,n->y+1); //+1 car on va ver sle bas: -1 c'est qd on vers le haut 
+				if(voisin->v != m->v){ //si == 0, il n'est pas marqué 
+					voisin->c2 =0; //péter le mur à gauche
+					old = voisin->v;
+					new = m->v;
+					if(v_graph_carre)
+						printCoteCarre(n->x,n->y,4,"blanc"); //màj affichage
+				} 
+				else{
+					if(d_graph_carre)
+						printCoteCarre(n->x,n->y,4,"noir");
+				}
+				break;	
+		}
+	
+		for (int i=0; i<lab->map->l*lab->map->h; i++){
+			
+			MurCarre * m2 = MatCarreVal(lab->map, i);
+			if(m2->v == old)
+				m2->v = new;
+		}
+	
+		if(d_graph_carre)
+			usleep(5*1000);
+			//waitgraph();
+	
+	}
+}
+
 // Affiche le labyrinthe dans la console
 void LabCarrePrint(LabyrintheCarre *lab){}
 
@@ -284,7 +409,130 @@ void SetCarrePointGraphe(int x, int y, char * color){}
 void lanceCarreRecherche(LabyrintheCarre *lab){}
 
 // lance la recherche
-void dijkstraCarre(LabyrintheCarre * lab){}
+void dijkstraCarre(LabyrintheCarre * lab){
+	
+		/*ich bin die Beste une ich weiss alles über dir 
+		ich bin Anne ich mag Katze, ich spiele Klavier
+		ich kann deutsch und ich habe deutsch in der schule gelernt
+		ich war auch drei Monate in Berlin um ein Praktikum in Web Entwicklung zu machen und mein deutsch zu verbessern
+		es war toll. Mein Praktikumsleiter war sehr froh, süss mit mir und ich habe viel gelernt*/
+	
+	 // temps_debut
+    /*gettimeofday(&temps_debut_carre,NULL);
+
+    MatriceCarre * dist = MatCarreAlloc(lab->map->l,lab->map->h);
+    MatriceCarre * isSet = MatCarreAlloc(lab->map->l,lab->map->h);
+
+    // Ensemble donnant le sommet avec la distance la plus petite en premiere position
+    EnsCarre *plusPetit = EnsCarreAlloc();
+
+    int V = lab->map->l*lab->map->h;
+
+    int i;
+    for (i = 0; i < V; i++)
+        MatCarreSet(dist, i, MurCarreAlloc2(0, 0, NT_MAX));
+		MatCarreSet(isSet, i, MurCarreAlloc());
+
+    MatCarreSet2(dist,start_x_carre,start_y_carre,0);
+	if(Dij_rech_carre)
+	    SetCarrePointGraphe(start_x_carre,start_y_carre, "vert");
+    EnsCarreAjoute(plusPetit,start_x_carre,start_y_carre);
+
+    int l = lab->map->l;
+    int h = lab->map->h;
+
+
+
+    while(!EnsEstVide(plusPetit) && MatCarreVal2(dist,h-2,l-2)->v == INT_MAX){
+
+        NoeudCarre * n = EnsCarreDepilePremier(plusPetit);
+
+        int u = n->x*l+n->y;
+        int min = MatCarreVal(dist,u);
+
+		NoeudCarreSuppr(n);
+
+        MatCarreSet(isSet,u,1);
+
+        if (!MatCarreVal(isSet,u+1) && !MatCarreVal(lab->map,u+1)
+                                    && MatCarreVal(dist,u)+1 < MatCarreVal(dist,u+1)){
+            MatCarreSet(dist ,u+1 ,MatCarreVal(dist,u)+1);
+            EnsCarreAjoute(plusPetit, (int)(u+1)/l , (u+1)%l);
+			if(Dij_rech_carre)
+	            SetCarrePointGraphe((u+1)%l, (int)(u+1)/l , "vert");
+        }
+
+        if (!MatCarreVal(isSet,u-1) && !MatCarreVal(lab->map,u-1)
+                                    && MatCarreVal(dist,u)+1 < MatVal(dist,u-1)){
+            MatCarreSet(dist,u-1,MatCarreVal(dist,u)+1);
+            EnsCarreAjoute(plusPetit, (int)(u-1)/l , (u-1)%l);
+			if(Dij_rech_carre)
+			    SetCarrePointGraphe((int)(u-1)%l,(int)(u-1)/l, "vert");
+        }
+
+        if (!MatCarreVal(isSet,u+l) && !MatCarreVal(lab->map,u+l)
+                                    && MatCarreVal(dist,u)+1 < MatCarreVal(dist,u+l)){
+            MatCarreSet(dist,u+l,MatCarreVal(dist,u)+1);
+            EnsCarreAjoute(plusPetit, (int)(u+l)/l , (u+l)%l);
+			if(Dij_rech_carre)
+	        	SetCarrePointGraphe((int)(u+l)%l,(int)(u+l)/l, "vert");
+        }
+
+
+        if (!MatCarreVal(isSet,u-l) && !MatCarreVal(lab->map,u-l)
+                                    && MatCarreVal(dist,u)+1 < MatCarreVal(dist,u-l)){
+            MatCarreSet(dist,u-l,MatCarreVal(dist,u)+1);
+            EnsCarreAjoute(plusPetit, (int)(u-l)/l , (u-l)%l);
+			if(Dij_rech_carre)
+	            SetCarrePointGraphe((int)(u-l)%l,(int)(u-l)/l, "vert");
+        }
+    }
+
+    // print
+    int d = MatCarreVal2(dist,h-2,l-2);
+	printf("\nDijsktra\n longueur du chemin : %i\n",d);
+    int p = (h-2)*l+l-2;
+	if(v_graph_carre)
+		while(d>=0){
+
+		    SetCarrePointGraphe((int)(p-l)%l,(int)(p-l)/l+1, "rouge");
+
+			if(!d){
+		        // fin
+		    }
+		    
+		    else if(MatCarreVal(dist,p-l)->v == d-1){
+		        p = p-l;
+		    }
+			else if(MatCarreVal(dist,p-1)->v == d-1){
+		        p = p-1;
+		    }	    
+		    else if(MatCarreVal(dist,p+l)->v == d-1){
+		        p = p+l;
+		    }
+			else if(MatCarreVal(dist,p+1)->v == d-1){
+		        p = p+1;
+		    }
+		    else if(MatCarreVal(dist,p)->v == INT_MAX){
+		        printf("Il n'y a pas de chemin vers la sortie\n");
+		        d=0;
+		    }
+		    else{
+		        printf("Erreur\n");
+		        d=0;
+		    }
+		    d--;
+		}
+
+    // temps_fin
+    gettimeofday(&temps_fin_carre,NULL);
+    printf(" temps d'execution: %.5f secondes\n", time_diff_carre(temps_debut_carre,temps_fin_carre));
+
+	MatCarreFree(dist);
+	MatCarreFree(isSet);
+	EnsCarreFree(plusPetit);*/
+	
+}
 
 // lance la recherche
 void A_StarCarre(LabyrintheCarre * lab){}

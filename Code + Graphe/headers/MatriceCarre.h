@@ -2,8 +2,7 @@
 typedef struct MurCarre{
 
   	int c1; // coté |
-  	int c2; // coté / 
-  	int c3; // coté \
+  	int c2; // coté _
 	
 	int v;
 
@@ -19,7 +18,7 @@ typedef struct MatriceCarre{
 
 MurCarre * MurCarreAlloc(); //constructeur
 
-MurCarre * MurCarreAlloc2(int c1, int c2, int c3, int v); //constructeur
+MurCarre * MurCarreAlloc2(int c1, int c2, int v); //constructeur
 
 MatriceCarre * MatCarreAlloc(int h1,int l1); // création d’une nouvelle Matrice h * l initialisée à 0
 
@@ -32,6 +31,10 @@ MurCarre * MatCarreVal2(MatriceCarre * m,int x,int y); // renvoie la valeur enti
 void MatCarreSet(MatriceCarre * m,int p,MurCarre * v); // stocke une valeur entière dans Matrice[x,y] a la potion p
 
 void MatCarreSet2(MatriceCarre * m,int x,int y,MurCarre* v); // stocke une valeur entière dans Matrice[x,y]
+
+void MatCarreSetValue(MatriceCarre * m, int p, int v);
+
+void MatCarreSetValue2(MatriceCarre * m, int x,int y, int v);
 
 
 int MatCarreGetL(MatriceCarre * m); // récupère la largeur

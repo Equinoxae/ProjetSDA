@@ -26,6 +26,10 @@ static int manual_start_carre = 0;
 // lineaire
 static int linear_carre = 0;
 
+//DJI
+static int Dij_carre = 0;
+static int Dij_rech_carre = 0;
+
 // accesseur
 void set_v_carre();
 
@@ -40,6 +44,11 @@ void set_Manual_Start_carre();
 void set_Construction_Carre(int val);
 
 void set_LinearGenCarre();
+
+void set_Dij_carre();
+
+void set_Dij_rech_carre();
+
 
 // difference en 2 moments
 double time_diff(struct timeval x , struct timeval y);
@@ -62,11 +71,9 @@ void LabCarreInit(LabyrintheCarre *lab, int w ,int h);
 // Verifie la constructibilité des case autour d'une case 
 void verifCarreTour(LabyrintheCarre *lab  , EnsCarre *v, int x,int y);
 
-// granularise le labyrinthe avec un nombre de graine
-void GranulariseCarre(LabyrintheCarre *lab ,EnsCarre *v, int nb);
-
-// Construit les murs du labyrinthe depuis les graines
+// Construit les murs du labyrinthe 
 void LabCarreConstruit(LabyrintheCarre *lab ,EnsCarre *v);
+void LabCarreConstruit2(LabyrintheCarre *lab ,EnsCarre *v);
 
 // Affiche le labyrinthe dans la console
 void LabCarrePrint(LabyrintheCarre *lab);

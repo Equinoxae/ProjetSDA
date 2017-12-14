@@ -8,20 +8,18 @@ MurCarre * MurCarreAlloc(){
 
 	m->c1 = 1;
 	m->c2 = 1;
-	m->c3 = 1;
 	m->v = 0;
 
 	return m;
 
 }
 
-MurCarre * MurCarreAlloc2(int c1, int c2, int c3,int v){
+MurCarre * MurCarreAlloc2(int c1, int c2,int v){
 
 	MurCarre * m = malloc(sizeof(MurCarre));
 
 	m->c1 = c1;
 	m->c2 = c2;
-	m->c3 = c3;
 	m->v = v;
 
 	return m;
@@ -60,6 +58,15 @@ void MatCarreSet(MatriceCarre * m, int p, MurCarre * v){
 void MatCarreSet2(MatriceCarre * m, int x,int y, MurCarre * v){
   m->points[y*m->l+x] = v;
 }
+
+void MatCarreSetValue(MatriceCarre * m, int p, int v){
+	m->points[p]->v = v; //->v : accéder à la valeur de la variable
+};
+
+void MatCarreSetValue2(MatriceCarre * m, int x,int y, int v){
+	m->points[y*m->l+x]->v = v;	
+};
+
 
 int MatCarreGetL(MatriceCarre * m){
     return m->l;
