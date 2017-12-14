@@ -6,6 +6,8 @@ static struct timeval temps_debut,temps_fin;
 static int v_graph = 0;
 static int d_graph = 0;
 
+static int case_width = 3;
+
 // Dijkstra 
 static int Dij = 0;
 static int Dij_rech = 0;
@@ -54,6 +56,8 @@ void set_Start(int x,int y);
 void set_Manual_Start();
 
 void set_LinearGen();
+
+void set_CaseWidth(int x);
 
 // difference en 2 moment
 double time_diff(struct timeval x , struct timeval y);

@@ -5,6 +5,7 @@
 #include <limits.h>
 #include "Labyrinthe.h"
 #include "graph.h"
+
 #include "Heap.h"
 #include <string.h>
 
@@ -61,6 +62,15 @@ void set_LinearGen(){
 	linear = 1;
 }
 
+void set_CaseWidth(int x){
+	if(x < 0 || x > 20){
+		printf("Taille de case invalide ! La largeur et la hauteur de la case doit être >= 0 et <= 20\n");
+	    exit(6);
+	}
+
+	case_width = x;	
+}
+
 double time_diff(struct timeval x , struct timeval y)
 {
     double x_ms , y_ms , diff;
@@ -89,7 +99,7 @@ Labyrinthe *LabCreate(int w,int h,float r){
     int H = h + 2;
 
     if(v_graph){
-        initgraph((W)*3,(H)*3);
+        initgraph((W)*case_width,(H)*case_width);
         flushgraph();
     }
 
@@ -438,8 +448,9 @@ void SetPointGraphe(int x, int y, char * color){
     else if (!strcmp(color,"gris"))
     		setcolor(newcolor(0.9,0.9,0.9));
 
+	fullrectangle(x*case_width,y*case_width,case_width,case_width);
 
-    putpixel(x*3,y*3);
+    /*putpixel(x*3,y*3);
     putpixel(x*3+1,y*3);
     putpixel(x*3+2,y*3);
     putpixel(x*3,y*3+1);
@@ -447,7 +458,7 @@ void SetPointGraphe(int x, int y, char * color){
     putpixel(x*3+2,y*3+1);
     putpixel(x*3,y*3+2);
     putpixel(x*3+1,y*3+2);
-    putpixel(x*3+2,y*3+2);
+    putpixel(x*3+2,y*3+2);*/
 
     refresh();
 }
@@ -468,11 +479,10 @@ void lanceRecherche(Labyrinthe *lab){
 			getClic(px,py);
 		}
 		
-		set_Start(x/3,y/3);
+		set_Start(x/case_width,y/case_width);
 		
-		SetPointGraphe(start_x,start_y,"rouge");
-		flushgraph();
-		refresh();
+		SetPointGraphe(start_x,start_y,"vert");
+
 		printf("s = %i %i \n",start_x,start_y );
 		
 		recherche_manuelle(lab);
@@ -511,10 +521,12 @@ void recherche_manuelle(Labyrinthe * lab){
 	int end_x = lab->map->l-2;
 	int end_y = lab->map->h-2;
 	char * k ="";
+	
+	SetPointGraphe(end_x,end_y,"rouge");
 
 	while ( !(x == end_x && y == end_y) && k != "esc"){
 		printf("Appuiez sur une touche\n");
-		k = getKey();
+		
 		//printf("dir : %s\n",k);
 				
 		if(!strcmp(k,"left")){
@@ -561,12 +573,11 @@ void recherche_manuelle(Labyrinthe * lab){
 		}
 		
 		SetPointGraphe(prev_x,prev_y,"gris");
-		SetPointGraphe(x,y,"rouge");
-		
-		//flushgraph();
-		//refresh();
+		SetPointGraphe(x,y,"vert");
 		
 		printf("pos : %i %i\n",x,y);
+		
+		k = getKey();
 		
 	}
 	
