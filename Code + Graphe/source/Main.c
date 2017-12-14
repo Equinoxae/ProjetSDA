@@ -110,6 +110,8 @@ int main(int argc, char *argv[]){
 		        set_Dij_rech();
 			else if (!strcmp(argv[i],"-Auto"))
 		        set_Auto();
+			else if (!strcmp(argv[i],"-cw"))
+				set_CaseWidth(atoi(argv[++i]));
 		    else if (!strcmp(argv[i],"-file"))
 		        sprintf(fichier,"%s.pgm",argv[++i]);
 		}

@@ -316,16 +316,27 @@ void point(int x, int y, int r){
 	XFillArc(display, shadow, gc, x-r, y-r, r*2 , r*2 , 0 ,360*64);
 }
 
+void rectangle(int x, int y, int l, int h, int line_width){
+
+}
+
+void fullrectangle(int x, int y, int l, int h){
+	CHECKINIT(fullrectangle);
+
+	XFillRectangle(display, shadow, gc, x, y, l , h);
+
+}
+
 void circle(int x, int y, int r){
 	CHECKINIT(circle);
 
-	XDrawArc(display, shadow, gc, x, y, r*2 , r*2 , 0 ,360*64);
+	XDrawArc(display, shadow, gc, x-r, y-r, r*2 , r*2 , 0 ,360*64);
 }
 
 void arc(int x, int y, int r, int angle_start, int angle_end){
 	CHECKINIT(arc);
 	
-	XDrawArc(display,shadow, gc, x, y, r*2 , r*2, angle_start, angle_end);
+	XDrawArc(display,shadow, gc, x-r, y-r, r*2 , r*2, angle_start, angle_end);
 }
 
 void getClic(int * x, int * y){

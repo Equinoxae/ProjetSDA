@@ -45,7 +45,7 @@ void set_Dij_hexa();
 void set_Dij_rech_hexa();
 
 // difference en 2 moment
-double time_diff(struct timeval x , struct timeval y);
+double time_diff_hexa(struct timeval x , struct timeval y);
 
 // génération du labyrinthe
 LabyrintheHexa *LabHexaCreate(int w,int h);

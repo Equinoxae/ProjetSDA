@@ -6,6 +6,7 @@
 #include <limits.h>
 #include "LabyrintheHexa.h"
 #include "graph.h"
+#include "Heap.h"
 #include <string.h>
 
 void set_v_hexa(){
@@ -44,6 +45,7 @@ void set_Dij_hexa(){
 void set_Dij_rech_hexa(){
 	Dij_hexa = 1;
 	Dij_rech_hexa = 1;
+	v_graph_hexa = 1;
 }
 
 
@@ -490,14 +492,12 @@ void recherche_manuelle_hexa(LabyrintheHexa * lab){
 	
 	printPointHexa(x,y,"vert");
 	printPointHexa(end_x,end_y,"rouge");
-	flushgraph();
-	refresh();
 
 	while ( !(x == end_x && y == end_y) && k != "esc"){
 		printf("Appuiez sur une touche\n");
-		k = getKey();
-		//printf("dir : %s\n",k);
 				
+		k = getKey();
+
 		if(!strcmp(k,"left")){
 			
 			MurHexa *m = MatHexaVal2(lab->map,x,y);
@@ -636,7 +636,9 @@ void recherche_manuelle_hexa(LabyrintheHexa * lab){
 		printPointHexa(prev_x,prev_y,"grisf");
 		printPointHexa(x,y,"vert");
 				
-		printf("pos : %i %i\n",x,y);
+		//printf("pos : %i %i\n",x,y);
+
+		//k = getKey();
 		
 	}
 	
@@ -856,21 +858,29 @@ void dijkstra_hexa(LabyrintheHexa * lab){
 }
 
 void A_Star_hexa(LabyrintheHexa * lab){
-
+/*
     // temps_debut
-    /*gettimeofday(&temps_debut,NULL);
+    gettimeofday(&temps_debut,NULL);
 
 	int l = lab->map->l;
     int h = lab->map->h;
+	int V = h*l;
 
     Heap * openList = heap_init(l*h);
     Matrice * estMarque = MatAlloc(l,h);
 	Matrice * closedList = MatAlloc(l,h);
+	int i;
+    for (i = 0; i < V; i++){    	
+        MatHexaSet(estMarque,i,MurHexaAlloc());
+    	MatHexaSet(closedList,i,MurHexaAlloc());
+    }
 
-    heap_push(openList,data_init(start_x,start_y,0, ((h-start_x)-2 -1)*((h-start_x)-2 -1) + ((l-start_y)-2 -1)*((l-start_y)-2 -1)) );
-	MatSet2(estMarque,start_x,start_y,1);
 
-	if(AStar_rech)
+    heap_push(openList,data_init(start_x_hexa,start_y_hexa,0, (h-start_y_hexa) + l - (h-start_y_hexa)/2 - start_x_hexa - 1);
+	
+	MatHexaSetValue2(estMarque,start_x,start_y,1);
+
+	if(AStar_rech_hexa)
     	SetPointGraphe(start_x,start_y, "vertf");
 
     while(!HeapEstVide(openList) && MatVal2(closedList,h-2,l-2) == 0){
