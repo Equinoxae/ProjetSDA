@@ -48,6 +48,23 @@ void set_Dij_rech_hexa(){
 	v_graph_hexa = 1;
 }
 
+void set_Slow_gen(){
+	slow_gen_hexa = 1;
+}
+
+void set_Slow_rech(){
+	slow_rech_hexa = 1;
+}
+
+void set_AStar_hexa(){
+	Dij_hexa = 1;
+}
+
+void set_AStar_rech_hexa(){
+	AStar_hexa = 1;
+	AStar_rech_hexa = 1;
+	v_graph_hexa = 1;
+}
 
 double time_diff_hexa(struct timeval x , struct timeval y)
 {
@@ -451,7 +468,7 @@ void LabHexaConstruit(LabyrintheHexa *lab ,EnsHexa *v){
 		}
 	
 		free(n);
-		if(d_graph_hexa)
+		if(slow_gen_hexa)
 			usleep(5 * 1000);
 
 	}
@@ -467,9 +484,12 @@ void lanceRechercheHexa(LabyrintheHexa *lab){
 		recherche_manuelle_hexa(lab);
 		
 	}
-	else if(Dij_hexa)
-		dijkstra_hexa(lab);
-	
+	else{ 
+		if(Dij_hexa)
+			dijkstra_hexa(lab);
+		if(AStar_hexa)
+			A_Star_hexa(lab);
+	}
 	if(v_graph_hexa){
 			waitgraph();
 			closegraph();
@@ -674,14 +694,16 @@ void dijkstra_hexa(LabyrintheHexa * lab){
     }
 
     MatHexaSetValue2(dist,start_x_hexa,start_y_hexa,0);
-    
-	if(Dij_rech_hexa)
+  	
+	if(Dij_rech_hexa){
 	    printPointHexa(start_x_hexa,start_y_hexa, "vert");
+		printPointHexa(l-1,h-1,"rouge");
+	}
     
     EnsHexaAjoute(plusPetit,start_x_hexa,start_y_hexa,0);
 
 
-    while(!EnsHexaEstVide(plusPetit) && MatHexaVal2(dist,h-1,l-1)->v == INT_MAX){
+    while(!EnsHexaEstVide(plusPetit) && MatHexaVal2(dist,l-1,h-1)->v == INT_MAX){
 
         NoeudHexa * n = EnsHexaDepilePremier(plusPetit);
 
@@ -729,7 +751,7 @@ void dijkstra_hexa(LabyrintheHexa * lab){
         }
 		// haut droite
 		if (!MatHexaVal(lab->map,u)->c3 && !MatHexaVal(isSet,uhd)->v
-									&& MatHexaVal(dist,u)->v+1 < MatHexaVal(dist,uhd)->v){ // OK
+									&& MatHexaVal(dist,u)->v+1 < MatHexaVal(dist,uhd)->v){
             
             //printf("h droite\n");
                         
@@ -786,14 +808,14 @@ void dijkstra_hexa(LabyrintheHexa * lab){
         }
 
 		NoeudHexaSuppr(n);
-		if(Dij_rech_hexa)
+		if(slow_rech_hexa)
 			usleep(10*1000);
 
 
     }
 
     // print
-    int d = MatHexaVal2(dist,h-1,l-1)->v;
+    int d = MatHexaVal2(dist,l-1,h-1)->v;
 	printf("\nDijsktra\n longueur du chemin : %i\n",d);
     int p = (h-1)*l+l-1;
     
@@ -802,8 +824,8 @@ void dijkstra_hexa(LabyrintheHexa * lab){
 
 		    printPointHexa((int)p%l,(int)p/l, "rouge");
 		    
-		    if( Dij_hexa)
-		    	usleep(500 * 1000);
+		    if( slow_rech_hexa)
+		    	usleep(300 * 1000);
 		    
 		    printPointHexa((int)p%l,(int)p/l, "grisf");
 		    
@@ -849,7 +871,8 @@ void dijkstra_hexa(LabyrintheHexa * lab){
 
     // temps_fin
     gettimeofday(&temps_fin_hexa,NULL);
-    printf(" temps d'execution: %.5f secondes\n", time_diff(temps_debut_hexa,temps_fin_hexa));
+    printf(" temps d'execution: %.5f secondes\n", 
+					time_diff_hexa(temps_debut_hexa,temps_fin_hexa));
 
 	MatHexaFree(dist);
 	MatHexaFree(isSet);
@@ -858,17 +881,17 @@ void dijkstra_hexa(LabyrintheHexa * lab){
 }
 
 void A_Star_hexa(LabyrintheHexa * lab){
-/*
+
     // temps_debut
-    gettimeofday(&temps_debut,NULL);
+    gettimeofday(&temps_debut_hexa,NULL);
 
 	int l = lab->map->l;
     int h = lab->map->h;
 	int V = h*l;
 
     Heap * openList = heap_init(l*h);
-    Matrice * estMarque = MatAlloc(l,h);
-	Matrice * closedList = MatAlloc(l,h);
+    MatriceHexa * estMarque = MatHexaAlloc(l,h);
+	MatriceHexa * closedList = MatHexaAlloc(l,h);
 	int i;
     for (i = 0; i < V; i++){    	
         MatHexaSet(estMarque,i,MurHexaAlloc());
@@ -876,98 +899,155 @@ void A_Star_hexa(LabyrintheHexa * lab){
     }
 
 
-    heap_push(openList,data_init(start_x_hexa,start_y_hexa,0, (h-start_y_hexa) + l - (h-start_y_hexa)/2 - start_x_hexa - 1);
+    heap_push(openList,data_init(start_x_hexa,start_y_hexa,0, 
+									HexaHeuristique(start_x_hexa,start_y_hexa,l-1,h-1)) );
 	
-	MatHexaSetValue2(estMarque,start_x,start_y,1);
+	MatHexaSetValue2(estMarque,start_x_hexa,start_y_hexa,1);
 
-	if(AStar_rech_hexa)
-    	SetPointGraphe(start_x,start_y, "vertf");
+	if(AStar_rech_hexa){
+	    printPointHexa(start_x_hexa,start_y_hexa, "vertf");
+		printPointHexa(l-1,h-1,"rouge");
+	}
 
-    while(!HeapEstVide(openList) && MatVal2(closedList,h-2,l-2) == 0){
+    while(!HeapEstVide(openList) && MatHexaVal2(closedList,l-1,h-1)->v == 0){
 
 
-        Data * u = heap_pop(openList);
-		MatSet2(closedList,u->x,u->y,u->cout);
+        Data * n = heap_pop(openList);
+		MatHexaSetValue2(closedList,n->x,n->y,n->cout);
 
-		if (!MatVal2(lab->map,u->x-1,u->y)){
+		int u = n->y*l + n->x;
 
-            if(!MatVal2(estMarque,u->x-1,u->y)){
-                Data * v = data_init(u->x-1,u->y,u->cout+1,u->heuristique+1);
-				MatSet2(estMarque,v->x,v->y,1);
-                heap_push(openList,v);
-                if(AStar_rech)
-                    SetPointGraphe(v->x,v->y, "vertf");
-            }
+		int ug = u - 1;
+		int ud = u + 1;
+		int uhg = (u/l%2 == 0) ?  u - l -1 : u - l;
+		int uhd = (u/l%2 == 0) ? u - l : u - l + 1  ;
+		int ubd = (u/l%2 == 0) ? u + l : u + l + 1 ;
+		int ubg = (u/l%2 == 0) ? u + l - 1 : u + l ;
 
+        MatHexaSetValue(estMarque,u,1);
+		// gauche 
+		if (!MatHexaVal(lab->map,u)->c1 &&!MatHexaVal(estMarque,ug)->v){
+            
+            //printf("gauche\n");
+            
+			Data * v = data_init(ug%l,ug/l,n->cout+1,n->heuristique+1);
+			MatHexaSetValue2(estMarque,v->x,v->y,1);
+            heap_push(openList,v);
+            if(AStar_rech_hexa)
+                printPointHexa(v->x,v->y, "vertf");
+        }
+        
+		// haut gauche
+		if (!MatHexaVal(lab->map,u)->c2 && !MatHexaVal(estMarque,uhg)->v){
+            
+            
+            //printf("h gauche\n");
+            
+			Data * v = data_init(uhg%l,uhg/l,n->cout+1,n->heuristique+1);
+			MatHexaSetValue2(estMarque,v->x,v->y,1);
+            heap_push(openList,v);
+            if(AStar_rech_hexa)
+                printPointHexa(v->x,v->y, "vertf");
+        }
+		// haut droite
+		if (!MatHexaVal(lab->map,u)->c3 && !MatHexaVal(estMarque,uhd)->v){
+            
+            //printf("h droite\n");
+                        
+			Data * v = data_init(uhd%l,uhd/l,n->cout+1,n->heuristique);
+			MatHexaSetValue2(estMarque,v->x,v->y,1);
+            heap_push(openList,v);
+            if(AStar_rech_hexa)
+                printPointHexa(v->x,v->y, "vertf");
+        }
+		// droite
+		if (n->x < l-1 && !MatHexaVal(estMarque,ud)->v && !MatHexaVal(lab->map,ud)->c1){
+            
+            //printf("droite\n");
+            
+			Data * v = data_init(ud%l,ud/l,n->cout+1,n->heuristique-1);
+			MatHexaSetValue2(estMarque,v->x,v->y,1);
+            heap_push(openList,v);
+            if(AStar_rech_hexa)
+                printPointHexa(v->x,v->y, "vertf");
+        }
+		// bas droite
+		if ((n->y%2 == 0 || n->x < l-1 ) && n->y < h-1 && !MatHexaVal(lab->map,ubd)->c2 
+					&& !MatHexaVal(estMarque,ubd)->v){
+            
+            //printf("b droite\n");
+                        
+			Data * v = data_init(ubd%l,ubd/l,n->cout+1,n->heuristique-1);
+			MatHexaSetValue2(estMarque,v->x,v->y,1);
+            heap_push(openList,v);
+            if(AStar_rech_hexa)
+                printPointHexa(v->x,v->y, "vertf");
+        }
+		// bas gauche
+		if ((n->y%2 == 1 || n->x > 0 ) && n->y < h-1 && !MatHexaVal(lab->map,ubg)->c3 
+					&& !MatHexaVal(estMarque,ubg)->v){
+                        
+            //printf("b gauche\n");
+            
+			Data * v = data_init(ubg%l,ubg/l,n->cout+1,n->heuristique);
+			MatHexaSetValue2(estMarque,v->x,v->y,1);
+            heap_push(openList,v);
+            if(AStar_rech_hexa)
+                printPointHexa(v->x,v->y, "vertf");
+	            
         }
 
-		if (!MatVal2(lab->map,u->x,u->y-1)){
+		free(n);
 
-            if(!MatVal2(estMarque,u->x,u->y-1)){
-                Data * v = data_init(u->x,u->y-1,u->cout+1,u->heuristique+1);
-				MatSet2(estMarque,v->x,v->y,1);
-                heap_push(openList,v);
-                if(AStar_rech)
-                    SetPointGraphe(v->x,v->y, "vertf");
-            }
-
-        }
-
-		if (!MatVal2(lab->map,u->x+1,u->y)){
-            if(!MatVal2(estMarque,u->x+1,u->y)){
-                Data * v = data_init(u->x+1,u->y,u->cout+1,u->heuristique-1);
-				MatSet2(estMarque,v->x,v->y,1);
-                heap_push(openList,v);
-                if(AStar_rech)
-                    SetPointGraphe(v->x,v->y, "vertf");
-            }
-
-        }
-
-		if (!MatVal2(lab->map,u->x,u->y+1)){
-
-            if(!MatVal2(estMarque,u->x,u->y+1)){
-                Data * v = data_init(u->x,u->y+1,u->cout+1,u->heuristique-1);
-				MatSet2(estMarque,v->x,v->y,1);
-                heap_push(openList,v);
-                if(AStar_rech)
-                    SetPointGraphe(v->x,v->y, "vertf");
-            }
-        }
-		
-
-		free(u);
-
-    }
-
+		if(slow_rech_hexa)
+			usleep(10*1000);
+	}
 
 	// print
-    int d = MatVal2(closedList,h-2,l-2);
+    int d = MatHexaVal2(closedList,l-1,h-1)->v;
 	printf("\nA*\n longueur du chemin: %i\n",d);
-    int p = (h-2)*l+l-2;
+    int p = (h-1)*l+l-1;
 
-	if(v_graph)
-		while(d>0){
+	if(v_graph_hexa)
+		while(d>=0){
 
-		    SetPointGraphe((int)(p-l)%l, (int)(p-l)/l+1,"bleu");
+		    printPointHexa((int)p%l,(int)p/l, "rouge");
+		    
+		    if(slow_rech_hexa)
+		    	usleep(300 * 1000);
+		    
+		    printPointHexa((int)p%l,(int)p/l, "grisf");
 
-			if(!(d-1)){
-				SetPointGraphe(start_x,start_y, "bleu");
+			int u = p;
+			int ug = u - 1;
+			int uhg = (u/l%2 == 0) ?  u - l -1 : u - l;
+			int uhd = (u/l%2 == 0) ? u - l : u - l + 1  ;
+			int ud = u + 1;
+			int ubd = (u/l%2 == 0) ? u + l : u + l + 1 ;
+			int ubg = (u/l%2 == 0) ? u + l - 1 : u + l ;
+
+			if(!d){
 		        // fin
+		    }// gauche
+		    else if(!MatHexaVal(lab->map,u)->c1 && MatHexaVal(closedList,ug)->v == d-1){
+		        p = ug;
+		    }// haut gauche
+			else if(!MatHexaVal(lab->map,u)->c2 && MatHexaVal(closedList,uhg)->v == d-1){
+		        p = uhg;
+		    }// haut droit	    
+		    else if(!MatHexaVal(lab->map,u)->c3 && MatHexaVal(closedList,uhd)->v == d-1){
+		        p = uhd;
+		    }// droite
+			else if(!MatHexaVal(lab->map,ud)->c1 && MatHexaVal(closedList,ud)->v == d-1){
+		        p = ud;
+		    }// bas droite	    
+		    else if(!MatHexaVal(lab->map,ubd)->c2 && MatHexaVal(closedList,ubd)->v == d-1){
+		        p = ubd;
+		    }// bas gauche
+			else if(!MatHexaVal(lab->map,ubg)->c3 && MatHexaVal(closedList,ubg)->v == d-1){
+		        p = ubg;
 		    }
-		    else if(MatVal(closedList,p-l) == d-1){
-		        p = p-l;
-		    }
-			else if(MatVal(closedList,p-1) == d-1){
-		        p = p-1;
-		    }
-			else if(MatVal(closedList,p+l) == d-1){
-		        p = p+l;
-		    }
-		    else if(MatVal(closedList,p+1) == d-1){
-		        p = p+1;
-		    }
-		    else if(!MatVal(closedList,p)){
+		    else if(MatHexaVal(closedList,p)->v == INT_MAX){
 		        printf("Il n'y a pas de chemin vers la sortie\n");
 		        d=0;
 		    }
@@ -976,17 +1056,34 @@ void A_Star_hexa(LabyrintheHexa * lab){
 		        d=0;
 		    }
 		    d--;
+
 		}
 
     // temps_fin
-    gettimeofday(&temps_fin,NULL);
-    printf(" temps d'execution: %.5f secondes\n", time_diff(temps_debut,temps_fin));
+    gettimeofday(&temps_fin_hexa,NULL);
+    printf(" temps d'execution: %.5f secondes\n", 
+				time_diff_hexa(temps_debut_hexa,temps_fin_hexa));
 
-	MatFree(estMarque);
-	MatFree(closedList);
+	MatHexaFree(estMarque);
+	MatHexaFree(closedList);
 	HeapFree(openList);
-*/
+
 }
+
+int HexaHeuristique(int x_start, int y_start, int x_end, int y_end){
+	int off_x_s = x_start - ( y_start - y_start%2) / 2;
+	int off_z_s = y_start;
+	int off_y_s = - off_x_s - off_z_s;
+
+	int off_x_e = x_end - ( y_end - y_end%2) / 2;
+	int off_z_e = y_end;
+	int off_y_e = - off_x_e - off_z_e;
+
+	return (abs(off_x_e - off_x_s) +abs(off_y_e - off_y_s) +abs(off_z_e - off_z_s))/2;
+
+
+}
+
 
 // Affiche un point sur le graphe
 void printHexa(int w, int h, int x, int y, char * color){

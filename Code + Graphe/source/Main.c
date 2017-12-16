@@ -71,10 +71,22 @@ int main(int argc, char *argv[]){
 		        set_Dij_hexa();
 			else if (!strcmp(argv[i],"-Dd"))
 		        set_Dij_rech_hexa();
+		    else if (!strcmp(argv[i],"-A"))
+		    	set_AStar_hexa();
+			else if (!strcmp(argv[i],"-Ad"))
+		        set_AStar_rech_hexa();
 			else if (!strcmp(argv[i],"-M"))
 				set_Manual_rech_hexa();
 			else if ( !strcmp(argv[i],"-linear"))
 				set_LinearGenHexa();
+			else if ( !strcmp(argv[i],"-slow")){
+				set_Slow_gen();
+				set_Slow_rech();
+			}
+			else if ( !strcmp(argv[i],"-slowg"))
+				set_Slow_gen();
+			else if ( !strcmp(argv[i],"-slowr"))
+				set_Slow_rech();
 			else if (!strcmp(argv[i],"-start"))
 		        set_Start_hexa(atof(argv[++i]),atof(argv[++i]));
 			else if (!strcmp(argv[i],"-ms"))
@@ -153,8 +165,8 @@ int main(int argc, char *argv[]){
 		if(l == -1)
 			l = 10;
 
-		if (h < 5 || l < 5 || h > 40 || l > 40){
-		    printf("Taille invalide ! La largeur et la hauteur doivent être >= 5 et <= 40\n");
+		if (h < 5 || l < 5 || h > 40 || l > 80){
+		    printf("Taille invalide ! La largeur doit être >= 5 et <= 80 et la hauteur doit être >= 5 et <= 40\n");
 		    exit(2);
 		}
 

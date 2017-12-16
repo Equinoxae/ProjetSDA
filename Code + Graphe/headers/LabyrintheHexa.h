@@ -27,6 +27,14 @@ static int linear_hexa = 0;
 static int Dij_hexa = 0;
 static int Dij_rech_hexa = 0;
 
+// Dijkstra 
+static int AStar_hexa = 0;
+static int AStar_rech_hexa = 0;
+
+// slow motion
+static int slow_gen_hexa = 0;
+static int slow_rech_hexa = 0;
+
 // accesseur
 void set_v_hexa();
 
@@ -40,9 +48,17 @@ void set_Manual_Start_hexa();
 
 void set_LinearGenHexa();
 
+void set_Slow_gen();
+
+void set_Slow_rech();
+
 void set_Dij_hexa();
 
 void set_Dij_rech_hexa();
+
+void set_AStar_hexa();
+
+void set_AStar_rech_hexa();
 
 // difference en 2 moment
 double time_diff_hexa(struct timeval x , struct timeval y);
@@ -73,6 +89,9 @@ void dijkstra_hexa(LabyrintheHexa * lab);
 
 // lance la recherche
 void A_Star_hexa(LabyrintheHexa * lab);
+
+// calcule l'heuristique entre 2 points hexagonaux (odd-r coordonate)
+int HexaHeuristique(int x_start, int y_start, int x_end, int y_end);
 
 void printHexa(int w, int h, int x, int y, char* color);
 
