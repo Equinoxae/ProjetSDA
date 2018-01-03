@@ -655,7 +655,8 @@ void recherche_manuelle_hexa(LabyrintheHexa * lab){
 		
 		printPointHexa(prev_x,prev_y,"grisf");
 		printPointHexa(x,y,"vert");
-				
+
+		usleep(10*1000);
 		//printf("pos : %i %i\n",x,y);
 
 		//k = getKey();
@@ -840,6 +841,10 @@ void dijkstra_hexa(LabyrintheHexa * lab){
 			if(!d){
 		        // fin
 		    }// gauche
+			else if(MatHexaVal(dist,p)->v == INT_MAX){
+		        printf("Il n'y a pas de chemin vers la sortie\n");
+		        d=0;
+		    }
 		    else if(!MatHexaVal(lab->map,u)->c1 && MatHexaVal(dist,ug)->v == d-1){
 		        p = ug;
 		    }// haut gauche
@@ -857,10 +862,6 @@ void dijkstra_hexa(LabyrintheHexa * lab){
 		    }// bas gauche
 			else if(!MatHexaVal(lab->map,ubg)->c3 && MatHexaVal(dist,ubg)->v == d-1){
 		        p = ubg;
-		    }
-		    else if(MatHexaVal(dist,p)->v == INT_MAX){
-		        printf("Il n'y a pas de chemin vers la sortie\n");
-		        d=0;
 		    }
 		    else{
 		        printf("Erreur\n");

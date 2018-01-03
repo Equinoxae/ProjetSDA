@@ -144,7 +144,7 @@ int EstConstructible(Labyrinthe *lab , Ens *v, Noeud * point, int init){
     int w = MatGetL(lab->map);
     int h = MatGetH(lab->map);
 
-    if(EstConstruit(lab,x,y) || ( !init && (x<= 1|| y <= 1 || x >= h-2 || y >= w-2) ) )
+    if(EstConstruit(lab,x,y) || ( !init && (x<= 1|| y <= 1 || x >= w-2 || y >= h-2) ) )
         return 0;
 
     int res = 0;
@@ -329,46 +329,45 @@ void Granularise(Labyrinthe *lab  , Ens *v, int nb){
 
 	// Noeud gauche
 
-	MatSet2(lab->map, gg , 1 , 1);
+	MatSet2(lab->map, 1 , gg , 1);
 
 	if(v_graph)
-		SetPointGraphe(gg,1,"noir");
+		SetPointGraphe(1, gg ,"noir");
 
-	verifTour(lab,v,NoeudInit(gg,1),1);
+	verifTour(lab,v,NoeudInit(1 , gg),1);
 
 	// Noeud haut
 
-	MatSet2(lab->map, 1 , gh , 1);
+	MatSet2(lab->map, gh, 1 , 1);
 
 	if(v_graph)
-		SetPointGraphe(1 , gh ,"noir");
+		SetPointGraphe(gh , 1 ,"noir");
 
-	verifTour(lab,v,NoeudInit(1,gh),1);
+	verifTour(lab,v,NoeudInit(gh, 1),1);
 
 	// Noeud droite
 
-	MatSet2(lab->map, gd , l-2 , 1);
-
+	MatSet2(lab->map, l-2 , gd, 1);
 	if(v_graph)
-		SetPointGraphe(gd,l-2,"noir");
+		SetPointGraphe(l-2 , gd,"noir");
 
-	verifTour(lab,v,NoeudInit(gd,l-2),1);
+	verifTour(lab,v,NoeudInit(l-2 , gd),1);
 
 	// Noeud bas
 
-	MatSet2(lab->map, h-2 , gb , 1);
+	MatSet2(lab->map, gb, h-2  , 1);
 
 	if(v_graph)
-		SetPointGraphe(h-2 , gb ,"noir");
+		SetPointGraphe(gb, h-2 ,"noir");
 
-	verifTour(lab,v,NoeudInit(h-2,gb),1);
+	verifTour(lab,v,NoeudInit(gb, h-2 ),1);
 
     int count = 0;
     int res;
 
     while( count < nb){
 
-        Noeud * tirage = NoeudInit(rand()%(h-2)+1,rand()%(l-2)+1);
+        Noeud * tirage = NoeudInit(rand()%(l-2)+1,rand()%(h-2)+1);
 
         if( EstConstructible(lab , v, tirage,1 ) ){
 
@@ -611,14 +610,12 @@ void dijkstra(Labyrinthe * lab){
 
     int l = lab->map->l;
     int h = lab->map->h;
-
-
-
-    while(!EnsEstVide(plusPetit) && MatVal2(dist,h-2,l-2) == INT_MAX){
+    
+    while(!EnsEstVide(plusPetit) && MatVal2(dist,l-2,h-2) == INT_MAX){
 
         Noeud * n = EnsDepilePremier(plusPetit);
 
-        int u = n->x*l+n->y;
+        int u = n->y*l+n->x;
         int min = MatVal(dist,u);
 
 		NoeudSuppr(n);
@@ -628,7 +625,7 @@ void dijkstra(Labyrinthe * lab){
         if (!MatVal(isSet,u+1) && !MatVal(lab->map,u+1)
                                     && MatVal(dist,u)+1 < MatVal(dist,u+1)){
             MatSet(dist ,u+1 ,MatVal(dist,u)+1);
-            EnsAjoute(plusPetit, (int)(u+1)/l , (u+1)%l);
+            EnsAjoute(plusPetit, (int)(u+1)%l , (u+1)/l);
 			if(Dij_rech)
 	            SetPointGraphe((u+1)%l, (int)(u+1)/l , "vert");
         }
@@ -636,7 +633,7 @@ void dijkstra(Labyrinthe * lab){
         if (!MatVal(isSet,u-1) && !MatVal(lab->map,u-1)
                                     && MatVal(dist,u)+1 < MatVal(dist,u-1)){
             MatSet(dist,u-1,MatVal(dist,u)+1);
-            EnsAjoute(plusPetit, (int)(u-1)/l , (u-1)%l);
+            EnsAjoute(plusPetit, (int)(u-1)%l , (u-1)/l);
 			if(Dij_rech)
 			    SetPointGraphe((int)(u-1)%l,(int)(u-1)/l, "vert");
         }
@@ -644,7 +641,7 @@ void dijkstra(Labyrinthe * lab){
         if (!MatVal(isSet,u+l) && !MatVal(lab->map,u+l)
                                     && MatVal(dist,u)+1 < MatVal(dist,u+l)){
             MatSet(dist,u+l,MatVal(dist,u)+1);
-            EnsAjoute(plusPetit, (int)(u+l)/l , (u+l)%l);
+            EnsAjoute(plusPetit, (int)(u+l)%l , (u+l)/l);
 			if(Dij_rech)
 	        	SetPointGraphe((int)(u+l)%l,(int)(u+l)/l, "vert");
         }
@@ -653,7 +650,7 @@ void dijkstra(Labyrinthe * lab){
         if (!MatVal(isSet,u-l) && !MatVal(lab->map,u-l)
                                     && MatVal(dist,u)+1 < MatVal(dist,u-l)){
             MatSet(dist,u-l,MatVal(dist,u)+1);
-            EnsAjoute(plusPetit, (int)(u-l)/l , (u-l)%l);
+            EnsAjoute(plusPetit, (int)(u-l)%l , (u-l)/l);
 			if(Dij_rech)
 	            SetPointGraphe((int)(u-l)%l,(int)(u-l)/l, "vert");
         }
@@ -662,18 +659,21 @@ void dijkstra(Labyrinthe * lab){
     }
 
     // print
-    int d = MatVal2(dist,h-2,l-2);
-	printf("\nDijsktra\n longueur du chemin : %i\n",d);
-    int p = (h-2)*l+l-2;
+    int d = MatVal2(dist,l-2,h-2);
+	printf("\nDijsktra\n longuleur du chemin : %i\n",d);
+    int p = (l)*(h-2)+l-2;
 	if(v_graph)
 		while(d>=0){
 
-		    SetPointGraphe((int)(p-l)%l,(int)(p-l)/l+1, "rouge");
+		    SetPointGraphe((int)(p)%l,(int)(p)/l, "rouge");
 
 			if(!d){
-		        // fin
+			// fin
 		    }
-		    
+		    else if(MatVal(dist,p) == INT_MAX){
+		        printf("Il n'y a pas de chemin vers la sortie\n");
+		        d=0;
+		    }		    
 		    else if(MatVal(dist,p-l) == d-1){
 		        p = p-l;
 		    }
@@ -686,10 +686,7 @@ void dijkstra(Labyrinthe * lab){
 			else if(MatVal(dist,p+1) == d-1){
 		        p = p+1;
 		    }
-		    else if(MatVal(dist,p) == INT_MAX){
-		        printf("Il n'y a pas de chemin vers la sortie\n");
-		        d=0;
-		    }
+		    
 		    else{
 		        printf("Erreur\n");
 		        d=0;
@@ -719,14 +716,13 @@ void A_Star(Labyrinthe * lab){
     Matrice * estMarque = MatAlloc(l,h);
 	Matrice * closedList = MatAlloc(l,h);
 
-    heap_push(openList,data_init(start_x,start_y,0, ((h-start_x)-2 -1)*((h-start_x)-2 -1) + ((l-start_y)-2 -1)*((l-start_y)-2 -1)) );
+    heap_push(openList,data_init(start_x,start_y,0, ((l-start_x)-2 -1)*((l-start_x)-2 -1) + ((h-start_y)-2 -1)*((h-start_y)-2 -1)) );
 	MatSet2(estMarque,start_x,start_y,1);
 
 	if(AStar_rech)
     	SetPointGraphe(start_x,start_y, "vertf");
 
-    while(!HeapEstVide(openList) && MatVal2(closedList,h-2,l-2) == 0){
-
+    while(!HeapEstVide(openList) && MatVal2(closedList,l-2,h-2) == 0){
 
         Data * u = heap_pop(openList);
 		MatSet2(closedList,u->x,u->y,u->cout);
@@ -784,7 +780,7 @@ void A_Star(Labyrinthe * lab){
 
 
 	// print
-    int d = MatVal2(closedList,h-2,l-2);
+    int d = MatVal2(closedList,l-2,h-2);
 	printf("\nA*\n longueur du chemin: %i\n",d);
     int p = (h-2)*l+l-2;
 
