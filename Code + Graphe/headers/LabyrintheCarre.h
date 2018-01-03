@@ -30,6 +30,10 @@ static int linear_carre = 0;
 static int Dij_carre = 0;
 static int Dij_rech_carre = 0;
 
+//AStar
+static int AStar_carre = 0;
+static int AStar_rech_carre = 0;
+
 // accesseur
 void set_v_carre();
 
@@ -48,6 +52,10 @@ void set_LinearGenCarre();
 void set_Dij_carre();
 
 void set_Dij_rech_carre();
+
+void set_AStar_carre();
+
+void set_AStar_rech_carre();
 
 
 // difference en 2 moments

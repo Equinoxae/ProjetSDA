@@ -161,9 +161,7 @@ int main(int argc, char *argv[]){
 		labc = LabCarreCreate(l, h);
 		
 		lanceCarreRecherche(labc);
-		
-		waitgraph();
-		
+				
 		LabCarreFree(labc);
 	}
 	

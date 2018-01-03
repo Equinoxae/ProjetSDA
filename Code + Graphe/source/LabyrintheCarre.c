@@ -51,6 +51,15 @@ void set_Dij_rech_carre(){
 	v_graph_carre = 1;
 }
 
+void set_AStar_carre(){
+	AStar_carre = 1;
+}
+void set_AStar_rech_carre(){
+	AStar_carre = 1;
+	AStar_rech_carre = 1;
+	v_graph_carre = 1;
+}
+
 double time_diff_carre(struct timeval x , struct timeval y)
 {
     double x_ms , y_ms , diff;
@@ -428,11 +437,11 @@ void lanceCarreRecherche(LabyrintheCarre *lab)
 		if(Dij_carre)
 			dijkstraCarre(lab);
 
-		/*if(v_graph && !Auto && AStar)
+		if(v_graph_carre /*&& !Auto*/ && AStar_carre)
 			waitgraph();
 
-		if(AStar)
-			A_Star(lab);*/
+		if(AStar_carre)
+			A_StarCarre(lab);
 		
 	//}
 	
@@ -560,15 +569,16 @@ void dijkstraCarre(LabyrintheCarre * lab){
 void A_StarCarre(LabyrintheCarre * lab){
 	
 	 // temps_debut
-    gettimeofday(&temps_debut,NULL);
+    gettimeofday(&temps_debut_carre,NULL);
+
+	int l = lab->map->l;
+    int h = lab->map->h;
 
     Heap * openList = heap_init(l*h);
     MatriceCarre * estMarque = MatCarreAlloc(l,h);
 	MatriceCarre * closedList = MatCarreAlloc(l,h);
 
-	int V = lab->map->l*lab->map->h;
-	int l = lab->map->l;
-    int h = lab->map->h;
+	int V = l*h;
     
     int i;
     for (i = 0; i < V; i++){
@@ -579,64 +589,66 @@ void A_StarCarre(LabyrintheCarre * lab){
     heap_push(openList,data_init(start_x_carre,start_y_carre,0, ((h-start_x_carre)-1 -1)*((h-start_x_carre)-1 -1) + ((l-start_y_carre)-1 -1)*((l-start_y_carre)-1 -1)) );
 	MatCarreSetValue2(estMarque,start_x_carre,start_y_carre,1);
 
-	if(AStar_rech_carre)
+	if(AStar_rech_carre){
     	SetCarrePointGraphe(start_x_carre,start_y_carre, "vertf");
-
-    while(!HeapEstVide(openList) && MatCarreVal2(closedList,h-1,l-1) == 0){
+    	SetCarrePointGraphe(l-1,h-1, "rouge");	
+	}
+    while(!HeapEstVide(openList) && MatCarreVal2(closedList,l-1,h-1)->v == 0){
 
         Data * u = heap_pop(openList);
 		MatCarreSetValue2(closedList,u->x,u->y,u->cout);
-
-		if (!MatCarreVal2(lab->map,u->x-1,u->y)->c1){
+		// gauche
+		if (!MatCarreVal2(lab->map,u->x,u->y)->c1){
 
             if(!MatCarreVal2(estMarque,u->x-1,u->y)->v){
                 Data * v = data_init(u->x-1,u->y,u->cout+1,u->heuristique+1);
 				MatCarreSetValue2(estMarque,v->x,v->y,1);
                 heap_push(openList,v);
-                if(AStar_rech)
+                if(AStar_rech_carre)
                     SetCarrePointGraphe(v->x,v->y, "vertf");
             }
         }
-
-		if (!MatCarreVal2(lab->map,u->x,u->y-1)->c2){
+		// haut
+		if (!MatCarreVal2(lab->map,u->x,u->y)->c2){
 
             if(!MatCarreVal2(estMarque,u->x,u->y-1)->v){
                 Data * v = data_init(u->x,u->y-1,u->cout+1,u->heuristique+1);
 				MatCarreSetValue2(estMarque,v->x,v->y,1);
                 heap_push(openList,v);
-                if(AStar_rech)
+                if(AStar_rech_carre)
                     SetCarrePointGraphe(v->x,v->y, "vertf");
             }
         }
-
-		if (n->y<0 && !MatCarreVal2(lab->map,u->x+1,u->y)->c1){
+		//droite
+		if (u->x<l-1 && !MatCarreVal2(lab->map,u->x+1,u->y)->c1){
             if(!MatCarreVal2(estMarque,u->x+1,u->y)->v){
                 Data * v = data_init(u->x+1,u->y,u->cout+1,u->heuristique-1);
 				MatCarreSetValue2(estMarque,v->x,v->y,1);
                 heap_push(openList,v);
-                if(AStar_rech)
+                if(AStar_rech_carre)
                     SetCarrePointGraphe(v->x,v->y, "vertf");
             }
         }
-
+		//bas
 		if (u->y<h-1 && !MatCarreVal2(lab->map,u->x,u->y+1)->c2){
 
-            if(!MatCarreVal2(estMarque,u->x,u->y+1)-v){
+            if(!MatCarreVal2(estMarque,u->x,u->y+1)->v){
                 Data * v = data_init(u->x,u->y+1,u->cout+1,u->heuristique-1);
 				MatCarreSetValue2(estMarque,v->x,v->y,1);
                 heap_push(openList,v);
-                if(AStar_rech)
+                if(AStar_rech_carre)
                     SetCarrePointGraphe(v->x,v->y, "vertf");
             }
         }
 		free(u);
     }
-
+printf("1");
 	// print
-    int d = MatCarreVal2(closedList,l-1,h-1);
+    int d = MatCarreVal2(closedList,l-1,h-1)->v;
 	printf("\nA*\n longueur du chemin: %i\n",d);
     int p = (h-1)*l+l-1;
 
+printf("2");
 	if(v_graph_carre)
 		while(d>0){
 
