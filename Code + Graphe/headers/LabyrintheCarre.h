@@ -93,3 +93,6 @@ void A_StarCarre(LabyrintheCarre * lab);
 void printCarre(int w, int h, int x, int y, char* color);
 
 void printCoteCarre(int x, int y, int cot, char* color);
+
+// Affiche un point sur le graphe
+void SetCarrePointGraphe(int x, int y, char * color);

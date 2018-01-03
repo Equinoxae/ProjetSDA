@@ -54,6 +54,14 @@ int main(int argc, char *argv[]){
 				
 			else if (!strcmp(argv[i], "-construction1"))
 				set_Construction_Carre(atoi(argv[++i]));
+			else if (!strcmp(argv[i],"-D"))
+		        set_Dij_carre();
+			else if (!strcmp(argv[i],"-Dd"))
+		        set_Dij_rech_carre();
+		    else if (!strcmp(argv[i],"-A"))
+		    	set_AStar_carre();
+			else if (!strcmp(argv[i],"-Ad"))
+		        set_AStar_rech_carre();
 		}
 		else if(!strcmp(type,"-C")){
 		
@@ -152,7 +160,9 @@ int main(int argc, char *argv[]){
 		
 		labc = LabCarreCreate(l, h);
 		
-		//lanceCarreRecherche(labc);
+		lanceCarreRecherche(labc);
+		
+		waitgraph();
 		
 		LabCarreFree(labc);
 	}

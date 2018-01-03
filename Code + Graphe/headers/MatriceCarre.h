@@ -36,7 +36,6 @@ void MatCarreSetValue(MatriceCarre * m, int p, int v);
 
 void MatCarreSetValue2(MatriceCarre * m, int x,int y, int v);
 
-
 int MatCarreGetL(MatriceCarre * m); // récupère la largeur
 
 int MatCarreGetH(MatriceCarre * m); // récupère la hauteur
