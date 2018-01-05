@@ -4,6 +4,7 @@
 #include "Labyrinthe.h"
 #include "LabyrintheHexa.h"
 #include "LabyrintheCarre.h"
+#include "LabyrintheCercle.h"
 #include "graph.h"
 
 // utilisation : ./program {-c/-C/-X/-r}  [-v] [-d] [-l <largeur>] [ -h <hauteur>] [-g <%graine>] [-Auto] [<fichier>]
@@ -12,6 +13,8 @@ int main(int argc, char *argv[]){
     Labyrinthe *lab;
     LabyrintheCarre *labc;
 	LabyrintheHexa *labx;
+	LabyrintheCercle *labC;
+
 	
 	//LabyrintheCarre *labc;
     int h = -1;
@@ -27,6 +30,7 @@ int main(int argc, char *argv[]){
 
     for(i = 2;i<argc;i++){
 	
+		// carre
 		if(!strcmp(type,"-c")){
 			if ( !strcmp(argv[i],"-v"))
 		        set_v_carre();
@@ -62,9 +66,41 @@ int main(int argc, char *argv[]){
 		    	set_AStar_carre();
 			else if (!strcmp(argv[i],"-Ad"))
 		        set_AStar_rech_carre();
-		}
+		}// cercle
 		else if(!strcmp(type,"-C")){
-		
+			if ( !strcmp(argv[i],"-v"))
+		        set_v_cercle();
+		        
+		    else if (!strcmp(argv[i],"-d"))
+		        set_d_cercle();
+		        
+			else if (!strcmp(argv[i],"-l"))
+		        l = atoi(argv[++i]);
+		        
+		    else if (!strcmp(argv[i],"-h"))
+		        h = atoi(argv[++i]);
+		        
+			else if (!strcmp(argv[i],"-M"))
+				set_Manual_rech_carre();
+				
+			else if ( !strcmp(argv[i],"-linear"))
+				set_LinearGenCercle();
+				
+			else if (!strcmp(argv[i],"-start"))
+		        set_Start_carre(atof(argv[++i]),atof(argv[++i]));
+		        
+			else if (!strcmp(argv[i],"-ms"))
+				set_Manual_Start_cercle();
+			else if (!strcmp(argv[i],"-D"))
+		        set_Dij_cercle();
+			else if (!strcmp(argv[i],"-Dd"))
+		        set_Dij_rech_cercle();
+		    else if (!strcmp(argv[i],"-A"))
+		    	set_AStar_cercle();
+			else if (!strcmp(argv[i],"-Ad"))
+		        set_AStar_rech_cercle();
+			else if (!strcmp(argv[i],"-cw"))
+				set_CaseWidth_cercle(atoi(argv[++i]));
 		}
 		else if (!strcmp(type,"-x")){
 			if ( !strcmp(argv[i],"-v"))
@@ -143,7 +179,23 @@ int main(int argc, char *argv[]){
 
 	// cercle
 	if(!strcmp(type,"-C")){
+		if(h == -1)
+			h = 10;
+
+		if(l == -1)
+			l = 180;
+			
+		//if( l > 360 || (l%45 != 0 && l != 8 && l != 6)){
+		if( l > 360 || l < 2){
+				printf("Taille invalide ! La largeur doit etre un muliple de 45 (max 360) ou = à 8 ou 4 \n");
+				exit(9);
+		}
 		
+		labC = LabCercleCreate(l, h);
+		
+		//lanceCercleRecherche(labc);
+				
+		LabCercleFree(labC);
 	}
 	// carré avec bordure
 	else if (!strcmp(type,"-c")){

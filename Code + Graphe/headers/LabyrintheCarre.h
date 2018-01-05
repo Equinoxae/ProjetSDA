@@ -1,4 +1,9 @@
+#ifndef MatCarre
+#define MatCarre 
+
 #include "EnsembleCarre.h"
+
+#endif //MatCarre
 
 typedef struct LabCarre{
 
