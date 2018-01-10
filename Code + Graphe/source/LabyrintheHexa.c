@@ -496,8 +496,8 @@ void recherche_manuelle_hexa(LabyrintheHexa * lab){
 	
 	int x = start_x_hexa;
 	int y = start_y_hexa;
-	int prev_x;
-	int prev_y;
+	int prev_x = start_x_hexa;
+	int prev_y = start_y_hexa;;
 
 	int end_x = lab->map->l-1;
 	int end_y = lab->map->h-1;
@@ -511,9 +511,14 @@ void recherche_manuelle_hexa(LabyrintheHexa * lab){
 	if(v_graph_hexa)
 		printPointHexa(end_x,end_y,"rouge");
 
-	while ( !(x == end_x && y == end_y) && strcmp(k,"esc") == 0){
+	while ( !(x == end_x && y == end_y) && !strcmp(k,"esc") == 0){
 		printf("Appuiez sur une touche\n");
 				
+		if(v_graph_hexa){
+			printPointHexa(prev_x,prev_y,"grisf");
+			printPointHexa(x,y,"vert");
+		}
+
 		k = getKey();
 
 		if(!strcmp(k,"left")){
@@ -1113,7 +1118,7 @@ void printHexa(int w, int h, int x, int y, char * color){
 	line(10 + c + col, 0 + l, 20 + c + col, 10 + l); //x1, y1, x2, y2 coté 3
 
 	// coté gauche '\'
-	if( x == 0 && y%2 == 1)
+	if( x == 0 && y%2 == 0)
 		line(0, 20 + l , 10 , 30 + l);
 
 	// ligne du bas '\/'
@@ -1122,9 +1127,11 @@ void printHexa(int w, int h, int x, int y, char * color){
 		line(10 + c + col, 30 + l , 20 + c + col, 20 + l);
 	}
 
-	if( x == w-1)
+	// coté droit
+	if( x == w-1){
 		line(20 + c + col, 10 + l, 20 + c + col,  20 + l);
-
+		line(10 + c + col, 30 + l , 20 + c + col, 20 + l);
+	}
 	refresh();
 
 }

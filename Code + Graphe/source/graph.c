@@ -380,7 +380,7 @@ char * getKey(){
 	
 	char * c = "null";
 	
-	while(strcmp(c,"null"))
+	while(!strcmp(c,"null"))
 	{
 		XNextEvent(display, &report); /* si un seule fenêtre */
 		

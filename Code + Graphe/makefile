@@ -20,6 +20,9 @@ rect:
 rectl:
 	./program -r -v -h 200 -l 200 -g 0.0002 -linear
 
+rectm:
+	./program -r -v -h 20 -l 20 -cw 15 -M
+
 carre1:
 	./program -c -d -h 20 -l 20 -Dd -Ad -making 1
 
@@ -27,10 +30,13 @@ carre2:
 	./program -c -d -h 20 -l 20 -Dd -Ad -making 2
 
 hexa:
-	./program -x -d -h 40 -l 40 -Dd -Ad -slowr 	
+	./program -x -d -h 20 -l 20 -Dd -Ad -slowr	
 
 hexal:
-	./program -x -d -h 40 -l 40 -linear
+	./program -x -d -h 30 -l 30 -linear
+
+hexam:
+	./program -x -v -h 15 -l 15 -M
 
 cercle1:
 	./program -C -d -h 10 -l 30

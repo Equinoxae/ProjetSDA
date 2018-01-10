@@ -474,7 +474,7 @@ void lanceRecherche(Labyrinthe *lab){
 		
 		getClic(px,py);
 		
-		while(EstConstruit(lab, x/3,y/3)){
+		while(EstConstruit(lab, x/case_width,y/case_width)){
 			getClic(px,py);
 		}
 		

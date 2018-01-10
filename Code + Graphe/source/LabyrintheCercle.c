@@ -71,7 +71,8 @@ LabyrintheCercle *LabCercleCreate(int w,int h){
     gettimeofday(&temps_fin_cercle,NULL);
     printf("Génération\n temps d'execution: %.5f secondes\n", time_diff_cercle(temps_debut_cercle,temps_fin_cercle));;
 	
-		
+	if(v_graph_cercle)
+ 		waitgraph();
 	return l;
 }
 
@@ -151,8 +152,7 @@ void LabCercleConstruit(LabyrintheCercle *lab){
 		
 
 	}   
-	if(v_graph_cercle)
- 		waitgraph();
+
 }
 
 void printCercle(int w, int h, int x, int y, char * color){
