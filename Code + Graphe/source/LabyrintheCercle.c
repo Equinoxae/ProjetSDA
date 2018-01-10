@@ -145,9 +145,11 @@ void LabCercleConstruit(LabyrintheCercle *lab){
 		}
 		
 		if(doors == 0){
+					int x2 = rand()%l;
+					m = MatCarreVal2(lab->map,x2,y);
 					m->c2 = 0;
 					if(v_graph_cercle)
-						printCoteCercle(l,h,rand()%l,y,2,"blanc");
+						printCoteCercle(l,h,x2,y,2,"blanc");
 				}
 		
 
