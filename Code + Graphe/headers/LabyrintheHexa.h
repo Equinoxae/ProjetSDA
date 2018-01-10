@@ -44,8 +44,6 @@ void set_Manual_rech_hexa();
 
 void set_Start_hexa(int x,int y);
 
-void set_Manual_Start_hexa();
-
 void set_LinearGenHexa();
 
 void set_Slow_gen();
@@ -93,8 +91,11 @@ void A_Star_hexa(LabyrintheHexa * lab);
 // calcule l'heuristique entre 2 points hexagonaux (odd-r coordonate)
 int HexaHeuristique(int x_start, int y_start, int x_end, int y_end);
 
+//affiche une case
 void printHexa(int w, int h, int x, int y, char* color);
 
+//affiche un coté d'une case
 void printCoteHexa(int x, int y, int cot, char* color);
 
+//affiche un point au centre d'une case
 void printPointHexa(int x, int y, char* color);

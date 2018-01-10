@@ -380,7 +380,7 @@ char * getKey(){
 	
 	char * c = "null";
 	
-	while(c == "null")
+	while(strcmp(c,"null"))
 	{
 		XNextEvent(display, &report); /* si un seule fenêtre */
 		
@@ -435,7 +435,7 @@ void refresh()
 void waitgraph(void)
 {
     XEvent report;
-    XWindowAttributes wattr;
+    //XWindowAttributes wattr;
 
     CHECKINIT(waitgraph);
 

@@ -1,0 +1,77 @@
+Pour l'exécution du programme tout se fait en ligne de commande
+
+Lancement :
+
+./program {-r,-c,-C,-x}
+
+Option pour le labyrinthe rectangulaire : -r
+
+   [-v] : affiche le labyrinthe
+   [-d] : affiche le labyrinthe avec le détail de construction
+   [-h int] : hauteur du labyrinthe
+   [-l int] : largeur du labyrinthe
+   [-g float] : pourcentage de grainage -> max : 0.3
+   [-start int_x int_y] : defini la position de départ
+   [-ms] : défini manuellement la position de départ
+   [-linear] : enlève le facteur aléatoire lors de la génération
+   [-A] : lance A* 
+   [-Ad] : lance A* avec le détail (affichage)
+   [-D] : lance Dijkstra
+   [-Dd] : lance Dijkstra avec le détail (affichage)
+   [-M] : lance la recherche manuelle
+   [-Auto] : exécute les étapes automatiquement
+   [-cw int] : défini la largeur des cases (défault = 3)
+   [-file string_name] : défini le nom du fichier dans lequel va s'enregistrer l'image du labyrinthe (en .pgm)
+
+
+Option pour le labyrinthe carré : -c
+
+   [-v] : affiche le labyrinthe
+   [-d] : affiche le labyrinthe avec le détail de construction
+   [-h int] : hauteur du labyrinthe
+   [-l int] : largeur du labyrinthe
+   [-making {1,2}] : défini l'algorithme de construction 1->Prim; 2->kruskal
+   [-start int_x int_y] : defini la position de départ
+   [-linear] : enlève le facteur aléatoire lors de la génération
+   [-A] : lance A* 
+   [-Ad] : lance A* avec le détail (affichage)
+   [-D] : lance Dijkstra
+   [-Dd] : lance Dijkstra avec le détail (affichage)
+
+
+Option pour le labyrinthe hexagonal : -x
+
+   [-v] : affiche le labyrinthe
+   [-d] : affiche le labyrinthe avec le détail de construction
+   [-h int] : hauteur du labyrinthe
+   [-l int] : largeur du labyrinthe
+   [-start int_x int_y] : defini la position de départ
+   [-linear] : enlève le facteur aléatoire lors de la génération
+   [-A] : lance A* 
+   [-Ad] : lance A* avec le détail (affichage)
+   [-D] : lance Dijkstra
+   [-Dd] : lance Dijkstra avec le détail (affichage)
+   [-M] : lance la recherche manuelle
+   [-Auto] : exécute les étapes automatiquement
+   [-slow] : ralenti la génération et la recherche (pour le visuel)
+   [-slowg] : ralenti la génération (pour le visuel)
+   [-slowr] : ralenti la rechecher (pour le visuel)
+
+Option pour le labyrinthe circulaire : -C
+
+   [-v] : affiche le labyrinthe
+   [-d] : affiche le labyrinthe avec le détail de construction
+   [-h int] : hauteur du labyrinthe
+   [-l int] : largeur du labyrinthe
+   [-cw int] : défini la largeur des cases (défault = 3)
+
+
+La recherche manuelle se dirige avec les touches fléché et la touche echap qui permet d'abandonné
+Pour le labyrinthe hexagonal, les directions sont un peu spécial:
+	- gauche -> touche gauche
+	- haut gauche -> touche haut + touche gauche
+	- haut droit -> touche haut + touche droite
+	- droite -> touche droite
+	- bas gauche -> touche bas + touche gauche
+	- bas droit -> touche bas + touche droite
+   

@@ -20,15 +20,10 @@ int main(int argc, char *argv[]){
     int h = -1;
     int l = -1;
     float g = 0.0001;
-    int s_x;
-    int s_y;
     char * fichier = "lab_file";
-
-    int i;
-	
 	char * type = argv[1];
 
-    for(i = 2;i<argc;i++){
+    for(int i = 2;i<argc;i++){
 	
 		// carre
 		if(!strcmp(type,"-c")){
@@ -43,20 +38,14 @@ int main(int argc, char *argv[]){
 		        
 		    else if (!strcmp(argv[i],"-h"))
 		        h = atoi(argv[++i]);
-		        
-			else if (!strcmp(argv[i],"-M"))
-				set_Manual_rech_carre();
-				
+		        				
 			else if ( !strcmp(argv[i],"-linear"))
 				set_LinearGenCarre();
 				
 			else if (!strcmp(argv[i],"-start"))
 		        set_Start_carre(atof(argv[++i]),atof(argv[++i]));
-		        
-			else if (!strcmp(argv[i],"-ms"))
-				set_Manual_Start_carre();
-				
-			else if (!strcmp(argv[i], "-construction1"))
+		        			
+			else if (!strcmp(argv[i], "-making"))
 				set_Construction_Carre(atoi(argv[++i]));
 			else if (!strcmp(argv[i],"-D"))
 		        set_Dij_carre();
@@ -79,26 +68,6 @@ int main(int argc, char *argv[]){
 		        
 		    else if (!strcmp(argv[i],"-h"))
 		        h = atoi(argv[++i]);
-		        
-			else if (!strcmp(argv[i],"-M"))
-				set_Manual_rech_carre();
-				
-			else if ( !strcmp(argv[i],"-linear"))
-				set_LinearGenCercle();
-				
-			else if (!strcmp(argv[i],"-start"))
-		        set_Start_carre(atof(argv[++i]),atof(argv[++i]));
-		        
-			else if (!strcmp(argv[i],"-ms"))
-				set_Manual_Start_cercle();
-			else if (!strcmp(argv[i],"-D"))
-		        set_Dij_cercle();
-			else if (!strcmp(argv[i],"-Dd"))
-		        set_Dij_rech_cercle();
-		    else if (!strcmp(argv[i],"-A"))
-		    	set_AStar_cercle();
-			else if (!strcmp(argv[i],"-Ad"))
-		        set_AStar_rech_cercle();
 			else if (!strcmp(argv[i],"-cw"))
 				set_CaseWidth_cercle(atoi(argv[++i]));
 		}
@@ -133,8 +102,6 @@ int main(int argc, char *argv[]){
 				set_Slow_rech();
 			else if (!strcmp(argv[i],"-start"))
 		        set_Start_hexa(atof(argv[++i]),atof(argv[++i]));
-			else if (!strcmp(argv[i],"-ms"))
-				set_Manual_Start_hexa();
 		}
 		else if (!strcmp(type,"-r")){
 
@@ -185,7 +152,6 @@ int main(int argc, char *argv[]){
 		if(l == -1)
 			l = 180;
 			
-		//if( l > 360 || (l%45 != 0 && l != 8 && l != 6)){
 		if( l > 360 || l < 2){
 				printf("Taille invalide ! La largeur doit etre un muliple de 45 (max 360) ou = à 8 ou 4 \n");
 				exit(9);
@@ -205,8 +171,8 @@ int main(int argc, char *argv[]){
 		if(l == -1)
 			l = 10;
 			
-		if( h < 10 || l < 10 || h > 60 || l > 60){
-				printf("Taille invalide ! La largeur et la hauteur doivent être comprises entre 10 et 60 \n");
+		if( h < 10 || l < 10 ){
+				printf("Taille invalide ! La largeur et la hauteur doivent être comprises superieur à 10 \n");
 				exit(8);
 		}
 		
@@ -214,7 +180,6 @@ int main(int argc, char *argv[]){
 		
 		lanceCarreRecherche(labc);
 				
-		LabCarreFree(labc);
 	}
 	
 	// hexagone
@@ -225,8 +190,8 @@ int main(int argc, char *argv[]){
 		if(l == -1)
 			l = 10;
 
-		if (h < 5 || l < 5 || h > 40 || l > 80){
-		    printf("Taille invalide ! La largeur doit être >= 5 et <= 80 et la hauteur doit être >= 5 et <= 40\n");
+		if (h < 5 || l < 5 ){
+		    printf("Taille invalide ! La largeur et la hauteur doit être >= 5 \n");
 		    exit(2);
 		}
 

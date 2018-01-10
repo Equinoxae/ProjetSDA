@@ -19,7 +19,6 @@ void set_d_hexa(){
 }
 
 void set_Manual_rech_hexa(){
-	set_Manual_Start_hexa();
 	set_v_hexa();
 	manual_search_hexa = 1;
 }
@@ -27,11 +26,6 @@ void set_Manual_rech_hexa(){
 void set_Start_hexa(int x,int y){
 	start_x_hexa = x;
 	start_y_hexa = y;
-}
-
-
-void set_Manual_Start_hexa(){
-	manual_start_hexa = 1;
 }
 
 void set_LinearGenHexa(){
@@ -57,7 +51,7 @@ void set_Slow_rech(){
 }
 
 void set_AStar_hexa(){
-	Dij_hexa = 1;
+	AStar_hexa = 1;
 }
 
 void set_AStar_rech_hexa(){
@@ -105,12 +99,15 @@ LabyrintheHexa *LabHexaCreate(int w,int h){
 
 	LabHexaInit(l,W,H);
 	
-	//waitgraph();
-	
 	LabHexaConstruit(l,v);
-
-	waitgraph();
-
+	
+	// temps_fin
+    gettimeofday(&temps_fin_hexa,NULL);
+    printf("Génération\n temps d'execution: %.5f secondes\n", time_diff_hexa(temps_debut_hexa,temps_fin_hexa));;
+	
+	if(v_graph_hexa)
+		waitgraph();
+	
 	return l;
 }
 
@@ -293,8 +290,7 @@ void LabHexaConstruit(LabyrintheHexa *lab ,EnsHexa *v){
 	while(!EnsHexaEstVide(v)){
 		NoeudHexa * n = EnsHexaTirage(v,linear_hexa);
 		
-		MurHexa * m, * voisin, * first;
-		int x_v,y_v;
+		MurHexa * m, * voisin;
 
 		m = MatHexaVal2(lab->map,n->x,n->y);
 		m->v = 1;
@@ -509,11 +505,13 @@ void recherche_manuelle_hexa(LabyrintheHexa * lab){
 	
 	int l = lab->map->l;
 	int h = lab->map->h;
-	
-	printPointHexa(x,y,"vert");
-	printPointHexa(end_x,end_y,"rouge");
+	if(v_graph_hexa)
+		printPointHexa(x,y,"vert");
 
-	while ( !(x == end_x && y == end_y) && k != "esc"){
+	if(v_graph_hexa)
+		printPointHexa(end_x,end_y,"rouge");
+
+	while ( !(x == end_x && y == end_y) && strcmp(k,"esc") == 0){
 		printf("Appuiez sur une touche\n");
 				
 		k = getKey();
@@ -562,7 +560,6 @@ void recherche_manuelle_hexa(LabyrintheHexa * lab){
 							y--;
 						}
 						else{
-							x;
 							y--;
 						}
 					}
@@ -581,7 +578,6 @@ void recherche_manuelle_hexa(LabyrintheHexa * lab){
 						prev_y = y;
 		
 						if(y%2 == 0){
-							x;
 							y--;
 						}
 						else{
@@ -611,7 +607,6 @@ void recherche_manuelle_hexa(LabyrintheHexa * lab){
 						prev_y = y;
 		
 						if(y%2 == 0){
-							x;
 							y++;
 						}
 						else{
@@ -638,7 +633,6 @@ void recherche_manuelle_hexa(LabyrintheHexa * lab){
 							y++;
 						}
 						else{
-							x;
 							y++;
 						}
 					}
@@ -653,9 +647,10 @@ void recherche_manuelle_hexa(LabyrintheHexa * lab){
 		
 		}
 		
-		printPointHexa(prev_x,prev_y,"grisf");
-		printPointHexa(x,y,"vert");
-
+		if(v_graph_hexa){
+			printPointHexa(prev_x,prev_y,"grisf");
+			printPointHexa(x,y,"vert");
+		}
 		usleep(10*1000);
 		//printf("pos : %i %i\n",x,y);
 
@@ -696,7 +691,7 @@ void dijkstra_hexa(LabyrintheHexa * lab){
 
     MatHexaSetValue2(dist,start_x_hexa,start_y_hexa,0);
   	
-	if(Dij_rech_hexa){
+	if(Dij_rech_hexa && v_graph_hexa){
 	    printPointHexa(start_x_hexa,start_y_hexa, "vert");
 		printPointHexa(l-1,h-1,"rouge");
 	}
@@ -731,7 +726,7 @@ void dijkstra_hexa(LabyrintheHexa * lab){
 
 			// Ajoute le noeud
             EnsHexaAjoute(plusPetit, (ug)%l, (int)(ug)/l, 0);
-			if(Dij_rech_hexa)
+			if(Dij_rech_hexa && v_graph_hexa)
 	            printPointHexa((ug)%l, (int)(ug)/l , "vert");
         }
         
@@ -747,7 +742,7 @@ void dijkstra_hexa(LabyrintheHexa * lab){
 
 			// Ajoute le noeud
             EnsHexaAjoute(plusPetit, (uhg)%l, (int)(uhg)/l, 0);
-			if(Dij_rech_hexa)
+			if(Dij_rech_hexa && v_graph_hexa)
 	            printPointHexa((uhg)%l, (int)(uhg)/l , "vert");
         }
 		// haut droite
@@ -761,7 +756,7 @@ void dijkstra_hexa(LabyrintheHexa * lab){
 
 			// Ajoute le noeud
             EnsHexaAjoute(plusPetit, (uhd)%l, (int)(uhd)/l, 0);
-			if(Dij_rech_hexa)
+			if(Dij_rech_hexa && v_graph_hexa)
 	            printPointHexa((uhd)%l, (int)(uhd)/l , "vert");
         }
 		// droite
@@ -775,7 +770,7 @@ void dijkstra_hexa(LabyrintheHexa * lab){
 
 			// Ajoute le noeud
             EnsHexaAjoute(plusPetit, (ud)%l, (int)(ud)/l, 0);
-			if(Dij_rech_hexa)
+			if(Dij_rech_hexa && v_graph_hexa)
 	            printPointHexa((ud)%l, (int)(ud)/l , "vert");
         }
 		// bas droite
@@ -789,7 +784,7 @@ void dijkstra_hexa(LabyrintheHexa * lab){
 
 			// Ajoute le noeud
             EnsHexaAjoute(plusPetit, (ubd)%l, (int)(ubd)/l, 0);
-			if(Dij_rech_hexa)
+			if(Dij_rech_hexa && v_graph_hexa)
 	            printPointHexa((ubd)%l, (int)(ubd)/l , "vert");
         }
 		// bas gauche
@@ -1118,16 +1113,16 @@ void printHexa(int w, int h, int x, int y, char * color){
 	line(10 + c + col, 0 + l, 20 + c + col, 10 + l); //x1, y1, x2, y2 coté 3
 
 	// coté gauche '\'
-	if( x = 0 && y%2 == 1)
+	if( x == 0 && y%2 == 1)
 		line(0, 20 + l , 10 , 30 + l);
 
 	// ligne du bas '\/'
-	if( y = h-1){
+	if( y == h-1){
 		line(0 + c + col, 20 + l , 10 + c + col, 30 + l);
 		line(10 + c + col, 30 + l , 20 + c + col, 20 + l);
 	}
 
-	if( x = w-1)
+	if( x == w-1)
 		line(20 + c + col, 10 + l, 20 + c + col,  20 + l);
 
 	refresh();

@@ -33,9 +33,9 @@ void MatHexaSet(MatriceHexa * m,int p,MurHexa * v); // stocke une valeur entièr
 
 void MatHexaSet2(MatriceHexa * m,int x,int y,MurHexa * v); // stocke une valeur entière dans Matrice[x,y]
 
-void MatHexaSetValue(MatriceHexa * m, int p, int v);
+void MatHexaSetValue(MatriceHexa * m, int p, int v); // défini la valeur de la case à la position p d'une Matrice[x,y] 
 
-void MatHexaSetValue2(MatriceHexa * m, int x,int y, int v);
+void MatHexaSetValue2(MatriceHexa * m, int x,int y, int v); // défini la valeur d'un case à la position [x,y]
 
 int MatHexaGetL(MatriceHexa * m); // récupère la largeur
 

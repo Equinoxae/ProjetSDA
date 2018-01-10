@@ -20,13 +20,9 @@ static int contruction_value = 1;
 static int v_graph_carre = 0;
 static int d_graph_carre = 0;
 
-// Manual Research 
-static int manual_search_carre = 0;
-
 // Start
 static int start_x_carre= 0;
 static int start_y_carre = 0;
-static int manual_start_carre = 0;
 
 // lineaire
 static int linear_carre = 0;
@@ -71,13 +67,6 @@ LabyrintheCarre *LabCarreCreate(int w,int h);
 
 // Libère le labyrinthe 
 void LabCarreFree(LabyrintheCarre *lab);
-
-// verifie si une case est un mur
-int EstCarreConstruit(LabyrintheCarre *lab , int x ,int y);
-
-// Vérifie si une case est constructible
-int EstCarreConstructible(LabyrintheCarre *lab  , EnsCarre *v, NoeudCarre * point);
-
 // construit les bords
 void LabCarreInit(LabyrintheCarre *lab, int w ,int h); 
 
@@ -87,9 +76,6 @@ void verifCarreTour(LabyrintheCarre *lab  , EnsCarre *v, int x,int y);
 // Construit les murs du labyrinthe 
 void LabCarreConstruit(LabyrintheCarre *lab ,EnsCarre *v);
 void LabCarreConstruit2(LabyrintheCarre *lab ,EnsCarre *v);
-
-// Affiche le labyrinthe dans la console
-void LabCarrePrint(LabyrintheCarre *lab);
 
 // Affiche un point sur le graphe
 void SetHCarrePointGraphe(int x, int y, char * color);
@@ -103,8 +89,10 @@ void dijkstraCarre(LabyrintheCarre * lab);
 // lance la recherche
 void A_StarCarre(LabyrintheCarre * lab);
 
+// affiche une case 
 void printCarre(int w, int h, int x, int y, char* color);
 
+// affiche un coté d'une case
 void printCoteCarre(int x, int y, int cot, char* color);
 
 // Affiche un point sur le graphe

@@ -19,21 +19,6 @@ void set_d_cercle(){
     d_graph_cercle = 1;
 }
 
-void set_Manual_rech_cercle(){
-	set_Manual_Start_cercle();
-	set_v_cercle();
-	manual_search_cercle = 1;
-}
-
-void set_Start_cercle(int x,int y){
-	start_x_cercle = x;
-	start_y_cercle = y;
-}
-
-void set_Manual_Start_cercle(){
-	manual_start_cercle = 1;
-}
-
 void set_CaseWidth_cercle(int x){
 	if(x < 5 || x > 50){
 		printf("Taille de case invalide ! La largeur et la hauteur de la case doit être >= 5 et <= 50\n");
@@ -81,6 +66,11 @@ LabyrintheCercle *LabCercleCreate(int w,int h){
 	LabCercleInit(l,W,H);
 			
 	LabCercleConstruit(l); 
+	
+	// temps_fin
+    gettimeofday(&temps_fin_cercle,NULL);
+    printf("Génération\n temps d'execution: %.5f secondes\n", time_diff_cercle(temps_debut_cercle,temps_fin_cercle));;
+	
 		
 	return l;
 }
@@ -117,13 +107,18 @@ void LabCercleConstruit(LabyrintheCercle *lab){
 	MurCarre * m = NULL;
 
 	for(int y = 0;y < h;y++){
+
+		int doors = 0;		
+
 		for(int x = 0;x < l;x++){
 			m = MatCarreVal2(lab->map,x,y);
 			// première ligne
 			if(y == 0){
+				doors = 1;
 				if(!x==0){
 					m->c1 = 0;
-					printCoteCercle(l,h,x,y,1,"blanc");
+					if(v_graph_cercle)
+						printCoteCercle(l,h,x,y,1,"blanc");
 					
 				}			
 			}
@@ -131,11 +126,14 @@ void LabCercleConstruit(LabyrintheCercle *lab){
 			{
 				if(rand()%2){
 					m->c1 = 0;
-					printCoteCercle(l,h,x,y,1,"blanc");
+					if(v_graph_cercle)
+						printCoteCercle(l,h,x,y,1,"blanc");
 				}
 				else{
+					doors++;
 					m->c2 = 0;
-					printCoteCercle(l,h,x,y,2,"blanc");
+					if(v_graph_cercle)
+						printCoteCercle(l,h,x,y,2,"blanc");
 				}
 			}
 			
@@ -145,9 +143,16 @@ void LabCercleConstruit(LabyrintheCercle *lab){
 
 		}
 		
-	}   
+		if(doors == 0){
+					m->c2 = 0;
+					if(v_graph_cercle)
+						printCoteCercle(l,h,rand()%l,y,2,"blanc");
+				}
+		
 
- 	waitgraph();
+	}   
+	if(v_graph_cercle)
+ 		waitgraph();
 }
 
 void printCercle(int w, int h, int x, int y, char * color){
@@ -168,9 +173,6 @@ void printCercle(int w, int h, int x, int y, char * color){
             setcolor(newcolor(0,0.5,1));
     else if (!strcmp(color,"gris"))
     		setcolor(newcolor(0.9,0.9,0.9));
-
-	int l = y * 20;
-	int c = x * 20;
 	
 	circle(h*case_width_cercle +1 ,h*case_width_cercle +1, y *case_width_cercle );
 
@@ -221,34 +223,3 @@ void printCoteCercle(int l, int h, int x, int y, int cot, char * color){
 	
 	refresh();
 }
-
-// Affiche un point sur le graphe
-void SetCerclePointGraphe(int x, int y, char * color){
-	if (!strcmp(color,"blanc"))
-            setcolor(newcolor(1,1,1));
-    else if (!strcmp(color,"noir"))
-            setcolor(newcolor(0,0,0));
-    else if (!strcmp(color,"rouge"))
-            setcolor(newcolor(1,0,0));
-    else if (!strcmp(color,"vert") ){
-		setcolor(newcolor(0,1,0));
-	}
-	else if (!strcmp(color,"vertf") ){
-		setcolor(newcolor(0,0.4,0));
-	}
-    else if (!strcmp(color,"bleu"))
-            setcolor(newcolor(0,0.5,1));
-    else if (!strcmp(color,"gris"))
-    		setcolor(newcolor(0.9,0.9,0.9));
-	else if (!strcmp(color,"grisf"))
-    		setcolor(newcolor(0.6,0.6,0.6));
-	
-	int l = y * 20;
-	int c = x * 20;
-	
-		
-	point(10 + c , 10 + l ,4);
-
-	refresh();
-}
-

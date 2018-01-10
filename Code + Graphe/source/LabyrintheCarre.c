@@ -18,12 +18,6 @@ void set_d_carre(){
     d_graph_carre = 1;
 }
 
-void set_Manual_rech_carre(){
-	set_Manual_Start_carre();
-	set_v_carre();
-	manual_search_carre = 1;
-}
-
 void set_Start_carre(int x,int y){
 	start_x_carre = x;
 	start_y_carre = y;
@@ -31,10 +25,6 @@ void set_Start_carre(int x,int y){
 
 void set_Construction_Carre(int val){
 	contruction_value = val;
-}
-
-void set_Manual_Start_carre(){
-	manual_start_carre = 1;
 }
 
 void set_LinearGenCarre(){
@@ -110,6 +100,10 @@ LabyrintheCarre *LabCarreCreate(int w,int h){
 	
 	}
 	
+	// temps_fin
+    gettimeofday(&temps_fin_carre,NULL);
+    printf("Génération\n temps d'execution: %.5f secondes\n", time_diff_carre(temps_debut_carre,temps_fin_carre));;
+	
 	return l;
 }
 
@@ -118,12 +112,6 @@ void LabCarreFree(LabyrintheCarre *lab){
 	MatCarreFree(lab->map);
     free(lab);
 }
-
-// verifie si une case est un mur
-int EstCarreConstruit(LabyrintheCarre *lab , int x ,int y){}
-
-// Vérifie si une case est constructible
-int EstCarreConstructible(LabyrintheCarre *lab  , EnsCarre *v, NoeudCarre * point){}
 
 // construit les bords
 void LabCarreInit(LabyrintheCarre *lab, int w ,int h){
@@ -331,7 +319,7 @@ void LabCarreConstruit2(LabyrintheCarre *lab ,EnsCarre *v){
 						printCoteCarre(n->x,n->y,1,"blanc"); //màj affichage
 				} 
 				else{
-					if(d_graph_carre)
+					if(d_graph_carre && m->c1 != 0)
 						printCoteCarre(n->x,n->y,1,"noir");
 				}
 				
@@ -348,7 +336,7 @@ void LabCarreConstruit2(LabyrintheCarre *lab ,EnsCarre *v){
 						printCoteCarre(n->x,n->y,2,"blanc"); //màj affichage
 				} 
 				else{
-					if(d_graph_carre)
+					if(d_graph_carre && m->c2 != 0)
 						printCoteCarre(n->x,n->y,2,"noir");
 				}
 				
@@ -366,7 +354,7 @@ void LabCarreConstruit2(LabyrintheCarre *lab ,EnsCarre *v){
 						printCoteCarre(n->x,n->y,3,"blanc");
 				} 
 				else{
-					if(d_graph_carre)
+					if(d_graph_carre && voisin->c1 != 0)
 						printCoteCarre(n->x,n->y,3,"noir");
 				}
 				break;
@@ -383,7 +371,7 @@ void LabCarreConstruit2(LabyrintheCarre *lab ,EnsCarre *v){
 						printCoteCarre(n->x,n->y,4,"blanc"); //màj affichage
 				} 
 				else{
-					if(d_graph_carre)
+					if(d_graph_carre && voisin->c2 != 0)
 						printCoteCarre(n->x,n->y,4,"noir");
 				}
 				break;	
@@ -403,52 +391,26 @@ void LabCarreConstruit2(LabyrintheCarre *lab ,EnsCarre *v){
 	}
 }
 
-// Affiche le labyrinthe dans la console
-void LabCarrePrint(LabyrintheCarre *lab){}
-
 // gestionnaire des fonctions de recherche
 void lanceCarreRecherche(LabyrintheCarre *lab)
-{
-	/*if(manual_search){
-		
-		int x, y;
-		
-		int * px = &x;
-		int * py = &y;
-		
-		getClic(px,py);
-		
-		while(EstConstruit(lab, x/3,y/3)){
-			getClic(px,py);
-		}
-		
-		SetPointGraphe(start_x_carre,start_y_carre,"vert");
+{	
 
-		printf("s = %i %i \n",start_x_carre,start_y_carre );
-		
-		recherche_manuelle(lab);
-		
-	}
-	else{*/
+	if(v_graph_carre /*&& !Auto */ && Dij_carre)
+		waitgraph();
 
-		if(v_graph_carre /*&& !Auto */ && Dij_carre)
-			waitgraph();
+	if(Dij_carre)
+		dijkstraCarre(lab);
 
-		if(Dij_carre)
-			dijkstraCarre(lab);
+	if(v_graph_carre /*&& !Auto*/ && AStar_carre)
+		waitgraph();
 
-		if(v_graph_carre /*&& !Auto*/ && AStar_carre)
-			waitgraph();
-
-		if(AStar_carre)
-			A_StarCarre(lab);
-		
-	//}
+	if(AStar_carre)
+		A_StarCarre(lab);
 	
 	if(v_graph_carre){
-			waitgraph();
-			closegraph();
-		}
+		waitgraph();
+		closegraph();
+	}
 }
 
 // lance la recherche
@@ -527,7 +489,7 @@ void dijkstraCarre(LabyrintheCarre * lab){
     int p = (h-1)*l+l-1; //p = position (même chose que u avant)
 	if(v_graph_carre)
 		while(d>=0){
-		    SetCarrePointGraphe((int)(p-l)%l,(int)(p-l)/l+1, "rouge");
+		    SetCarrePointGraphe((int)p%l,(int)p/l, "rouge");
 
 			if(!d){
 		        // fin
@@ -536,7 +498,7 @@ void dijkstraCarre(LabyrintheCarre * lab){
 		        printf("Il n'y a pas de chemin vers la sortie\n");
 		        d=0;
 		    }
-		    else if(!MatCarreVal(lab->map, p)->c2 && MatCarreVal(dist,p-l)->v == d-1){ //vérif si mur au dessus et si val case=-1
+		    else if(!MatCarreVal(lab->map, p)->c2 && MatCarreVal(dist,p-l)->v == d-1){
 		        p = p-l;
 		    }
 			else if(!MatCarreVal(lab->map, p)->c1 && MatCarreVal(dist,p-1)->v == d-1){
@@ -642,34 +604,34 @@ void A_StarCarre(LabyrintheCarre * lab){
         }
 		free(u);
     }
-printf("1");
 	// print
     int d = MatCarreVal2(closedList,l-1,h-1)->v;
 	printf("\nA*\n longueur du chemin: %i\n",d);
     int p = (h-1)*l+l-1;
 
-printf("2");
 	if(v_graph_carre)
 		while(d>0){
 
-		    SetCarrePointGraphe((int)(p-l)%l, (int)(p-l)/l+1,"bleu");
 
-			if(!(d-1)){
+		    SetCarrePointGraphe((int)p%l, (int)p/l,"bleu");
+
+			if(!(d-1) || p<0){
 				SetCarrePointGraphe(start_x_carre,start_y_carre, "bleu");
+				d =0;
 		        // fin
-		    }
-		    else if(MatCarreVal(closedList,p-l)->v == d-1){
+		    }		    
+			else if(!MatCarreVal(lab->map, p)->c2 && MatCarreVal(closedList,p-l)->v == d-1){
 		        p = p-l;
 		    }
-			else if(MatCarreVal(closedList,p-1)->v == d-1){
+			else if(!MatCarreVal(lab->map, p)->c1 && MatCarreVal(closedList,p-1)->v == d-1){
 		        p = p-1;
-		    }
-			else if(MatCarreVal(closedList,p+l)->v == d-1){
+		    }	    
+		    else if(!MatCarreVal(lab->map, p+l)->c2 && MatCarreVal(closedList,p+l)->v == d-1){
 		        p = p+l;
 		    }
-		    else if(MatCarreVal(closedList,p+1)->v == d-1){
+			else if(!MatCarreVal(lab->map, p+1)->c1 && MatCarreVal(closedList,p+1)->v == d-1){
 		        p = p+1;
-		    }
+			}
 		    else if(!MatCarreVal(closedList,p)){
 		        printf("Il n'y a pas de chemin vers la sortie\n");
 		        d=0;
@@ -718,11 +680,11 @@ void printCarre(int w, int h, int x, int y, char * color){
 	line(20 + c, 0 + l, 0 + c, 0 + l); //x1, y1, x2, y2 coté 2
 
 	// ligne du bas
-	if( y = h-1)
+	if( y == h-1)
 		line(0 + c,  20 + l , 20 + c, 20 + l);
 
 	//ligne de droite
-	if( x = w-1)
+	if( x == w-1)
 		line(20 + c, 20 + l, 20 + c,  0 + l);
 
 	refresh();
@@ -792,7 +754,6 @@ void SetCarrePointGraphe(int x, int y, char * color){
 	int l = y * 20;
 	int c = x * 20;
 	
-		
 	point(10 + c , 10 + l ,4);
 
 	refresh();

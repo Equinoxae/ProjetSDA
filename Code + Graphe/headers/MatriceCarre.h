@@ -32,9 +32,9 @@ void MatCarreSet(MatriceCarre * m,int p,MurCarre * v); // stocke une valeur enti
 
 void MatCarreSet2(MatriceCarre * m,int x,int y,MurCarre* v); // stocke une valeur entière dans Matrice[x,y]
 
-void MatCarreSetValue(MatriceCarre * m, int p, int v);
+void MatCarreSetValue(MatriceCarre * m, int p, int v); // défini la valeur de la case à la position p d'une Matrice[x,y] 
 
-void MatCarreSetValue2(MatriceCarre * m, int x,int y, int v);
+void MatCarreSetValue2(MatriceCarre * m, int x,int y, int v); // défini la valeur d'un case à la position [x,y]
 
 int MatCarreGetL(MatriceCarre * m); // récupère la largeur
 
