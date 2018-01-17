@@ -6,13 +6,16 @@ OPTS = -L
 LIBGRAPH = /usr/X11R6/lib
 MATH = -lm
 GRAPH = -lX11
-DEBUG = -g
+DEBUG = -g -Wall
 OPT := -I$(HEADERS)
 SRCS := $(SRC)*.c
 
 All:
 	$(CC) $(SRCS) $(OPT) -o program $(MATH) $(OPTS) $(LIBGRAPH) $(GRAPH) $(DEBUG)
 
+
+install:
+	sudo apt-get install libx11-dev
 
 rect:
 	./program -r -d -h 200 -l 200 -Dd -Ad

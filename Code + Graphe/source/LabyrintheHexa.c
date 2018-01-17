@@ -9,6 +9,38 @@
 #include "Heap.h"
 #include <string.h>
 
+// Statics
+
+static struct timeval temps_debut_hexa,temps_fin_hexa;
+
+/* affichage du graph */
+static int v_graph_hexa = 0;
+static int d_graph_hexa = 0;
+
+// Manual Research 
+static int manual_search_hexa = 0;
+
+// Start
+static int start_x_hexa = 0;
+static int start_y_hexa = 0;
+
+// lineaire
+static int linear_hexa = 0;
+
+// Dijkstra 
+static int Dij_hexa = 0;
+static int Dij_rech_hexa = 0;
+
+// Dijkstra 
+static int AStar_hexa = 0;
+static int AStar_rech_hexa = 0;
+
+// slow motion
+static int slow_gen_hexa = 0;
+static int slow_rech_hexa = 0;
+
+//Accesseur
+
 void set_v_hexa(){
     v_graph_hexa = 1;
 }

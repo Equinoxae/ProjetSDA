@@ -3,7 +3,7 @@ typedef struct MurHexa{
 
   	int c1; // coté |
   	int c2; // coté / 
-  	int c3; // coté \
+  	int c3; /* coté \ */
 	
 	int v;
 

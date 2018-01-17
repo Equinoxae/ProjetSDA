@@ -10,6 +10,19 @@
 #include <unistd.h>
 #include <Heap.h>
 
+
+// Static
+static struct timeval temps_debut_cercle,temps_fin_cercle;
+
+//affichage du graph
+static int v_graph_cercle = 0;
+static int d_graph_cercle = 0;
+
+// hauteur de l'étage
+static int case_width_cercle = 20;
+
+
+// Accesseur
 void set_v_cercle(){
     v_graph_cercle = 1;
 }

@@ -5,10 +5,42 @@
 #include <limits.h>
 #include "Labyrinthe.h"
 #include "graph.h"
-
 #include "Heap.h"
 #include <string.h>
 
+// Statics
+
+static struct timeval temps_debut,temps_fin;
+
+/* affichage du graph */
+static int v_graph = 0;
+static int d_graph = 0;
+
+static int case_width = 3;
+
+// Dijkstra 
+static int Dij = 0;
+static int Dij_rech = 0;
+
+// A*
+static int AStar = 0;
+static int AStar_rech = 0;
+
+// Manual Research 
+static int manual_search = 0;
+
+// Execution automatique
+static int Auto = 0;
+
+// Start
+static int start_x = 1;
+static int start_y = 1;
+static int manual_start = 0;
+
+// Linear
+static int linear = 0;
+
+// Accesseur
 void set_v(){
     v_graph = 1;
 }
@@ -224,7 +256,6 @@ int EstConstructible(Labyrinthe *lab , Ens *v, Noeud * point, int init){
 
 void verifTour(Labyrinthe *lab  , Ens *v, Noeud * point,int init){
 
-    int cb;
     int x = point->x;
     int y = point->y;
 
@@ -363,7 +394,6 @@ void Granularise(Labyrinthe *lab  , Ens *v, int nb){
 	verifTour(lab,v,NoeudInit(gb, h-2 ),1);
 
     int count = 0;
-    int res;
 
     while( count < nb){
 
@@ -388,8 +418,6 @@ void Granularise(Labyrinthe *lab  , Ens *v, int nb){
 
 // construit
 void LabConstruit(Labyrinthe *lab  , Ens * v){
-
-    int res;
 
     while( !EnsEstVide(v) ){
         Noeud * tirage = EnsTirage(v,linear);
@@ -523,7 +551,7 @@ void recherche_manuelle(Labyrinthe * lab){
 	
 	SetPointGraphe(end_x,end_y,"rouge");
 
-	while ( !(x == end_x && y == end_y) && k != "esc"){
+	while ( !(x == end_x && y == end_y) && strcmp(k,"esc")){
 		printf("Appuiez sur une touche\n");
 		
 		//printf("dir : %s\n",k);
@@ -616,7 +644,6 @@ void dijkstra(Labyrinthe * lab){
         Noeud * n = EnsDepilePremier(plusPetit);
 
         int u = n->y*l+n->x;
-        int min = MatVal(dist,u);
 
 		NoeudSuppr(n);
 

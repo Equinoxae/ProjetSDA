@@ -43,8 +43,11 @@ int main(int argc, char *argv[]){
 				set_LinearGenCarre();
 				
 			else if (!strcmp(argv[i],"-start"))
-		        set_Start_carre(atof(argv[++i]),atof(argv[++i]));
-		        			
+			{
+				int x = atoi(argv[++i]);
+				int y = atoi(argv[++i]);
+		        	set_Start_carre(x,y);
+		       	}
 			else if (!strcmp(argv[i], "-making"))
 				set_Construction_Carre(atoi(argv[++i]));
 			else if (!strcmp(argv[i],"-D"))
@@ -101,7 +104,11 @@ int main(int argc, char *argv[]){
 			else if ( !strcmp(argv[i],"-slowr"))
 				set_Slow_rech();
 			else if (!strcmp(argv[i],"-start"))
-		        set_Start_hexa(atof(argv[++i]),atof(argv[++i]));
+		        {
+				int x = atoi(argv[++i]);
+				int y = atoi(argv[++i]);
+		        	set_Start_hexa(x,y);
+		       	}
 		}
 		else if (!strcmp(type,"-r")){
 
@@ -118,7 +125,11 @@ int main(int argc, char *argv[]){
 			else if (!strcmp(argv[i],"-M"))
 				set_Manual_rech();
 			else if (!strcmp(argv[i],"-start"))
-		        set_Start(atof(argv[++i]),atof(argv[++i]));
+		        {
+				int x = atoi(argv[++i]);
+				int y = atoi(argv[++i]);
+		        	set_Start(x,y);
+		       	}
 			else if (!strcmp(argv[i],"-ms"))
 				set_Manual_Start();
 			else if (!strcmp(argv[i],"-linear"))

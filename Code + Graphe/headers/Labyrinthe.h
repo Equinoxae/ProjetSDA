@@ -1,35 +1,5 @@
 #include "Ensemble.h"
 
-static struct timeval temps_debut,temps_fin;
-
-/* affichage du graph */
-static int v_graph = 0;
-static int d_graph = 0;
-
-static int case_width = 3;
-
-// Dijkstra 
-static int Dij = 0;
-static int Dij_rech = 0;
-
-// A*
-static int AStar = 0;
-static int AStar_rech = 0;
-
-// Manual Research 
-static int manual_search = 0;
-
-// Execution automatique
-static int Auto = 0;
-
-// Start
-static int start_x = 1;
-static int start_y = 1;
-static int manual_start = 0;
-
-// Linear
-static int linear = 0;
-
 typedef struct Lab{
     Matrice * map;
 }Labyrinthe;

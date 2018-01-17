@@ -11,30 +11,6 @@ typedef struct LabCarre{
 
 }LabyrintheCarre;
 
-static struct timeval temps_debut_carre,temps_fin_carre;
-
-//Construction
-static int contruction_value = 1;
-
-//affichage du graph
-static int v_graph_carre = 0;
-static int d_graph_carre = 0;
-
-// Start
-static int start_x_carre= 0;
-static int start_y_carre = 0;
-
-// lineaire
-static int linear_carre = 0;
-
-//DJI
-static int Dij_carre = 0;
-static int Dij_rech_carre = 0;
-
-//AStar
-static int AStar_carre = 0;
-static int AStar_rech_carre = 0;
-
 // accesseur
 void set_v_carre();
 

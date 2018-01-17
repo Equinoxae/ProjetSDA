@@ -11,13 +11,6 @@ typedef struct LabCercle{
 
 }LabyrintheCercle;
 
-static struct timeval temps_debut_cercle,temps_fin_cercle;
-
-//affichage du graph
-static int v_graph_cercle = 0;
-static int d_graph_cercle = 0;
-
-static int case_width_cercle = 20;
 
 // accesseur
 void set_v_cercle();
