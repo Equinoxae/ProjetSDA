@@ -330,8 +330,8 @@ void LabCarreConstruit2(LabyrintheCarre *lab ,EnsCarre *v){
 		NoeudCarre * n = EnsCarreTirage(v,0);
 		
 		MurCarre * m, * voisin;
-		int old; //ancienne valeur
-		int new; //new val
+		int old = 0; //ancienne valeur
+		int new = 0; //new val
 		
 		switch(n->cote)
 		{
@@ -403,6 +403,11 @@ void LabCarreConstruit2(LabyrintheCarre *lab ,EnsCarre *v){
 						printCoteCarre(n->x,n->y,4,"noir");
 				}
 				break;	
+			default:
+				m = MatCarreVal2(lab->map,n->x,n->y);
+				new = m->v;
+				old = m->v;
+				break;
 		}
 	
 		for (int i=0; i<lab->map->l*lab->map->h; i++){

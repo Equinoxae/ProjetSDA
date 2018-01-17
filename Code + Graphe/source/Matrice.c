@@ -56,8 +56,10 @@ Matrice * MatLit(char* file){
 
   int h;
   int l;
+  int res;
 
-  fscanf(f,"P5\n%i %i\n1\n",&h,&l);
+
+  res = fscanf(f,"P5\n%i %i\n1\n",&h,&l);
 
   Matrice * m ;
   m = MatAlloc(h,l);
@@ -66,11 +68,13 @@ Matrice * MatLit(char* file){
 
   char in;
   for(i = 0; i < h*l;i++){
-	fscanf(f,"%c",&in);
-    MatSet(m,i,in);
+	res = fscanf(f,"%c",&in);
+    	MatSet(m,i,in);
     }
 
     fclose(f);
+  if(res == 0)
+	exit(res);
 
     return m;
 

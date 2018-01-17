@@ -97,7 +97,7 @@ void LabCercleFree(LabyrintheCercle *lab){
 
 // construit les bords
 void LabCercleInit(LabyrintheCercle *lab, int w ,int h){
-int i,j;
+int i ,j;
 	for(j = 0; j < h;j++){
 		for(i = 0; i < w ; i++){
 			MatCarreSet2(lab->map,i ,j , MurCarreAlloc() );
@@ -108,7 +108,7 @@ int i,j;
 	}
 	
 	if(v_graph_cercle)
-		       	printCercle(w, h, i, h , "noir");
+		       	printCercle(w, h, w, h , "noir");
 }
 
 

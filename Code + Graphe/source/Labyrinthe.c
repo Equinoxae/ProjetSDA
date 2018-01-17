@@ -542,8 +542,8 @@ void recherche_manuelle(Labyrinthe * lab){
 	
 	int x = start_x;
 	int y = start_y;
-	int prev_x;
-	int prev_y;
+	int prev_x = 0;
+	int prev_y = 0;
 
 	int end_x = lab->map->l-2;
 	int end_y = lab->map->h-2;

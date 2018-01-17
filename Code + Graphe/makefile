@@ -6,7 +6,7 @@ OPTS = -L
 LIBGRAPH = /usr/X11R6/lib
 MATH = -lm
 GRAPH = -lX11
-DEBUG = -g -Wall
+DEBUG = -O3 -Wall
 OPT := -I$(HEADERS)
 SRCS := $(SRC)*.c
 
